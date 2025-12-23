@@ -1,0 +1,19 @@
+---
+title: "Klasyfikatory bayesowskie"
+---
+
+## Teoria Bayesa i dwa podejscia estymacji
+
+- Twierdzenie Bayesa oraz pojecia: rozklad aprioryczny i a posteriori.
+- MLE maksymalizuje prawdopodobienstwo danych przy danym parametrze.
+- MAP maksymalizuje iloczyn prawdopodobienstwa i rozkladu apriorycznego, co wprowadza regularizacje.
+
+## Klasyfikator MAP/ML
+
+- Naiwny Bayes w wariancie ML (parametry z estymacji wiarygodnosci).
+- Naiwny Bayes w wariancie MAP (parametry z uwzglednieniem priory).
+
+## Naive Bayes
+
+- Probabilistyczny algorytm oparty na twierdzeniu Bayesa z zalozeniem niezaleznosci cech.
+- Skuteczny w klasyfikacji tekstu, filtracji spamu i analizie uczuc.

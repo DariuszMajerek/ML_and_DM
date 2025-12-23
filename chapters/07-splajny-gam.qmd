@@ -1,0 +1,16 @@
+---
+title: "Modele addytywne i splajny"
+---
+
+## Regresje sklejane (splajny)
+
+- Splajny regresyjne to wielomianowa regresja kawalkowa; przedzialy rozdzielone sa wezlami, a wielomiany lacza sie gladko na wezlach.
+- Liczba wezlow steruje elastycznoscia i ryzykiem przeuczenia.
+- Splajny sluza do modelowania nieliniowosci, m.in. w FDA i GAM.
+
+## Generalized Additive Models (GAM)
+
+- GAM sumuja wygładzone funkcje zmiennych (np. splajny), co pozwala modelowac zlozone relacje.
+- W porownaniu z regresja liniowa GAM nie wymaga scisle liniowego zwiazku, ale jest bardziej zlozony.
+- Zalety: elastycznosc, interpretowalnosc, uchwycenie nieliniowosci.
+- Wady: wieksza zlozonosc obliczeniowa i wrazliwosc na parametry wygladzania.

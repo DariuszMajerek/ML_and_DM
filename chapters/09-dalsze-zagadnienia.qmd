@@ -1,0 +1,22 @@
+---
+title: "Inne metody"
+---
+
+## Reinforcement learning
+
+- Uczenie ze wzmocnieniem: agent uczy sie przez interakcje ze srodowiskiem, maksymalizujac sume przyszlych nagrod.
+- Elementy: agent, srodowisko, stan, akcja, nagroda, polityka i funkcja wartosci; modelowane jako zadanie Markowa.
+- Szczegolowe algorytmy (Q-learning, SARSA, aktor-krytyk) omawiane sa w innym kursie.
+
+## Modele koszykowe (market basket analysis)
+
+- Analiza koszykowa wykrywa wzorce zakupowe i produkty kupowane razem.
+- Reguly asocjacyjne "jezeli-to": antecedent i consequent.
+- Miary: support, confidence i lift.
+- Algorytmy: Apriori, FP-Growth.
+
+## Wykrywanie anomalii (ponowne)
+
+- Przypomnienie definicji anomalii w kontekście oszustw, awarii i bezpieczenstwa.
+- Typy anomalii: punktowe, kontekstowe, zbiorowe.
+- Metody detekcji omawiane sa szczegolowo w innych kursach.

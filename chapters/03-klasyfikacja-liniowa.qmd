@@ -1,0 +1,20 @@
+---
+title: "Klasyfikacja liniowa"
+---
+
+## Regresja logistyczna
+
+- Regresja logistyczna to algorytm klasyfikacji binarnej wykorzystujacy funkcje sigmoidalna do estymacji prawdopodobienstwa przynaleznosci do klasy.
+- Jest to metoda nadzorowana, w ktorej logit jest funkcja liniowa predyktorow.
+- Zalozenia: niezaleznosc obserwacji, dwumianowa zmienna zalezna, liniowa relacja predyktorow z log-ilorazem szans, brak silnych odstepstw i dostatecznie duza proba.
+- Interpretacja wspolczynnikow, ocena jakosci (funkcja kosztu, AUC), ograniczenia przy duzej nakladce klas lub wielu cechach.
+
+## Dyskryminacja liniowa i kwadratowa
+
+- LDA szuka liniowych kombinacji predyktorow maksymalizujacych separacje klas; zaklada normalny rozklad cech i identyczne macierze kowariancji.
+- QDA dopuszcza rozne macierze kowariancji, przez co jest bardziej elastyczna.
+- Warianty:
+  - RDA: regularyzacja (skurcz) estymacji macierzy kowariancji.
+  - MDA: kazda klasa jako mieszanka kilku gaussowskich podklas.
+  - FDA: nieliniowe kombinacje predyktorow, np. funkcje sklejane.
+- Dyskryminacja bywa korzystniejsza od regresji logistycznej dla problemow wieloklasowych i roznych rozkladow cech.

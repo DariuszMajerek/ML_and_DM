@@ -1,0 +1,876 @@
+---
+title: "Przygotowanie i czyszczenie danych"
+---
+
+Przygotowanie danych stanowi jeden z kluczowych etapów procesu eksploracji danych i uczenia maszynowego. Jakość danych wejściowych w dużej mierze determinuje jakość modeli, niezależnie od stopnia ich złożoności. W praktyce analizy danych etap ten obejmuje zarówno wstępną eksplorację danych, jak i ich transformację, czyszczenie oraz konstrukcję cech, które będą następnie wykorzystywane przez algorytmy uczenia nadzorowanego. W niniejszym rozdziale przygotowanie danych jest traktowane jako proces analityczny, a nie jedynie techniczny etap przetwarzania.
+
+## Import i czyszczenie danych
+
+Import danych jest pierwszym momentem, w którym można świadomie zminimalizować późniejsze problemy jakościowe. W praktyce ważne jest nie tylko „wczytanie pliku”, ale kontrola takich elementów jak kodowanie znaków, separator, typy danych, format dat, niestandardowe znaczniki braków oraz interpretacja wartości logicznych. `pandas` daje w tym zakresie bardzo duże możliwości, a poprawna konfiguracja importu bywa istotniejsza niż późniejsze „naprawy” wykonywane ad hoc.
+
+Najczęściej spotykanym formatem jest CSV, który bywa myląco prosty: różne pliki mogą używać separatora `,` lub `;`, różnych separatorów dziesiętnych (kropka/przecinek), mogą zawierać znaki narodowe (tu: polskie nazwy miast), a braki mogą być kodowane jako puste pole, `NA`, `N/A`, `null`, `-999` itd. Dlatego przy imporcie CSV bardzo często warto jawnie ustawić: `sep`, `encoding`, `na_values`, `parse_dates`, a w razie potrzeby także `dtype`. Przykładowo[^02-przygotowanie-danych-1]:
+
+[^02-przygotowanie-danych-1]: Dane przypominają prosty wycinek danych klient–zakupy. Zawierają zmienne liczbowe (np. `income_eur`, `avg_basket_eur`, `visits_last30`), jakościowe (`city`, `segment`, `device_type`, `notes`), logiczne (`has_promo`), daty (`signup_date`, `last_purchase_date`) oraz zmienną docelową (`churned`). Celowo wprowadzono braki danych (w tym puste pola i znaczniki `NA`), wartości odstające (np. nienaturalnie wysokie dochody, koszyki zakupowe i liczby wizyt) oraz błędy jakościowe (np. wiek 5 i 120, ujemne zwroty, rozbieżności w kodowaniu kategorii: spacje i różne wielkości liter).
+
+```{python}
+import pandas as pd
+
+df = pd.read_csv(
+    "data.csv",
+    encoding="utf-8",
+    na_values=["", "NA", "N/A", "null", "None"],
+    parse_dates=["signup_date", "last_purchase_date"]
+)
+df.head()
+```
+
+W tym przykładzie `na_values` powoduje, że zarówno puste pola, jak i tekstowe znaczniki braków zostaną zamienione na `NaN`, a `parse_dates` zadba o automatyczną konwersję wskazanych kolumn do typu daty. To jest szczególnie ważne, bo daty wczytane jako tekst utrudniają analizę sezonowości, czasu od rejestracji, czy prostych agregacji po miesiącach.
+
+W przypadku danych w Excelu (`.xlsx`) import odbywa się przez `read_excel`. W praktyce warto pamiętać, że Excel często zawiera dodatkowe arkusze, nagłówki „opisowe” nad tabelą, albo mieszane typy w kolumnach. Gdy dane są w konkretnym arkuszu i zaczynają się od konkretnego wiersza, przydają się parametry `sheet_name` oraz `skiprows`. Dla dołączonego pliku:
+
+```{python}
+df = pd.read_excel(
+    "data.xlsx",
+    sheet_name=0,
+    na_values=["", "NA", "N/A", "null", "None"],
+    parse_dates=["signup_date", "last_purchase_date"]
+)
+
+df.head()
+```
+
+Klasyczny format JSON (`.json`) przechowuje dane jako jedną spójną strukturę, najczęściej listę obiektów (rekordów). Taki zapis jest szczególnie często spotykany w interfejsach API, plikach konfiguracyjnych oraz w wymianie danych pomiędzy systemami informatycznymi. Z punktu widzenia analizy danych format ten jest bardziej „opisowy” i czytelny dla człowieka, ale jednocześnie wymaga załadowania całej struktury do pamięci.
+
+W przygotowanym pliku `data.json` dane zapisane są jako lista rekordów, gdzie każdy rekord odpowiada jednej obserwacji, a klucze obiektów odpowiadają nazwom zmiennych. Taki układ bardzo naturalnie mapuje się na strukturę ramki danych w `pandas`. Podstawowy import danych JSON do pandas odbywa się za pomocą funkcji `read_json`.
+
+```{python}
+df = pd.read_json("data.json")
+df.head()
+```
+
+Po wczytaniu danych `pandas` automatycznie spróbuje rozpoznać typy zmiennych, jednak – podobnie jak w przypadku CSV – nie zawsze zrobi to zgodnie z oczekiwaniami analityka. W szczególności kolumny datowe są często wczytywane jako typ `object`, dlatego dobrą praktyką jest ich jawna konwersja:
+
+```{python}
+df["signup_date"] = pd.to_datetime(df["signup_date"], errors="coerce")
+df["last_purchase_date"] = pd.to_datetime(df["last_purchase_date"], errors="coerce")
+df.head()
+```
+
+Parametr `errors="coerce"` powoduje, że ewentualne niepoprawne formaty dat zostaną zamienione na `NaT`, co jest bezpieczniejsze niż przerwanie importu błędem. W kontekście eksploracji danych takie zachowanie pozwala szybko zidentyfikować problemy jakościowe bez utraty całego zbioru. Warto podkreślić, że format JSON nie posiada natywnego pojęcia braków danych w sensie znanym z analizy statystycznej. Braki mogą być reprezentowane jako `null`, brak klucza lub wartość tekstowa (np. `NA`). `pandas` zamienia `null` na `NaN`, ale nie rozpoznaje automatycznie tekstowych znaczników braków. Dlatego po imporcie zalecane jest jawne czyszczenie takich wartości:
+
+```{python}
+df.replace(["NA", "N/A", ""], pd.NA, inplace=True)
+df.head()
+```
+
+W porównaniu do CSV, format JSON lepiej zachowuje strukturę danych (np. brak problemów z separatorami czy kodowaniem znaków), ale gorzej skaluje się dla bardzo dużych zbiorów. Z tego względu klasyczny JSON jest szczególnie przydatny w dydaktyce oraz w pracy z danymi średniej wielkości, gdzie czytelność i jednoznaczność struktury są ważniejsze niż wydajność. Z perspektywy dalszych etapów kursu istotne jest, aby rozumieć, że import danych nie jest neutralnym technicznie krokiem, lecz pierwszym momentem, w którym podejmowane są decyzje wpływające na całą analizę. Różnice pomiędzy CSV, JSONL i JSON przekładają się nie tylko na sposób wczytania danych, ale także na późniejsze możliwości ich walidacji, przetwarzania i skalowania.￼
+
+W praktyce import często wymaga kontroli typów. Jeśli np. identyfikator klienta ma wyglądać jak liczba, ale nie wolno dopuścić do utraty wiodących zer (częsty przypadek dla kodów), należy wymusić typ tekstowy przez `dtype={"customer_id": "string"}`. W tym konkretnym zbiorze `customer_id` jest liczbowy, ale w realnych danych biznesowych to częsty problem. Analogicznie, gdy w jednej kolumnie występują liczby i tekst (np. „brak”), `pandas` może ustawić typ object, a to utrudni obliczenia – lepiej wczytać z `na_values` i później rzutować typy jawnie.
+
+Istotne są też parametry wpływające na wydajność i kontrolę pamięci. Dla dużych plików CSV warto rozważyć `usecols` (czytać tylko potrzebne kolumny), `chunksize` (czytanie porcjami) oraz `low_memory=False` (mniej błędnych inferencji typów kosztem RAM). Przykład importu porcjami:
+
+```{python}
+#| eval: false
+chunks = pd.read_csv("data.csv", chunksize=50_000)
+for chunk in chunks:
+    # walidacje / czyszczenie / zapis częściowy
+    pass
+```
+
+Na końcu, dobrą praktyką po imporcie jest natychmiastowa „kontrola jakości importu”: `df.info()`, `df.isna().sum()`, sprawdzenie liczby unikatów w kategoriach oraz szybkie oględziny podejrzanych wartości (np. wiek 120). To pozwala wcześnie odróżnić problemy wynikające z danych od problemów wynikających z błędnego importu.
+
+W praktyce analizy danych bardzo często spotyka się zbiory danych, których nazwy kolumn są niewygodne lub wręcz problematyczne z punktu widzenia języka Python oraz bibliotek analitycznych. Dotyczy to w szczególności nazw zawierających spacje, znaki specjalne, polskie znaki diakrytyczne, rozpoczynających się od cyfr, a także nazw bardzo długich lub opisowych. Choć `pandas` technicznie dopuszcza niemal dowolne nazwy kolumn, ich nieprzemyślane użycie prowadzi do błędów, nieczytelnego kodu oraz problemów w dalszych etapach analizy i modelowania. Problem ten ujawnia się szczególnie wyraźnie wtedy, gdy użytkownik próbuje korzystać z notacji kropkowej (`df.column_name`), budować formuły modelowe, pisać potoki przetwarzania lub eksportować dane do innych narzędzi analitycznych. Nazwy kolumn zawierające spacje, znaki `-`, `%`, `()`, `#`, rozpoczynające się od cyfr lub zawierające znaki typowe dla języków innych niż angielski (np. ś, ć, ń) nie mogą być używane jako poprawne identyfikatory w Pythonie. W efekcie kod staje się mniej czytelny i bardziej podatny na błędy.
+
+Rozważmy przykładowy zbiór danych, w którym nazwy kolumn zostały nadane w sposób typowy dla arkuszy Excel lub raportów biznesowych:
+
+```{python}
+df2 = pd.DataFrame({
+    "Customer ID": [1, 2, 3],
+    "2023 Revenue (€)": [12000, 34000, 18000],
+    "Avg Basket Value": [45.5, 78.2, 33.1],
+    "% Return": [0.02, 0.01, 0.05],
+    "Very long column name describing customer behaviour in detail": [1, 0, 1]
+})
+df2
+```
+
+Z punktu widzenia `pandas` taki zbiór danych jest poprawny, jednak już próba użycia notacji kropkowej zakończy się błędem:
+
+```{python}
+#| error: true
+df2.2023 Revenue (€) # błąd składni
+```
+
+Każdorazowo konieczne byłoby odwoływanie się do kolumn przez nawiasy i łańcuchy znaków, co znacząco obniża czytelność kodu:
+
+```{python}
+df2["2023 Revenue (€)"].mean()
+```
+
+Dlatego dobrą praktyką w analizie danych jest normalizacja nazw kolumn bezpośrednio po imporcie danych. Najczęściej stosowana konwencja obejmuje użycie wyłącznie małych liter, znaków ASCII, podkreśleń zamiast spacji oraz nazw rozpoczynających się literą. Taki styl jest zgodny z konwencją `snake_case` powszechnie stosowaną w Pythonie. Podstawowa korekta nazw kolumn może zostać wykonana w kilku krokach. Najpierw usuwa się nadmiarowe spacje, zamienia litery na małe, a spacje na podkreślenia:
+
+```{python}
+df2.columns = (
+    df2.columns
+    .str.strip()
+    .str.lower()
+    .str.replace(r"\s+", "_", regex=True)
+)
+```
+
+Jednak w praktyce to zwykle nie wystarcza, ponieważ w nazwach mogą występować znaki specjalne, symbole walut, procenty czy nawiasy. W takim przypadku warto usunąć wszystkie znaki niedozwolone i pozostawić jedynie litery, cyfry i podkreślenia:
+
+```{python}
+df2.columns = df2.columns.str.replace(r"[^a-zA-Z0-9_]", "", regex=True)
+
+# opcjonalnie: porządkujemy podkreślenia (np. po usunięciu znaków specjalnych)
+df2.columns = (
+    df2.columns
+    .str.replace(r"_+", "_", regex=True)
+    .str.strip("_")
+)
+df2.columns
+```
+
+Warto zauważyć, że po czyszczeniu może powstać nazwa będąca słowem kluczowym Pythona (np. `return`). Jeśli zależy nam na możliwości użycia notacji kropkowej, warto takie przypadki automatycznie zmienić, np. przez dodanie sufiksu:
+
+```{python}
+import keyword
+
+df2.columns = [
+    f"{c}_var" if keyword.iskeyword(c) else c
+    for c in df2.columns
+]
+```
+
+Wciąż jednak pozostaje problem nazw rozpoczynających się od cyfr. W Pythonie identyfikator nie może zaczynać się od liczby, dlatego zaleca się automatyczne dodanie prefiksu, na przykład `x_`:
+
+```{python}
+df2.columns = [
+    f"x_{c}" if (c != "" and c[0].isdigit()) else c
+    for c in df2.columns
+]
+df2.columns
+```
+
+
+Kolejnym, często niedocenianym problemem są zbyt długie nazwy kolumn. Choć technicznie są poprawne, znacząco utrudniają pracę z kodem, zwłaszcza w dalszych etapach, takich jak budowa modeli, interpretacja współczynników czy wizualizacja wyników. W takich sytuacjach dobrą praktyką jest ręczne lub półautomatyczne skracanie nazw, przy zachowaniu ich semantyki:
+
+```{python}
+df2 = df2.rename(columns={
+    "very_long_column_name_describing_customer_behaviour_in_detail": "customer_behavior_flag"
+})
+df2.columns
+```
+
+W projektach analitycznych o większej skali często stosuje się funkcję pomocniczą, która automatycznie „czyści” nazwy kolumn według ustalonej reguły:
+
+```{python}
+df2 = pd.DataFrame({
+    "Customer ID": [1, 2, 3],
+    "2023 Revenue (€)": [12000, 34000, 18000],
+    "Avg Basket Value": [45.5, 78.2, 33.1],
+    "% Return": [0.02, 0.01, 0.05],
+    "Very long column name describing customer behaviour in detail": [1, 0, 1]
+})
+
+def clean_column_names(df, max_len=40):
+    cleaned = (
+        pd.Index(df.columns).map(str)
+        .str.strip()
+        .str.lower()
+        .str.replace(r"\s+", "_", regex=True)
+        .str.replace(r"[^a-z0-9_]", "", regex=True)
+        .str.replace(r"_+", "_", regex=True)
+        .str.strip("_")
+    )
+
+    seen = {}
+    final_cols = []
+    for c in cleaned:
+        # pusta nazwa po czyszczeniu
+        if c == "":
+            c = "col"
+
+        # nazwa zaczyna się od cyfry
+        if c[0].isdigit():
+            c = f"x_{c}"
+
+        # słowo kluczowe Pythona
+        if keyword.iskeyword(c):
+            c = f"{c}_var"
+
+        # opcjonalnie: skracamy bardzo długie nazwy (np. do pracy z modelami/tabelami)
+        if max_len is not None and len(c) > max_len:
+            c = c[:max_len].rstrip("_")
+            if c == "":
+                c = "col"
+
+        # unikamy kolizji nazw (np. dwie różne kolumny mogą się „zlać” po czyszczeniu)
+        count = seen.get(c, 0)
+        seen[c] = count + 1
+        if count > 0:
+            suffix = f"_{count+1}"
+            base = c
+            if max_len is not None and len(base) + len(suffix) > max_len:
+                base = base[: max_len - len(suffix)].rstrip("_")
+                if base == "":
+                    base = "col"
+            c = f"{base}{suffix}"
+
+        final_cols.append(c)
+
+    df.columns = final_cols
+    return df
+
+df2 = clean_column_names(df2, max_len = 22)
+df2
+```
+
+Takie podejście sprawia, że już na wczesnym etapie analizy dane zostają dostosowane do dalszej pracy z modelami, formułami i potokami przetwarzania. Co istotne, normalizacja nazw kolumn nie jest kosmetyką, lecz elementem przygotowania danych, który wpływa na czytelność, reprodukowalność oraz odporność kodu na błędy.
+
+W kontekście tego kursu warto podkreślić, że praca z „brudnymi” nazwami kolumn jest codziennością analityka danych. Umiejętność ich systematycznego korygowania powinna być traktowana na równi z obsługą braków danych czy standaryzacją zmiennych. Jest to jeden z pierwszych kroków w kierunku tworzenia stabilnych i profesjonalnych analiz.
+
+## Obserwacje odstające i braki danych
+
+W praktyce analizy danych obserwacje odstające oraz braki danych są jednymi z najczęstszych źródeł błędnych wniosków i niestabilnych modeli. W EDA traktujemy je jako sygnał diagnostyczny: mogą oznaczać błędy pomiaru lub wprowadzania danych, ale mogą też być prawdziwymi rzadkimi zdarzeniami (np. klienci o bardzo wysokich dochodach). W modelowaniu ML odstające wartości i braki wpływają na estymację parametrów, stabilność uczenia i jakość generalizacji; dlatego kluczowe jest, aby postępowanie z nimi było konsekwentne, udokumentowane oraz wykonywane bez wycieku informacji (wszystkie „uczące się” transformacje dopasowujemy tylko na zbiorze treningowym).
+
+### Obserwacje odstające
+
+Obserwacje odstające (*outliers*) to wartości, które są „nietypowe” względem reszty danych. „Nietypowość” trzeba rozumieć w kontekście: może wynikać z rozkładu, jednostki miary, specyfiki biznesowej oraz tego, jakiego modelu używamy. W EDA zwykle rozróżnia się: (1) odstające wartości w pojedynczej zmiennej (*univariate*), (2) obserwacje odstające w relacji między zmiennymi (*bivariate*), oraz (3) odstające obserwacje wielowymiarowo (*multivariate*).
+
+#### Reguły matematyczne identyfikacji odstających (*univariate*)
+
+Najczęściej stosuje się regułę IQR (Tukeya) oraz regułę opartą o standaryzację. W regule IQR wyznaczamy kwartyle $Q_1$ i $Q_3$ oraz rozstęp międzykwartylowy $IQR = Q_3 - Q_1$. Obserwację $x$ uznaje się za odstającą, gdy:
+
+$$
+x < Q_1 - 1.5\cdot IQR \quad \text{lub} \quad x > Q_3 + 1.5\cdot IQR.
+$$
+
+Reguła standaryzacyjna używa *z-score*:
+
+$$
+z = \frac{x-\mu}{\sigma}.
+$$
+
+Typowo za odstające przyjmuje się obserwacje o $|z| > 3$, ale jest to reguła wrażliwa na odstające wartości, ponieważ $\mu$ i $\sigma$ same ulegają zniekształceniu. W danych skośnych (np. dochody) często lepsze są metody odporne.
+
+Odporna standaryzacja opiera się na medianie i medianowym odchyleniu bezwzględnym MAD. Dla $MAD = \mathrm{median}(|x - \mathrm{median}(x)|)$ stosuje się tzw. odporny *z-score*:
+
+$$
+z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
+$$
+
+Współczynnik (1.4826 [^02-przygotowanie-danych-2]) skaluje MAD do odpowiednika odchylenia standardowego przy rozkładzie normalnym.
+
+[^02-przygotowanie-danych-2]: Liczba 1.4826 pochodzi ze „skalowania” miary MAD tak, aby była porównywalna z odchyleniem standardowym przy rozkładzie normalnym. Dla rozkładu normalnego $X \sim \mathcal N(\mu,\sigma)$ zachodzi zależność $MAD = \Phi^{-1}(0.75)\,\sigma \approx 0.6745,\sigma$ bo dla $Z\sim\mathcal N(0,1)$ wartość $\mathrm{median}(|Z|)$ to dokładnie 75. percentyl rozkładu normalnego: $\Phi^{-1}(0.75)$. Żeby z MAD zrobić estymator „w skali $\sigma$”, mnoży się przez odwrotność tej stałej $\sigma \approx \frac{MAD}{0.6745} \approx 1.4826 \cdot MAD$ i stąd bierze się 1.4826 (dokładniej $1 / \Phi^{-1}(0.75)$).
+
+W naszych danych sensownymi kandydatami do analizy odstających są: `income_eur`, `avg_basket_eur`, `visits_last30`, a także „błędy logiczne” w `age` i `returns_last90`.
+
+```{python}
+import numpy as np
+
+num_cols = ["age", "income_eur", "visits_last30", "avg_basket_eur", "returns_last90", "satisfaction_1_5"]
+
+# Szybka diagnostyka: podstawowe statystyki + percentyle
+df[num_cols].describe(percentiles=[0.01, 0.05, 0.95, 0.99]).T
+```
+
+#### Reguła IQR dla jednej zmiennej
+
+```{python}
+def iqr_outliers(s: pd.Series, k: float = 1.5):
+    s = s.dropna()
+    q1, q3 = s.quantile(0.25), s.quantile(0.75)
+    iqr = q3 - q1
+    lower, upper = q1 - k * iqr, q3 + k * iqr
+    return lower, upper
+
+lower_inc, upper_inc = iqr_outliers(df["income_eur"])
+out_income = df[(df["income_eur"] < lower_inc) | (df["income_eur"] > upper_inc)]
+out_income[["customer_id", "income_eur", "city", "segment"]].head(10)
+```
+
+#### Odporny z-score (MAD)
+
+```{python}
+def robust_zscore(s: pd.Series):
+    s = s.astype(float)
+    med = np.nanmedian(s)
+    mad = np.nanmedian(np.abs(s - med))
+    return (s - med) / (1.4826 * mad)
+
+df["income_robust_z"] = robust_zscore(df["income_eur"])
+df.loc[df["income_robust_z"].abs() > 3, ["customer_id", "income_eur", "income_robust_z"]].head(10)
+```
+
+#### „Odstające” jako błąd jakości danych
+
+Część wartości odstających to nie „rzadkie przypadki”, tylko po prostu błędne dane. W `data.csv` celowo pojawiają się np. wiek 5 i 120 oraz ujemna liczba zwrotów (`returns_last90 == -1`). To nie są outliery w sensie rozkładu, tylko naruszenia dziedziny wartości.
+
+W EDA warto wprost zdefiniować reguły walidacji, np.: $16 \leq \text{age} \leq 80,$ $\text{returns\_last90} \geq 0.$
+
+W Pythonie:
+
+```{python}
+bad_age = df[(df["age"] < 16) | (df["age"] > 80)]
+bad_returns = df[df["returns_last90"] < 0]
+
+bad_age[["customer_id","age"]].head(), bad_returns[["customer_id","returns_last90"]].head()
+```
+
+Takie przypadki najczęściej traktuje się jako: (1) poprawa na podstawie źródła (jeśli możliwa), albo (2) ustawienie na brak (`NaN`) i późniejsza imputacja, albo (3) usunięcie obserwacji (jeżeli jest ich mało i są ewidentnie błędne).
+
+#### Co robimy z obserwacjami odstającymi w EDA i ML
+
+W EDA celem jest zrozumienie przyczyny i konsekwencji odstających wartości. Zwykle robimy trzy rzeczy: po pierwsze, oceniamy skalę zjawiska (ile obserwacji, w których zmiennych), po drugie, sprawdzamy czy są to błędy (np. wartości niemożliwe), a po trzecie, analizujemy wpływ na wnioski (np. średnie, korelacje, wykresy). Warto pamiętać, że średnia i odchylenie standardowe są wrażliwe, dlatego do EDA często stosuje się medianę i IQR.
+
+W ML decyzja zależy od modelu i celu. Dla modeli liniowych i dyskryminacyjnych (np. regresja logistyczna, LDA/QDA) odstające wartości mogą znacząco zaburzyć dopasowanie, dlatego typowe strategie to: transformacje (np. $\log$ dla `income_eur`), winsoryzacja/obcięcie ogonów, zastosowanie skalowania odpornego (np. `RobustScaler`), albo świadome usunięcie obserwacji błędnych. Dla drzew i ich zespołów (*Random Forest, boosting*) pojedyncze ekstremalne wartości często są mniej groźne, ale nadal mogą wpływać na podziały lub na stabilność w małych próbkach. Dla metod odległościowych i SVM skalowanie jest kluczowe: outliery w skali potrafią zdominować metrykę lub margines.
+
+Najczęściej spotykane „operacyjne” podejścia to:
+
+* **transformacja rozkładu** (np. $\log$, Box–Cox/Yeo–Johnson),
+* **winsoryzacja**: obcięcie do percentyli (np. 1%–99%),
+* **flaga odstających** jako dodatkowa cecha (model uczy się, że to przypadek nietypowy),
+* **usunięcie** tylko wtedy, gdy jest to błąd lub obserwacja spoza domeny problemu.
+
+Przykład winsoryzacji (percentyle) dla `income_eur`:
+
+```{python}
+p01, p99 = df["income_eur"].quantile([0.01, 0.99])
+df["income_eur_capped"] = df["income_eur"].clip(lower=p01, upper=p99)
+```
+
+### Braki danych i imputacja
+
+Braki danych (*missing values*) mogą wynikać z problemów pomiaru, integracji źródeł, błędów ETL, ale także z „logiki procesu” (np. klient nie ma ocen satysfakcji, bo nie wypełnił ankiety). W EDA kluczowe jest rozpoznanie: (1) gdzie braki występują, (2) ile ich jest, (3) czy są zależne od innych zmiennych (braki „systematyczne”). W ML brak danych wymaga decyzji, ponieważ większość klasycznych modeli nie obsługuje `NaN` wprost.
+
+Na początek warto policzyć braki:
+
+```{python}
+na_counts = df.isna().sum().sort_values(ascending=False)
+na_share = (df.isna().mean().sort_values(ascending=False) * 100).round(2)
+pd.DataFrame({"missing_count": na_counts, "missing_%": na_share})
+```
+
+#### Co robimy z brakami w EDA i ML
+
+W EDA braki traktujemy jako informację o jakości danych i procesie ich powstawania. Sprawdzamy, czy braki są losowe, czy dotyczą specyficznych segmentów (np. brak `income_eur` tylko dla jednego segmentu), oraz czy ich usunięcie nie zmieni populacji (*bias*). W ML trzeba z kolei zadbać o to, aby imputacja była wykonywana bez wycieku informacji: parametry imputacji wyznaczamy na zbiorze treningowym i stosujemy do walidacyjnego/testowego.
+
+Decyzje praktyczne obejmują: usuwanie cech/wierszy (gdy braków jest bardzo dużo), imputację prostą (średnia/mediana/moda), imputację warunkową (np. mediana w grupach), metody oparte na podobieństwie (k-NN), metody iteracyjne (MICE), a także dodawanie wskaźników braków (*missing indicators*), które pozwalają modelowi uczyć się samego faktu braku jako sygnału.
+
+#### Metody imputacji
+
+1. Imputacja stałą lub modą (kategorie i zmienne dyskretne)
+
+Dla zmiennych kategorycznych często stosuje się modę lub specjalną kategorię 'missing'. Dlaczego to bywa dobre? Ponieważ w wielu danych fakt, że czegoś brakuje, jest informacją samą w sobie. Na przykład: brak miasta może oznaczać, że klient nie podał danych adresowych, co może korelować z innymi cechami lub nawet z `churned`. Jeśli zamienimy brak na osobną kategorię "missing", model może się tego „nauczyć”.
+
+```{python}
+df["city"] = df["city"].fillna("missing")
+df["device_type"] = df["device_type"].fillna("missing")
+```
+
+2. Imputacja medianą/średnią (zmienne liczbowe)
+
+Jest to metoda szybka, ale ignoruje zależności między cechami:
+
+```{python}
+df["income_eur"] = df["income_eur"].fillna(df["income_eur"].median())
+```
+
+3. Imputacja grupowa (warunkowa)
+
+Bardzo użyteczna, gdy rozkłady różnią się w segmentach, np. dochody w segmentach `VIP` vs `Student`:
+
+```{python}
+df["income_eur"] = df["income_eur"].fillna(
+    df.groupby("segment")["income_eur"].transform("median")
+)
+```
+
+4.  k-NN Imputer (podobieństwo obserwacji)
+
+Wykorzystuje sąsiadów w przestrzeni cech do uzupełniania braków. Wymaga skalowania i pracy na liczbach.
+
+```{python}
+from sklearn.impute import KNNImputer
+
+num_features = ["age", "income_eur", "visits_last30", "avg_basket_eur", "returns_last90", "satisfaction_1_5"]
+imputer = KNNImputer(n_neighbors=5, weights="distance") # obserwacje imputujące będą ważone odległością
+
+df[num_features] = imputer.fit_transform(df[num_features])
+```
+
+5. *Iterative Imputer* (MICE – imputacja modelowa)
+
+Uzupełnia jedną zmienną na podstawie pozostałych (iteracyjnie), co lepiej zachowuje relacje w danych. Domyślną opcją `IterativeImputer` jest regresja liniowa z regularyzacją typu ridge w ujęciu bayesowskim (`sklearn.linear_model.BayesianRidge`). Można jednak wybrać inne techniki jako model uzupelniający 
+
+```{python}
+#| eval: false
+from sklearn.ensemble import RandomForestRegressor
+imp = IterativeImputer(estimator=RandomForestRegressor(n_estimators=200, random_state=42))
+```
+
+```{python}
+from sklearn.experimental import enable_iterative_imputer  # noqa: F401
+from sklearn.impute import IterativeImputer
+
+imp = IterativeImputer(random_state=42, max_iter=20)
+df[num_features] = imp.fit_transform(df[num_features])
+```
+
+6. Wskaźniki braków jako cechy
+
+Czasem sam fakt braku jest informacyjny (np. brak satysfakcji może korelować z churn). Można dodać flagi:
+
+```{python}
+# ponieważ wcześniej zmienna income_eur była zastępowana medianami to poniższy kod da same 0 dla income_missing. Podobnie dla zmiennej satisfaction_1_5
+df["income_missing"] = df["income_eur"].isna().astype(int)
+df["satisfaction_missing"] = df["satisfaction_1_5"].isna().astype(int)
+```
+
+W praktyce (szczególnie w ML) flagi braków często działają dobrze w połączeniu z imputacją, bo pozwalają modelowi rozróżnić „wartość prawdziwą” od „wartości wstawionej”.
+
+
+::: {.callout-warning}
+W modelowaniu nie imputujemy „ręcznie na całym df”, tylko budujemy potok, który dopasowuje imputery na treningu, a potem stosuje na walidacji/teście:
+
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+
+X = df.drop(columns=["churned"])
+y = df["churned"]
+
+# Uwaga: pandas może trzymać braki jako `pd.NA` (np. typy StringDtype/boolean).
+# scikit-learn oczekuje braków jako `np.nan` i potrafi się wysypać na `pd.NA`.
+X = X.replace({pd.NA: np.nan})
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+num_cols = ["age", "income_eur", "visits_last30", "avg_basket_eur", "returns_last90", "satisfaction_1_5"]
+cat_cols = ["city", "segment", "device_type", "has_promo", "notes"]
+
+# (opcjonalnie) upewniamy się, że kategorie są zwykłym `object`, a nie np. `string[python]` z `pd.NA`
+X_train[cat_cols] = X_train[cat_cols].astype("object")
+X_test[cat_cols] = X_test[cat_cols].astype("object")
+
+preprocess = ColumnTransformer(
+    transformers=[
+        ("num", Pipeline(steps=[
+            ("imputer", SimpleImputer(strategy="median"))
+        ]), num_cols),
+        ("cat", Pipeline(steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("onehot", OneHotEncoder(handle_unknown="ignore"))
+        ]), cat_cols),
+    ],
+    remainder="drop"
+)
+
+model = Pipeline(steps=[
+    ("prep", preprocess),
+    ("clf", LogisticRegression(max_iter=200))
+])
+
+model.fit(X_train, y_train)
+```
+
+To podejście jest spójne z „dobrą praktyką” w ML: wszystkie transformacje uczące się parametrów (imputacja, skalowanie, kodowanie) są częścią pipeline i nie „podglądają” testu.
+:::
+
+## EDA i preprocessing danych
+
+Ten rozdział porządkuje praktyczny przebieg pracy „od surowego pliku do macierzy cech gotowej dla modelu”. Najpierw wykonujemy EDA (ang. *exploratory data analysis*), aby zrozumieć dane (struktura, rozkłady, zależności, potencjalne problemy jakościowe), a dopiero potem przechodzimy do preprocessingu, który ma zapewnić poprawne działanie modeli i powtarzalność całego procesu. Kwestie braków danych i obserwacji odstających są tu jedynie sygnalizowane (szczegółowe strategie były w osobnych podrozdziałach).
+
+### Szybki „sanity check” po imporcie
+
+Po wczytaniu danych pierwszym krokiem jest szybka kontrola struktury: rozmiar zbioru, typy kolumn, podstawowe podsumowania i liczba braków. W tym momencie warto również ujednolicić nazwy kolumn (np. *snake_case*), aby dalszy kod był czytelny i odporny na błędy.
+
+```{python}
+df = pd.read_csv(
+    "data.csv",
+    na_values=["", "NA", "N/A", "null", "None"],
+    parse_dates=["signup_date", "last_purchase_date"],
+    encoding="utf-8"
+)
+
+df.shape
+df.info()
+df.head()
+```
+
+```{python}
+# szybki przegląd braków
+(df.isna().mean().sort_values(ascending=False) * 100).round(2)
+```
+
+Na tym etapie sprawdzamy też duplikaty oraz ewentualne naruszenia prostych reguł domenowych (np. ujemne wartości tam, gdzie nie powinny wystąpić). Jeśli widzimy ewidentne błędy, zazwyczaj oznaczamy je do późniejszej korekty, zamiast natychmiast usuwać dane „w ciemno”.
+
+```{python}
+df.duplicated().sum()
+```
+
+### EDA - rozkłady i struktura zmiennych
+
+EDA zaczynamy od uporządkowania typów zmiennych: rozdzielenia zmiennych liczbowych i kategorycznych oraz rozpoznania, które kolumny są zmiennymi docelowymi, identyfikatorami lub metadanymi (np. daty). W naszym `data.csv` naturalnie wyróżniają się liczby (np. `income_eur`, `avg_basket_eur`), kategorie (np. `segment`, `city`) i daty.
+
+```{python}
+num_cols = df.select_dtypes(include="number").columns.tolist()
+cat_cols = df.select_dtypes(include=["object", "string", "bool"]).columns.tolist()
+
+num_cols, cat_cols
+```
+
+W analizie rozkładów dla zmiennych liczbowych bardzo dobre są histogramy z nakładką gęstości oraz wykresy pudełkowe. Warto pamiętać, że część zmiennych może być skośna (np. dochody), więc czasem sensowne jest pokazanie wykresu w skali logarytmicznej.
+
+```{python}
+import matplotlib.pyplot as plt
+
+def univariate_view(series, title):
+    fig = plt.figure(figsize=(10, 4))
+    gs = fig.add_gridspec(1, 2, width_ratios=[3, 1])
+
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax1.hist(series.dropna(), bins=30)
+    ax1.set_title(f"Histogram: {title}")
+    ax1.set_xlabel(title)
+    ax1.set_ylabel("Liczność")
+
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax2.boxplot(series.dropna(), vert=True)
+    ax2.set_title("Boxplot")
+    ax2.set_xticks([])
+
+    plt.tight_layout()
+    plt.show()
+
+univariate_view(df["income_eur"], "income_eur")
+univariate_view(df["avg_basket_eur"], "avg_basket_eur")
+```
+
+Dla zmiennych kategorycznych kluczowe jest porównanie częstości. Prosty wykres słupkowy umożliwia identyfikację rzadkich kategorii oraz niespójności kodowania (np. różne wielkości liter, dodatkowe spacje).
+
+```{python}
+def top_categories(series, title, top=10):
+    counts = series.value_counts(dropna=False).head(top)
+    plt.figure(figsize=(10, 4))
+    plt.bar(counts.index.astype(str), counts.values)
+    plt.title(f"Top {top} kategorii: {title}")
+    plt.xticks(rotation=30, ha="right")
+    plt.ylabel("Liczność")
+    plt.tight_layout()
+    plt.show()
+
+top_categories(df["segment"], "segment")
+top_categories(df["device_type"], "device_type")
+top_categories(df["city"], "city", top=12)
+```
+
+### EDA - zależności między zmiennymi
+
+W celu odkrycia zależności pomiędzy cechami wykreślamy macierz korelacji.
+
+```{python}
+# macierz korelacji (numeryczne)
+corr = df[num_cols].corr(numeric_only=True)
+
+fig, ax = plt.subplots(figsize=(8, 6))
+im = ax.imshow(corr, aspect="auto")
+fig.colorbar(im, ax=ax)
+
+ax.set_xticks(range(len(corr.columns)))
+ax.set_xticklabels(corr.columns, rotation=30, ha="right")
+ax.set_yticks(range(len(corr.index)))
+ax.set_yticklabels(corr.index)
+ax.set_title("Macierz korelacji (numeryczne)")
+
+# wartości korelacji w komórkach
+for i in range(corr.shape[0]):
+    for j in range(corr.shape[1]):
+        val = corr.iloc[i, j]
+        color = "black" if abs(val) >= 0.5 else "white"
+        ax.text(j, i, f"{val:.2f}", ha="center", va="center", color=color, fontsize=8)
+
+plt.tight_layout()
+plt.show()
+```
+
+W kontekście klasyfikacji warto też zobaczyć, jak rozkłady cech różnią się między klasami (tu: `churned`). Bardzo czytelny jest wykres pudełkowy/wiolinowy „cecha vs klasa” albo porównanie histogramów. Poniżej przykład boxplotu cechy w podziale na `churned`.
+
+```{python}
+def box_by_target(df, feature, target="churned"):
+    groups = [df.loc[df[target] == t, feature].dropna() for t in sorted(df[target].dropna().unique())]
+    plt.figure(figsize=(7, 4))
+    plt.boxplot(groups, labels=[f"{target}={t}" for t in sorted(df[target].dropna().unique())])
+    plt.title(f"{feature} względem {target}")
+    plt.ylabel(feature)
+    plt.tight_layout()
+    plt.show()
+
+box_by_target(df, "avg_basket_eur")
+box_by_target(df, "visits_last30")
+```
+
+Dla zmiennych kategorycznych przydatne są wykresy udziałów klas w kategoriach (np. wskaźnik *churn* w segmentach). W prostym wariancie liczymy średnią `churned` w grupach (to jest odsetek „1” w danej kategorii) i wykreślamy słupki.
+
+```{python}
+rate = df.groupby("segment")["churned"].mean().sort_values(ascending=False)
+
+plt.figure(figsize=(7, 4))
+plt.bar(rate.index.astype(str), rate.values)
+plt.title("Średni churn w segmentach")
+plt.ylabel("P(churned=1)")
+plt.xticks(rotation=20, ha="right")
+plt.tight_layout()
+plt.show()
+```
+
+Jeżeli w danych występują daty, dobrze jest wykonać podstawowe przekroje czasowe: liczba rejestracji w czasie, średni koszyk w czasie, itp. Pozwala to zidentyfikować sezonowość, zmiany procesu zbierania danych, kampanie marketingowe.
+
+```{python}
+tmp = df.copy()
+tmp["signup_month"] = tmp["signup_date"].dt.to_period("M").dt.to_timestamp()
+
+counts = tmp.groupby("signup_month")["customer_id"].count()
+
+plt.figure(figsize=(10, 4))
+plt.plot(counts.index, counts.values)
+plt.title("Liczba rejestracji w czasie")
+plt.ylabel("Liczność")
+plt.xlabel("Miesiąc")
+plt.tight_layout()
+plt.show()
+```
+
+Na tym etapie jedynie notujemy, czy widać: braki danych (np. całe grupy z brakami), wartości podejrzanie ekstremalne lub naruszenia domeny. Szczegółowe postępowanie (imputacja, outliery) realizujemy według strategii opisanych w dedykowanych podrozdziałach.
+
+#### Narzędzia i biblioteki
+
+W praktycznej EDA najczęściej bazuje się na zestawie narzędzi „rdzeniowych”: `pandas` służy do przeglądu struktury danych, typów, braków, agregacji i podstawowych statystyk, natomiast `matplotlib` i `seaborn` odpowiadają za wizualizacje. `matplotlib` daje pełną kontrolę nad wykresem i jest dobry do precyzyjnych, publikacyjnych rysunków, a `seaborn` pozwala szybciej tworzyć estetyczne wykresy statystyczne typowe dla EDA (rozkłady, zależności, porównania grup). Jeżeli zależy Ci na interaktywności (zoom, podgląd wartości, selekcja), warto sięgnąć po `plotly` albo `altair`, które dobrze sprawdzają się w notebookach i podczas zajęć, bo ułatwiają „badanie danych w locie”.
+
+Do szybkiej diagnostyki całego zbioru danych, bez ręcznego pisania wielu wykresów i tabel, przydatne są biblioteki raportujące: `ydata-profiling` (dawniej `pandas-profiling`) oraz `sweetviz`. Generują one raporty HTML z podsumowaniami rozkładów, braków, korelacji i potencjalnych problemów jakościowych, a `sweetviz` dodatkowo dobrze nadaje się do porównywania zbiorów (np. train vs test) lub analiz w odniesieniu do zmiennej docelowej. Z kolei `dtale` daje interfejs „jak arkusz kalkulacyjny”, umożliwiając interaktywne filtrowanie i szybkie sprawdzanie danych w przeglądarce, co bywa bardzo wygodne w dydaktyce i debugowaniu.
+
+Jeżeli chcemy rozszerzyć EDA o wątki jakości danych i zależności specyficznych dla danych mieszanych, pomocne są narzędzia wyspecjalizowane: `missingno` służy do wizualizacji wzorców braków (gdzie i jak współwystępują), `great_expectations` pozwala formalizować reguły jakości danych i testować je w sposób powtarzalny, a `phik` bywa użyteczne do badania zależności również wtedy, gdy zmienne są kategoryczne lub relacje są nieliniowe. W praktyce dobry „stos” do Twojego kursu to: `pandas` + (`matplotlib`/`seaborn`) jako fundament, `missingno` do braków oraz `ydata-profiling` lub `sweetviz` do szybkiego raportu całości.
+
+### Preprocessing - przygotowanie macierzy cech do modeli
+
+Po EDA przechodzimy do preprocessingu, którego cel jest stricte „modelowy”: wytworzyć wejście w formacie akceptowalnym przez algorytmy oraz zapewnić powtarzalność transformacji. Kluczowa zasada brzmi: transformacje, które uczą się parametrów (`imputer`, `scaler`, `encoder`), dopasowujemy na zbiorze treningowym i stosujemy do walidacji/testu – najlepiej w pipeline.
+
+#### Podział na zbiory treningowy i testowy
+
+Podział na train/test wykonujemy przed dopasowaniem transformacji. Dla klasyfikacji zwykle stosujemy stratyfikację.
+
+```{python}
+X = df.drop(columns=["churned"])
+y = df["churned"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+```
+
+Jeżeli dodatkowo używamy walidacji, możemy wydzielić `X_val` z `X_train` analogicznie albo korzystać z *cross-validation*.
+
+#### Kodowanie kategorii
+
+Większość klasycznych modeli (regresja logistyczna, SVM, LDA/QDA) wymaga liczb, więc zmienne kategoryczne kodujemy. Standardem jest *one-hot encoding* z obsługą nieznanych kategorii w teście.
+
+#### Skalowanie zmiennych liczbowych
+
+Skalowanie jest szczególnie ważne dla metod opartych na odległości i marginesie (k-NN, SVM) oraz dla modeli liniowych przy regularyzacji. Dla drzew i metod zespołowych zwykle nie jest konieczne, ale utrzymywanie jednolitego pipeline’u ułatwia porównania.
+
+#### Pipeline preprocessingu
+
+Poniżej wzorcowa konstrukcja preprocessingu: dla liczb imputacja (tu jako placeholder) + skalowanie; dla kategorii imputacja (placeholder) + one-hot encoding. Strategię imputacji i obsługę outlierów możesz później łatwo podmienić.
+
+```{python}
+from sklearn.preprocessing import StandardScaler
+
+num_cols = ["age", "income_eur", "visits_last30", "avg_basket_eur", "returns_last90", "satisfaction_1_5"]
+cat_cols = ["city", "segment", "device_type", "has_promo", "notes"]
+
+numeric_pipe = Pipeline(steps=[
+    ("imputer", SimpleImputer(strategy="median")),   # szczegóły w rozdziale o imputacji
+    ("scaler", StandardScaler())
+])
+
+categorical_pipe = Pipeline(steps=[
+    ("imputer", SimpleImputer(strategy="most_frequent")),
+    ("onehot", OneHotEncoder(handle_unknown="ignore"))
+])
+
+preprocess = ColumnTransformer(
+    transformers=[
+        ("num", numeric_pipe, num_cols),
+        ("cat", categorical_pipe, cat_cols),
+    ],
+    remainder="drop"
+)
+```
+
+Następnie łączymy preprocessing z modelem w jeden pipeline. Dzięki temu cały proces jest powtarzalny i bezpieczny względem testu:
+
+```{python}
+clf = Pipeline(steps=[
+    ("prep", preprocess),
+    ("model", LogisticRegression(max_iter=300))
+])
+
+clf.fit(X_train, y_train)
+```
+
+## Inżynieria cech
+
+Inżynieria cech (*feature engineering*) to etap, w którym surowe dane przekształcamy w reprezentację bardziej użyteczną dla modeli uczenia maszynowego. Jej celem nie jest „upiększanie” danych, lecz zwiększenie ilości informacji, jaką model może efektywnie wykorzystać, oraz dopasowanie formatu cech do wymagań algorytmów. W praktyce inżynieria cech obejmuje zarówno proste transformacje (np. logarytmowanie zmiennej skośnej), jak i budowę cech pochodnych, interakcji, agregacji czy cech czasowych. W tym kursie inżynieria cech jest szczególnie istotna, ponieważ omawiane modele klasyczne (regresja logistyczna, LDA/QDA, SVM, k-NN) są wrażliwe na sposób reprezentacji danych i często korzystają bardziej z dobrze zaprojektowanych cech niż z samej „mocy” algorytmu.
+
+### Ujednolicanie i czyszczenie kategorii jako element inżynierii cech
+
+Zanim zakodujemy kategorie, warto je znormalizować, ponieważ w danych rzeczywistych często występują spacje, różne wielkości liter oraz warianty zapisu tej samej kategorii. To nie jest „czyszczenie kosmetyczne” – bez tego model będzie traktował np. `Mobile` i `mobile` jako różne wartości, co rozbije informację na wiele sztucznych kategorii.
+
+```{python}
+# ujednolicenie prostych kolumn kategorycznych
+for col in ["city", "segment", "device_type", "notes"]:
+    df[col] = (df[col]
+               .astype("string")
+               .str.strip()
+               .str.lower())
+
+# przykładowo: ujednolicenie nazw urządzeń
+df["device_type"] = df["device_type"].replace({"mobile": "mobile", "desktop": "desktop", "tablet": "tablet"})
+```
+
+W wielu projektach opłaca się również „skleić” rzadkie kategorie do wspólnej kategorii `other`, aby ograniczyć wymiar po kodowaniu one-hot.
+
+```{python}
+top_cities = df["city"].value_counts().head(6).index
+df["city_reduced"] = df["city"].where(df["city"].isin(top_cities), other="other")
+```
+
+### Cechy czasowe z dat
+
+Daty rzadko trafiają do modelu w postaci surowej. Zwykle tworzy się z nich cechy o sensie behawioralnym: czas od zdarzenia, miesiąc, dzień tygodnia, czy wskaźniki sezonowe. Dla danych klient–zakupy naturalne są cechy typu *tenure* oraz *recency*.
+
+Niech „datą odniesienia” będzie np. maksymalna obserwowana data zakupu (w realnym projekcie byłby to moment *as-of*).
+
+```{python}
+import pandas as pd
+
+as_of = df["last_purchase_date"].max()
+
+df["tenure_days"] = (as_of - df["signup_date"]).dt.days
+df["recency_days"] = (as_of - df["last_purchase_date"]).dt.days
+
+# sezonowość i kalendarz
+df["signup_month"] = df["signup_date"].dt.month
+df["signup_dow"] = df["signup_date"].dt.dayofweek  # 0=pon, 6=niedz
+```
+
+Takie cechy są zwykle dużo bardziej informacyjne dla klasyfikacji churn niż same daty, ponieważ mają bezpośredni związek z aktywnością klienta.
+
+### Transformacje rozkładów
+
+W danych ekonomicznych i behawioralnych (np. `income_eur`, `avg_basket_eur`) rozkłady są często prawoskośne. Dla modeli liniowych oraz metod odległościowych zyskujemy, gdy przekształcimy skalę tak, aby relacje były bardziej „liniowe” i mniej zdominowane przez ogon rozkładu.
+
+Standardowa transformacja logarytmiczna (z zabezpieczeniem na zera) to:
+
+$$
+x' = \log(1 + x).
+$$
+
+```{python}
+import numpy as np
+
+df["log_income"] = np.log1p(df["income_eur"])
+df["log_avg_basket"] = np.log1p(df["avg_basket_eur"])
+df["log_visits"] = np.log1p(df["visits_last30"])
+```
+
+W praktyce często lepsze jest utrzymywanie zarówno cechy pierwotnej, jak i przekształconej – modele drzewiaste zwykle skorzystają z obu, a modele liniowe częściej z wersji log.
+
+### Cechy intensywności i „normalizacja przez czas” (*rate features*)
+
+Typowym zabiegiem jest tworzenie cech typu „na jednostkę czasu”. Jeśli klient jest w systemie krótko, jego liczby bezwzględne mogą być nieporównywalne do klienta z długim stażem. Stąd tworzy się wskaźniki intensywności:
+
+```{python}
+# zabezpieczenie przed dzieleniem przez 0
+df["tenure_days_safe"] = df["tenure_days"].clip(lower=1)
+
+df["visits_per_day"] = df["visits_last30"] / 30.0
+df["returns_rate_90"] = df["returns_last90"] / 90.0
+df["visits_per_tenure"] = df["visits_last30"] / df["tenure_days_safe"]
+```
+
+Te cechy są szczególnie wartościowe w klasycznych modelach liniowych, bo stabilizują skalę i często lepiej korelują z decyzją niż wartości surowe.
+
+### Interakcje i cechy „biznesowe” z sensowną interpretacją
+
+Interakcje to bardzo ważna klasa cech w klasycznych modelach. Jeżeli nie używasz modeli, które „same” łatwo uczą się złożonych interakcji (np. boosting), to możesz jawnie dodać kilka logicznych interakcji. Przykładowo: wartość koszyka może działać inaczej dla segmentu VIP, a liczba wizyt może inaczej wpływać na churn, gdy satysfakcja jest niska.
+
+```{python}
+# przykładowe interakcje liczbowe
+df["basket_x_visits"] = df["avg_basket_eur"] * df["visits_last30"]
+df["income_x_visits"] = df["income_eur"] * df["visits_last30"]
+```
+
+Możemy również budować interakcje „warunkowe”, np. flaga „niska satysfakcja” i interakcja z wizytami:
+
+```{python}
+df["low_satisfaction"] = (df["satisfaction_1_5"] <= 2).astype(int)
+df["visits_if_low_satisfaction"] = df["visits_last30"] * df["low_satisfaction"]
+```
+
+To jest szczególnie dydaktyczne, bo pokazuje, jak złożone hipotezy można przenieść do prostego modelu.
+
+### Grupowanie zmiennych ciągłych do przedziałów (*binning*)
+
+Czasem warto przekształcić zmienną ciągłą do kategorii, zwłaszcza gdy zależność jest progowa. Przykładowo: `recency_days` może mieć silny efekt dopiero po przekroczeniu pewnego progu. Binning bywa użyteczny też w analizie dyskryminacyjnej i prostych modelach interpretowalnych.
+
+```{python}
+df["recency_bin"] = pd.cut(
+    df["recency_days"],
+    bins=[-1, 7, 30, 90, 180, 365, 10_000],
+    labels=["<=7", "8-30", "31-90", "91-180", "181-365", ">365"]
+)
+```
+
+### Kodowanie kategorii pod modele
+
+Najbardziej standardowym kodowaniem jest *one-hot encoding*. Możemy je zrobić w `pandas`, ale w modelowaniu lepszy jest pipeline w `sklearn`. Dla celów EDA i demonstracji:
+
+```{python}
+X_cat = pd.get_dummies(df[["segment", "device_type", "city_reduced"]], dummy_na=True)
+X_cat.head()
+```
+
+### Składanie cech do macierzy modelowej
+
+Po inżynierii cech zwykle wybieramy zestaw kolumn do modelu. Na potrzeby naszych klasycznych algorytmów rozsądne jest przygotowanie „bazowego” zestawu cech liczbowych oraz zakodowanych kategorii.
+
+```{python}
+feature_cols_num = [
+    "tenure_days", "recency_days",
+    "income_eur", "avg_basket_eur", "visits_last30", "returns_last90",
+    "log_income", "log_avg_basket", "log_visits",
+    "visits_per_day", "returns_rate_90",
+    "low_satisfaction", "basket_x_visits"
+]
+
+feature_cols_cat = ["segment", "device_type", "city_reduced", "recency_bin"]
+
+X_num = df[feature_cols_num]
+X_cat = pd.get_dummies(df[feature_cols_cat], dummy_na=True)
+
+X = pd.concat([X_num, X_cat], axis=1)
+y = df["churned"]
+```
+
+::: {.callout-note}
+Przedstawione powyżej przykłady inżynierii cech mają charakter ilustracyjny i służą pokazaniu typowych mechanizmów oraz kierunków pracy z danymi. W kontekście konkretnego problemu analitycznego część tych kroków może zostać zmodyfikowana, uproszczona lub całkowicie pominięta, a inne – niewystępujące w przykładach – mogą okazać się kluczowe. Inżynieria cech nie jest zestawem sztywnych reguł, lecz procesem zależnym od charakteru danych, celu analizy oraz stosowanego modelu.
+
+W praktyce najlepszym podejściem jest realizowanie inżynierii cech w sposób systematyczny i powtarzalny, z wykorzystaniem *pipeline’ów*. Pozwala to połączyć imputację, skalowanie, kodowanie oraz konstrukcję cech w jeden spójny proces, który jest dopasowywany wyłącznie na zbiorze treningowym i następnie stosowany do walidacji oraz testu. Takie podejście minimalizuje ryzyko wycieku informacji, ułatwia porównywanie modeli oraz sprawia, że eksperymenty analityczne są w pełni reprodukowalne.
+:::

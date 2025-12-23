@@ -1,0 +1,9 @@
+---
+title: "k-NN"
+---
+
+-   k-NN to nieparametryczny algorytm, ktory klasyfikuje obserwacje na podstawie wiekszosci klasy wśród k najblizszych sasiadow.
+-   Algorytm przechowuje dane treningowe i wykonuje obliczenia w momencie predykcji.
+-   Wybor metryki odleglosci (Euclidesowa, Manhattan) i liczby sasiadow wplywa na dokladnosc i zlozonosc obliczeniowa.
+-   Wady: wysoki koszt obliczen i wrazliwosc na skale cech.
+-   Zalety: prostota i brak zalozen o rozkladzie danych.

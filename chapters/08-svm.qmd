@@ -1,0 +1,10 @@
+---
+title: "Metoda SVM"
+---
+
+- Support Vector Machines (SVM) szukaja hiperpłaszczyzny maksymalizujacej margines miedzy klasami.
+- Kluczowe pojecia: hiperpłaszczyzna, wektory nosne, margines i jadra.
+- Twardy margines wymaga braku bledow klasyfikacji, miekkim marginesem steruje parametr regularyzacji.
+- Typy jader: liniowe, wielomianowe, RBF.
+- Zalety: skutecznosc w danych wysokowymiarowych i przy malych probach.
+- Wady: koniecznosc doboru parametrow i wrazliwosc na skale cech.

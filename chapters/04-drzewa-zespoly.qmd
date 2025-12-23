@@ -1,0 +1,23 @@
+---
+title: "Drzewa decyzyjne i zespoly modeli"
+---
+
+## Podstawowe drzewa decyzyjne
+
+- Drzewo decyzyjne dzieli przestrzen cech rekurencyjnie wedlug kryterium czystosci wezla (np. entropia lub indeks Gini).
+- Problem przeuczenia i techniki przycinania.
+- Algorytmy: ID3, C4.5, CART.
+
+## Bagging i lasy losowe
+
+- Bagging (bootstrap aggregating) tworzy wiele modeli na probkach losowanych z powtorzeniem i laczy ich wyniki, zmniejszajac wariancje.
+- Las losowy (random forest) to bagging z dodatkowym losowaniem cech przy kazdym podziale.
+- Parametry: liczba drzew, liczba losowanych cech, ocena waznosci cech.
+
+## Boosting
+
+- Boosting to sekwencyjne tworzenie modeli, gdzie kazdy kolejny koncentruje sie na poprawie bledow poprzednikow.
+- AdaBoost uzywa wag przykladów do korekty bledow.
+- Gradient Boosting minimalizuje funkcje bledu w oparciu o gradient; XGBoost to wydajna implementacja z mozliwoscia rownoleglosci.
+- CatBoost obsluguje natywnie zmienne kategoryczne i redukuje przeuczenie.
+- Roznice miedzy baggingiem a boostingiem oraz ryzyko nadmiernego dopasowania.

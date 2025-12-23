@@ -1,0 +1,351 @@
+customer_id,signup_date,last_purchase_date,age,income_eur,city,segment,device_type,visits_last30,avg_basket_eur,returns_last90,has_promo,satisfaction_1_5,churned,notes
+100000,2022-04-08,2022-10-19,,72955.0,Warszawa,B2B,desktop,8.0,39.88,1.0,False,4.0,0,klient powracający
+100001,2024-04-27,2024-05-13,52.0,24863.0,Kraków,B2C,mobile,12.0,67.8,1.0,False,3.0,0,brak uwag
+100002,2023-12-18,2024-04-05,,25333.0,Wrocław,B2C,desktop,6.0,27.04,1.0,True,4.0,0,reklamacja
+100003,2023-04-26,2023-10-01,16.0,,Łódź,B2B,mobile,6.0,149.03,1.0,False,3.0,1,brak uwag
+100004,2023-04-20,2024-04-07,42.0,27954.0,Warszawa,B2C,desktop,7.0,49.73,1.0,True,3.0,0,NA
+100005,2024-07-29,2025-07-26,39.0,54021.0,Katowice,B2C,mobile,5.0,398.8,-1.0,True,4.0,1,prośba o fakturę
+100006,2022-04-05,2022-05-30,43.0,9274.0,Wrocław,Student,desktop,10.0,53.19,0.0,False,2.0,1,kontakt mailowy
+100007,2024-02-03,2024-12-24,57.0,20309.0,Kraków,B2C,desktop,5.0,97.75,0.0,False,5.0,0,prośba o fakturę
+100008,2022-08-09,2022-09-11,16.0,20809.0,Katowice,B2C,mobile,11.0,60.0,0.0,False,4.0,1,NA
+100009,2022-04-14,2023-01-12,31.0,8931.0,Warszawa,B2B,mobile,4.0,20.4,1.0,True,5.0,1,kontakt mailowy
+100010,2023-07-31,2024-06-03,45.0,18835.0,Kraków,B2C,desktop,1.0,78.98,0.0,False,3.0,0,klient powracający
+100011,2024-12-04,2025-10-25,19.0,19344.0,Lublin,Student,mobile,5.0,36.03,1.0,False,3.0,0,prośba o fakturę
+100012,2024-03-16,2024-06-05,56.0,28649.0,,B2C,mobile,6.0,44.07,0.0,False,,0,zmiana adresu
+100013,2024-04-13,2025-03-05,42.0,59019.0,Gdańsk,Student,mobile,7.0,23.62,3.0,False,4.0,0,prośba o fakturę
+100014,2024-02-25,2024-04-07,48.0,27965.0,Łódź,Student,tablet,3.0,53.22,1.0,False,4.0,0,reklamacja
+100015,2024-05-10,2024-11-15,31.0,,Łódź,B2C,mobile,5.0,31.33,3.0,False,3.0,1,brak uwag
+100016,2023-07-16,2024-01-03,48.0,,Poznań,B2C,mobile,8.0,43.94,0.0,False,3.0,1,zmiana adresu
+100017,2022-05-21,2022-09-13,51.0,,Warszawa,B2C,tablet,6.0,36.96,1.0,False,3.0,0,klient powracający
+100018,2024-07-08,2024-07-16,,18708.0,Poznań,B2C,mobile,4.0,99.88,2.0,False,,0,
+100019,2023-05-09,2024-02-14,41.0,19393.0,Wrocław,B2C,mobile,8.0,102.48,0.0,False,3.0,0,zmiana adresu
+100020,2023-07-02,2023-11-01,41.0,43508.0,Katowice,VIP,mobile,1.0,42.89,0.0,True,3.0,0,problem z płatnością
+100021,2023-02-11,2023-10-10,28.0,28329.0,Poznań,B2C,mobile,8.0,43.23,0.0,True,5.0,1,prośba o fakturę
+100022,2022-07-19,2022-12-15,36.0,45689.0,Warszawa,Student,mobile,5.0,35.5,0.0,False,4.0,0,brak uwag
+100023,2024-10-11,2025-02-24,36.0,31761.0,Lublin,B2C,desktop,3.0,69.09,0.0,False,5.0,0,zmiana adresu
+100024,2024-05-05,2025-03-24,43.0,47071.0,Wrocław,VIP,mobile,4.0,36.22,2.0,False,3.0,1,duży koszyk
+100025,2023-12-07,2024-01-10,,18110.0,Wrocław,B2C,desktop,6.0,34.75,0.0,True,4.0,0,reklamacja
+100026,2023-03-17,2023-12-10,25.0,31788.0,Lublin,B2C,mobile,6.0,65.24,3.0,False,4.0,1,duży koszyk
+100027,2024-06-19,2025-03-18,36.0,28499.0,Katowice,B2C,mobile,7.0,32.96,1.0,False,2.0,0,duży koszyk
+100028,2023-08-21,2024-01-06,56.0,16395.0,Katowice,B2C,mobile,8.0,,1.0,False,5.0,0,kontakt mailowy
+100029,2023-05-01,2023-08-04,29.0,13542.0,Łódź,Student,mobile,5.0,20.62,0.0,True,4.0,0,zmiana adresu
+100030,2023-05-09,2023-05-10,28.0,46660.0,Lublin,B2C,desktop,9.0,57.66,0.0,False,4.0,0,problem z płatnością
+100031,2022-09-06,2023-08-13,40.0,26383.0,Warszawa,B2C,mobile,4.0,100.59,0.0,True,3.0,0,prośba o fakturę
+100032,2022-04-11,2023-03-22,48.0,18238.0,Poznań,B2C,mobile,6.0,58.1,1.0,False,4.0,1,NA
+100033,2023-08-31,2023-11-26,38.0,30351.0,Wrocław,B2B,mobile,9.0,81.08,1.0,True,3.0,0,klient powracający
+100034,2024-08-30,2024-09-10,54.0,59510.0,Gdańsk,B2C,desktop,3.0,28.7,0.0,True,5.0,0,problem z płatnością
+100035,2022-03-11,2022-04-24,48.0,,Kraków,B2C,mobile,4.0,46.71,1.0,True,4.0,1,duży koszyk
+100036,2024-07-28,2024-08-21,48.0,,Kraków,B2C,desktop,6.0,27.47,1.0,False,4.0,0,duży koszyk
+100037,2024-06-25,2025-04-24,45.0,19262.0,Gdańsk,B2C,mobile,10.0,37.91,1.0,False,5.0,0,duży koszyk
+100038,2022-10-31,2023-09-21,66.0,,Lublin,B2C,mobile,8.0,59.45,1.0,False,5.0,0,duży koszyk
+100039,2023-11-23,2024-01-17,36.0,485953.0,Łódź,VIP,desktop,5.0,43.97,2.0,False,4.0,0,kontakt mailowy
+100040,2022-06-30,2023-03-29,16.0,,Wrocław,B2C,mobile,7.0,22.24,1.0,False,2.0,0,brak uwag
+100041,2024-04-10,2024-06-14,57.0,17093.0,Gdańsk,B2B,mobile,4.0,23.24,1.0,False,3.0,0,kontakt mailowy
+100042,2024-02-07,2024-06-20,33.0,17288.0,Poznań,B2C,tablet,6.0,22.56,0.0,False,3.0,1,kontakt mailowy
+100043,2023-01-24,2023-08-30,120.0,40937.0,Kraków,B2C,Mobile,5.0,52.4,1.0,False,,0,problem z płatnością
+100044,2022-03-16,2022-12-03,54.0,33042.0,POZNAŃ,B2C,mobile,7.0,106.32,0.0,False,4.0,1,zmiana adresu
+100045,2024-11-28,2025-10-13,19.0,,Łódź,B2C,mobile,5.0,77.54,0.0,False,2.0,1,prośba o fakturę
+100046,2023-05-04,2023-05-20,23.0,,Kraków,B2C,mobile,7.0,17.89,0.0,False,4.0,0,brak uwag
+100047,2024-09-04,2024-11-14,19.0,37290.0,Poznań,B2C,desktop,7.0,79.61,0.0,True,2.0,0,problem z płatnością
+100048,2024-01-13,2024-04-24,28.0,34907.0,Łódź,B2C,mobile,11.0,64.01,1.0,False,4.0,0,reklamacja
+100049,2024-05-02,2024-08-23,43.0,49083.0,Poznań,VIP,tablet,3.0,20.95,1.0,True,2.0,1,duży koszyk
+100050,2024-04-12,2025-04-11,44.0,49879.0,Wrocław,B2C,desktop,5.0,36.64,0.0,True,,0,brak uwag
+100051,2022-08-02,2023-05-12,41.0,13129.0,Poznań,B2C,tablet,7.0,68.76,1.0,False,4.0,0,reklamacja
+100052,2023-02-03,2023-05-30,21.0,9297.0,Katowice,B2C,desktop,2.0,53.8,0.0,False,5.0,1,brak uwag
+100053,2023-05-27,2024-05-15,16.0,55517.0,Kraków,B2C,tablet,10.0,23.3,3.0,False,4.0,0,reklamacja
+100054,2023-06-30,2023-12-29,39.0,61497.0,,B2B,mobile,7.0,55.29,3.0,True,3.0,1,klient powracający
+100055,2022-02-17,2022-08-18,32.0,146032.0,Łódź,B2C,mobile,7.0,16.05,0.0,False,4.0,0,prośba o fakturę
+100056,2023-08-22,2024-01-27,,11506.0,Wrocław,B2B,mobile,7.0,37.99,0.0,False,2.0,0,prośba o fakturę
+100057,2022-06-18,2022-08-09,46.0,33791.0,Gdańsk,B2C,desktop,4.0,70.09,0.0,False,3.0,0,reklamacja
+100058,2024-03-24,2025-02-28,40.0,,Lublin,B2C,,5.0,42.35,1.0,False,4.0,0,reklamacja
+100059,2024-01-18,2024-01-23,47.0,86006.0,Wrocław,VIP,,12.0,33.55,0.0,True,2.0,0,problem z płatnością
+100060,2024-10-07,2024-12-09,41.0,42508.0,Poznań,B2C,mobile,7.0,62.67,0.0,False,4.0,0,klient powracający
+100061,2024-03-26,2024-06-17,44.0,26083.0,Kraków,Student,desktop,6.0,65.12,1.0,False,3.0,0,problem z płatnością
+100062,2023-02-06,2023-05-18,30.0,19580.0,Lublin,B2C,mobile,7.0,75.73,0.0,False,4.0,1,problem z płatnością
+100063,2024-11-25,2025-01-12,36.0,32202.0,Poznań,VIP,tablet,4.0,62.25,0.0,False,3.0,1,prośba o fakturę
+100064,2023-03-26,2023-04-01,40.0,27144.0,Katowice,B2C,mobile,8.0,68.33,1.0,False,4.0,0,brak uwag
+100065,2022-12-23,2023-08-27,48.0,18310.0,Poznań,B2C,mobile,5.0,58.41,1.0,False,4.0,1,problem z płatnością
+100066,2024-09-18,2025-09-06,33.0,98746.0,Wrocław, Student ,desktop,5.0,,0.0,False,5.0,1,duży koszyk
+100067,2023-02-10,2023-03-26,44.0,85420.0,Wrocław,B2C,desktop,13.0,43.73,0.0,True,4.0,1,zmiana adresu
+100068,2022-03-25,2022-07-11,35.0,59774.0,Łódź,B2C,desktop,3.0,37.75,0.0,True,3.0,0,brak uwag
+100069,2023-05-30,2023-11-30,,19284.0,Katowice,VIP,tablet,10.0,,0.0,False,3.0,0,problem z płatnością
+100070,2024-05-21,2025-04-24,48.0,51213.0,Kraków,B2C,mobile,7.0,27.32,1.0,False,2.0,0,klient powracający
+100071,2022-07-27,2023-04-06,16.0,45492.0,Katowice,B2B,desktop,5.0,36.99,0.0,False,4.0,0,NA
+100072,2023-05-22,2024-02-25,22.0,40819.0,,B2B,mobile,5.0,46.82,0.0,False,4.0,0,kontakt mailowy
+100073,2022-05-23,2022-12-21,20.0,63628.0,Warszawa,Student,,7.0,80.32,1.0,False,5.0,0,problem z płatnością
+100074,2024-01-22,2024-06-22,16.0,45385.0,Warszawa,Student,mobile,6.0,41.22,0.0,False,3.0,0,reklamacja
+100075,2023-06-05,2023-08-16,30.0,48074.0,Łódź,B2C,mobile,4.0,65.97,0.0,False,3.0,0,problem z płatnością
+100076,2022-12-28,2023-11-08,47.0,45424.0,Katowice,B2C,mobile,5.0,68.26,0.0,False,3.0,0,problem z płatnością
+100077,2022-09-06,2023-06-26,35.0,38597.0,Gdańsk,B2C,desktop,8.0,37.85,4.0,False,4.0,0,reklamacja
+100078,2023-09-11,2023-09-20,40.0,11998.0,Łódź,B2B,mobile,6.0,54.89,0.0,False,4.0,0,brak uwag
+100079,2024-01-04,2024-09-21,51.0,33506.0,Lublin,Student,tablet,7.0,37.64,0.0,False,4.0,0,zmiana adresu
+100080,2024-10-26,2024-11-25,54.0,23567.0,Wrocław,B2C,mobile,6.0,76.14,0.0,False,5.0,1,prośba o fakturę
+100081,2023-04-24,2024-01-18,37.0,15829.0,Kraków,B2C,mobile,4.0,55.91,0.0,False,3.0,0,duży koszyk
+100082,2022-06-25,2023-04-22,54.0,80700.0,Lublin,B2C,desktop,6.0,24.58,0.0,False,5.0,1,reklamacja
+100083,2024-06-30,2024-08-16,39.0,82821.0,,B2C,mobile,12.0,,1.0,True,4.0,1,kontakt mailowy
+100084,2023-11-21,2024-04-27,28.0,67580.0,Gdańsk,Student,mobile,5.0,88.17,0.0,False,4.0,0,
+100085,2024-02-06,2024-03-22,31.0,36822.0,Gdańsk,B2C,desktop,12.0,38.71,1.0,False,,0,problem z płatnością
+100086,2022-04-17,2022-11-10,20.0,67261.0,Poznań,B2B,mobile,7.0,51.37,1.0,True,5.0,0,zmiana adresu
+100087,2022-12-09,2023-11-12,27.0,32213.0,Wrocław,Student,mobile,9.0,53.69,1.0,False,3.0,0,klient powracający
+100088,2024-04-20,2024-05-19,34.0,35776.0,Łódź,VIP,desktop,4.0,26.34,1.0,False,4.0,0,duży koszyk
+100089,2024-06-30,2024-11-22,48.0,,Łódź,B2C,mobile,5.0,52.85,0.0,False,3.0,0,duży koszyk
+100090,2023-04-22,2024-04-11,59.0,39809.0,Kraków,VIP,desktop,8.0,22.43,1.0,False,5.0,0,duży koszyk
+100091,2024-05-31,2024-09-17,21.0,,Gdańsk,B2B,desktop,5.0,31.69,0.0,True,4.0,0,prośba o fakturę
+100092,2024-07-10,2024-08-27,43.0,15631.0,Warszawa,Student,Mobile,8.0,68.15,1.0,True,3.0,0,brak uwag
+100093,2023-03-01,2023-08-26,26.0,31111.0,Kraków,B2C,mobile,6.0,49.31,-1.0,False,,0,zmiana adresu
+100094,2024-09-10,2025-03-14,44.0,490032.0,Lublin,B2C,mobile,2.0,36.62,0.0,False,4.0,0,duży koszyk
+100095,2022-11-12,2023-07-11,36.0,86004.0,Poznań,B2B,desktop,6.0,51.35,1.0,False,3.0,0,klient powracający
+100096,2022-09-20,2023-01-12,16.0,52329.0,Poznań,B2C,mobile,8.0,40.88,1.0,False,4.0,0,problem z płatnością
+100097,2024-01-18,2024-12-31,49.0,32202.0,Lublin,B2C,tablet,5.0,42.24,0.0,False,4.0,0,zmiana adresu
+100098,2023-11-29,2024-06-06,31.0,36692.0,Łódź,B2C,mobile,5.0,56.44,0.0,True,,0,zmiana adresu
+100099,2022-06-03,2022-09-15,32.0,32788.0,Katowice,B2C,desktop,8.0,30.28,3.0,False,4.0,0,brak uwag
+100100,2024-06-30,2025-06-15,25.0,28621.0,Łódź,B2C,mobile,6.0,42.77,1.0,True,4.0,0,brak uwag
+100101,2022-08-07,2023-07-10,30.0,17644.0,Gdańsk,B2C,,8.0,36.49,2.0,False,4.0,0,brak uwag
+100102,2024-05-31,2024-11-29,43.0,29449.0,Łódź,B2C,mobile,7.0,20.58,1.0,True,4.0,0,klient powracający
+100103,2022-01-09,2022-01-18,36.0,21229.0,Wrocław,VIP,mobile,7.0,27.76,0.0,False,3.0,0,duży koszyk
+100104,2024-05-22,2024-12-25,,16088.0,Lublin,VIP,tablet,1.0,85.06,0.0,False,5.0,0,reklamacja
+100105,2024-05-11,2024-11-29,120.0,42390.0,Kraków,B2C,mobile,5.0,49.94,0.0,False,3.0,1,prośba o fakturę
+100106,2024-05-04,2024-06-27,54.0,39683.0,Lublin,B2C,mobile,7.0,23.15,1.0,True,4.0,0,prośba o fakturę
+100107,2023-12-30,2024-08-17,34.0,11978.0,Lublin,B2C,mobile,8.0,21.0,1.0,True,3.0,0,kontakt mailowy
+100108,2023-06-01,2024-04-02,20.0,29912.0,Kraków,B2C,,11.0,39.93,1.0,False,5.0,0,prośba o fakturę
+100109,2024-02-12,2024-03-21,51.0,55333.0,Łódź,Student,desktop,10.0,84.79,1.0,False,3.0,1,reklamacja
+100110,2022-10-31,2023-07-22,34.0,57300.0,Lublin,B2C,desktop,4.0,38.61,0.0,True,3.0,0,problem z płatnością
+100111,2024-05-04,2024-06-24,51.0,56258.0,Poznań,B2C,desktop,5.0,75.63,0.0,False,3.0,0,duży koszyk
+100112,2023-09-01,2024-05-31,43.0,32692.0,Wrocław,B2C,mobile,4.0,,0.0,False,4.0,0,brak uwag
+100113,2023-05-18,2023-10-17,36.0,20105.0,Lublin,B2C,mobile,2.0,51.92,0.0,False,2.0,0,prośba o fakturę
+100114,2023-07-08,2023-07-10,,17632.0,Poznań,Student,desktop,5.0,23.03,3.0,True,3.0,0,klient powracający
+100115,2023-09-15,2024-09-01,61.0,38678.0,,B2B,mobile,3.0,64.04,0.0,False,2.0,0,duży koszyk
+100116,2022-02-10,2022-04-11,63.0,39423.0,Kraków,B2C,desktop,8.0,36.12,2.0,True,4.0,1,duży koszyk
+100117,2022-06-03,2023-01-06,39.0,64960.0,Łódź,B2C,mobile,4.0,61.93,1.0,True,3.0,1,problem z płatnością
+100118,2022-09-26,2022-12-01,40.0,58599.0,Gdańsk,VIP,mobile,3.0,29.12,3.0,False,2.0,0,brak uwag
+100119,2022-05-06,2023-04-11,51.0,29755.0,Kraków,B2C,desktop,8.0,45.48,1.0,False,5.0,1,klient powracający
+100120,2023-04-27,2024-01-21,28.0,16142.0,Katowice,Student,mobile,3.0,49.21,1.0,False,3.0,0,problem z płatnością
+100121,2024-01-02,2024-10-21,,26849.0,WARSZAWA,Student,tablet,5.0,39.19,2.0,False,4.0,0,klient powracający
+100122,2023-12-18,2024-05-23,38.0,36061.0,Kraków,B2C,mobile,8.0,50.39,0.0,True,3.0,1,klient powracający
+100123,2023-05-31,2023-11-17,42.0,28634.0,Gdańsk,Student,mobile,7.0,37.26,1.0,True,5.0,0,reklamacja
+100124,2024-07-25,2025-03-13,28.0,23287.0,Warszawa,B2C,mobile,8.0,31.36,0.0,False,4.0,0,brak uwag
+100125,2023-09-11,2024-06-23,19.0,36775.0,Gdańsk,B2B,mobile,8.0,86.5,0.0,False,3.0,0,problem z płatnością
+100126,2022-03-28,2023-01-31,16.0,24253.0,Lublin,B2C,mobile,6.0,67.34,0.0,False,3.0,0,prośba o fakturę
+100127,2024-04-17,2024-04-23,25.0,,Lublin,B2C,,5.0,29.82,1.0,True,4.0,0,brak uwag
+100128,2023-09-22,2024-05-21,,37979.0,Katowice,B2C,,9.0,54.24,0.0,True,3.0,1,reklamacja
+100129,2023-11-27,2024-01-05,34.0,25652.0,Wrocław,B2C,desktop,3.0,30.07,1.0,True,4.0,1,klient powracający
+100130,2023-09-12,2023-12-26,61.0,36598.0,Warszawa,B2C,mobile,5.0,24.64,0.0,False,5.0,0,reklamacja
+100131,2023-08-30,2024-06-27,51.0,,Katowice,B2C,mobile,4.0,668.8,1.0,False,3.0,0,reklamacja
+100132,2022-04-10,2022-07-10,26.0,17100.0,Wrocław,B2B,mobile,2.0,19.51,2.0,False,4.0,0,problem z płatnością
+100133,2023-09-05,2024-06-21,42.0,,Łódź,B2C,desktop,5.0,63.74,1.0,False,5.0,1,problem z płatnością
+100134,2024-05-20,2024-11-04,33.0,70564.0,Warszawa,B2C,mobile,6.0,37.49,0.0,True,4.0,0,reklamacja
+100135,2022-11-29,2023-02-21,35.0,16888.0,Łódź,VIP,mobile,8.0,38.19,0.0,False,4.0,1,duży koszyk
+100136,2023-10-23,2024-02-21,40.0,9990.0,Poznań,VIP,mobile,4.0,50.5,2.0,True,3.0,0,zmiana adresu
+100137,2022-02-03,2022-08-15,45.0,11493.0,Lublin,B2C,mobile,7.0,54.55,0.0,False,,0,kontakt mailowy
+100138,2023-01-16,2023-10-22,,32516.0,Warszawa,B2C,mobile,6.0,28.96,0.0,False,3.0,0,reklamacja
+100139,2023-04-24,2023-12-01,51.0,32549.0,Gdańsk,B2B,mobile,8.0,58.01,1.0,False,4.0,0,duży koszyk
+100140,2024-12-12,2025-11-17,24.0,29996.0,Lublin,Student,tablet,3.0,,2.0,True,4.0,1,brak uwag
+100141,2022-08-23,2023-07-05,38.0,62398.0,Gdańsk,B2C,mobile,5.0,23.87,1.0,False,4.0,0,brak uwag
+100142,2022-10-30,2023-07-31,69.0,7357.0,Łódź,Student,mobile,7.0,38.91,0.0,False,5.0,0,problem z płatnością
+100143,2023-03-24,2023-10-30,41.0,39785.0,Kraków,B2C,mobile,4.0,,1.0,True,3.0,1,prośba o fakturę
+100144,2024-12-22,2025-04-06,5.0,75530.0,Łódź,B2C,mobile,9.0,89.31,3.0,True,3.0,0,reklamacja
+100145,2024-07-23,2024-12-20,39.0,17209.0,Wrocław,B2B,mobile,5.0,58.0,0.0,False,4.0,0,prośba o fakturę
+100146,2022-02-07,2022-03-22,45.0,25967.0,Poznań,B2B,mobile,3.0,24.58,2.0,True,3.0,1,kontakt mailowy
+100147,2022-09-14,2023-01-28,37.0,21150.0,,Student,mobile,2.0,52.38,1.0,True,5.0,0,reklamacja
+100148,2024-06-18,2025-05-22,36.0,19567.0,Łódź,B2C,desktop,5.0,61.59,2.0,True,5.0,1,kontakt mailowy
+100149,2022-03-05,2022-08-07,29.0,,Gdańsk,B2C,mobile,1.0,58.22,2.0,True,4.0,0,zmiana adresu
+100150,2024-07-25,2024-09-04,43.0,70165.0,Kraków,B2C,desktop,11.0,59.79,1.0,False,5.0,1,
+100151,2022-11-05,2023-06-30,28.0,87909.0,Wrocław,B2C,Mobile,7.0,49.46,1.0,False,2.0,0,klient powracający
+100152,2024-10-01,2025-09-17,46.0,26602.0,Katowice,B2C,mobile,6.0,40.65,1.0,True,4.0,0,
+100153,2022-11-18,2023-09-30,51.0,91242.0,Kraków,B2C,tablet,3.0,31.94,3.0,False,4.0,0,reklamacja
+100154,2023-04-21,2023-07-30,42.0,32632.0,Łódź,B2C,desktop,7.0,17.88,0.0,True,3.0,0,reklamacja
+100155,2023-12-26,2024-06-08,35.0,83954.0,Gdańsk,B2B,mobile,5.0,48.94,1.0,True,4.0,0,zmiana adresu
+100156,2022-05-19,2022-11-28,43.0,30399.0,Wrocław,B2C,desktop,9.0,45.67,0.0,True,3.0,0,zmiana adresu
+100157,2023-09-02,2023-12-01,34.0,34392.0,Łódź,B2C,mobile,5.0,53.98,1.0,False,4.0,0,klient powracający
+100158,2023-07-07,2023-10-13,49.0,39124.0,Wrocław,B2B,mobile,5.0,23.01,2.0,False,5.0,0,klient powracający
+100159,2024-05-08,2024-08-02,16.0,183847.0,Wrocław,B2C,,6.0,56.14,1.0,False,4.0,0,duży koszyk
+100160,2024-12-26,2025-12-24,34.0,51108.0,Poznań,Student,desktop,5.0,105.87,0.0,True,2.0,1,kontakt mailowy
+100161,2023-12-29,2024-09-26,16.0,21688.0,,B2C,mobile,6.0,43.51,1.0,True,3.0,0,
+100162,2023-03-25,2024-01-25,20.0,54526.0,Katowice,B2C,mobile,8.0,40.85,0.0,True,4.0,0,klient powracający
+100163,2023-03-21,2024-01-13,54.0,26225.0,Łódź,Student,mobile,2.0,48.27,1.0,False,4.0,0,klient powracający
+100164,2023-04-03,2024-03-18,49.0,24444.0,Łódź,B2C,mobile,7.0,104.82,0.0,True,1.0,0,reklamacja
+100165,2024-06-10,2024-07-18,29.0,52745.0,Katowice,B2B,tablet,4.0,,0.0,False,5.0,0,brak uwag
+100166,2022-12-18,2023-11-04,20.0,32552.0,Wrocław,B2B,mobile,4.0,46.02,1.0,False,4.0,1,problem z płatnością
+100167,2022-07-02,2022-07-26,16.0,37298.0,Wrocław,B2C,mobile,11.0,,1.0,False,3.0,1,zmiana adresu
+100168,2023-01-02,2023-06-24,31.0,32247.0,Gdańsk,B2B,mobile,6.0,32.84,0.0,False,5.0,0,klient powracający
+100169,2022-01-25,2022-08-29,67.0,38508.0,Łódź,Student,,9.0,41.07,1.0,True,3.0,1,zmiana adresu
+100170,2022-04-27,2022-09-04,43.0,40426.0,Łódź,VIP,mobile,6.0,77.01,1.0,False,,1,duży koszyk
+100171,2022-04-09,2022-06-01,31.0,11028.0,Kraków,B2C,tablet,5.0,94.45,1.0,True,4.0,0,duży koszyk
+100172,2024-04-24,2024-07-03,44.0,46171.0,Katowice,B2C,desktop,6.0,51.38,1.0,False,5.0,0,brak uwag
+100173,2024-03-01,2024-12-27,19.0,18646.0,Wrocław,Student,desktop,2.0,35.45,1.0,False,5.0,0,kontakt mailowy
+100174,2024-02-02,2024-05-28,34.0,14476.0,Lublin,B2C,mobile,9.0,128.95,0.0,True,4.0,0,duży koszyk
+100175,2023-05-21,2023-09-11,39.0,30988.0,Łódź,B2C,mobile,5.0,34.65,0.0,False,4.0,0,kontakt mailowy
+100176,2024-02-25,2025-01-27,37.0,33513.0,Lublin,B2C,mobile,5.0,32.48,1.0,True,4.0,1,kontakt mailowy
+100177,2022-06-26,2022-08-17,47.0,21852.0,Łódź,B2C,mobile,2.0,,3.0,True,3.0,0,duży koszyk
+100178,2024-09-13,2025-08-13,42.0,50542.0,,B2C,mobile,6.0,78.72,1.0,False,4.0,0,kontakt mailowy
+100179,2023-07-03,2024-06-03,46.0,15295.0,Kraków,B2C,desktop,7.0,64.93,2.0,False,3.0,0,kontakt mailowy
+100180,2024-10-24,2025-05-30,30.0,25583.0,Gdańsk,B2C,desktop,2.0,124.67,2.0,False,4.0,0,brak uwag
+100181,2022-06-16,2022-08-15,49.0,23198.0,,B2C,mobile,6.0,22.47,1.0,False,3.0,0,prośba o fakturę
+100182,2023-06-29,2023-08-24,58.0,31190.0,Gdańsk,VIP,mobile,1.0,80.95,2.0,False,4.0,1,problem z płatnością
+100183,2024-02-02,2024-05-15,26.0,37304.0,Warszawa,B2C,desktop,8.0,43.35,0.0,True,4.0,0,problem z płatnością
+100184,2023-06-27,2024-01-23,27.0,18382.0,Kraków,B2C,mobile,6.0,60.37,0.0,True,1.0,0,klient powracający
+100185,2023-05-04,2023-06-29,54.0,47660.0,Poznań,B2C,tablet,6.0,20.01,1.0,False,4.0,0,problem z płatnością
+100186,2022-07-02,2022-12-15,36.0,33128.0,Łódź,B2C,mobile,6.0,81.31,1.0,True,4.0,1,duży koszyk
+100187,2023-02-22,2023-04-05,55.0,11304.0,Lublin,VIP,mobile,16.0,59.84,1.0,False,4.0,1,kontakt mailowy
+100188,2022-09-19,2023-04-04,33.0,10897.0,Lublin,VIP,mobile,3.0,41.27,1.0,True,4.0,0,reklamacja
+100189,2022-11-27,2022-12-04,55.0,31784.0,Poznań,B2C,tablet,5.0,56.15,1.0,True,,0,reklamacja
+100190,2024-01-19,2024-10-03,40.0,28338.0,Poznań,B2C,mobile,5.0,29.76,0.0,False,4.0,0,brak uwag
+100191,2023-11-22,2023-12-12,41.0,30231.0,Katowice,B2C,desktop,10.0,32.36,0.0,False,4.0,1,klient powracający
+100192,2023-10-27,2024-01-06,57.0,31511.0,Warszawa,B2C,mobile,6.0,34.09,1.0,False,5.0,0,kontakt mailowy
+100193,2023-02-01,2023-04-05,34.0,36227.0,Poznań,B2C,mobile,3.0,18.25,2.0,False,4.0,1,prośba o fakturę
+100194,2024-11-16,2025-09-15,27.0,53890.0,Gdańsk,B2C,desktop,5.0,61.9,0.0,True,,1,reklamacja
+100195,2022-04-06,2022-04-25,33.0,17368.0,Katowice,B2C,mobile,13.0,71.8,0.0,False,2.0,0,brak uwag
+100196,2023-01-11,2023-06-16,43.0,16796.0,Katowice, B2C ,mobile,4.0,30.63,0.0,True,3.0,0,klient powracający
+100197,2022-05-10,2022-12-11,19.0,,Łódź,B2C,mobile,10.0,,0.0,False,4.0,0,kontakt mailowy
+100198,2023-01-07,2023-07-14,46.0,37511.0,Łódź,B2C,desktop,6.0,37.27,1.0,True,,1,brak uwag
+100199,2024-11-19,2025-07-25,32.0,63463.0,Łódź,B2C,mobile,10.0,48.69,1.0,False,,1,reklamacja
+100200,2023-02-06,2023-11-26,52.0,25242.0,Poznań,B2C,mobile,5.0,31.67,1.0,True,4.0,0,
+100201,2024-09-21,2025-02-11,,8083.0,Kraków,B2C,tablet,6.0,28.22,1.0,False,5.0,1,klient powracający
+100202,2023-06-27,2024-04-24,29.0,12535.0,Wrocław,B2C,desktop,8.0,67.43,2.0,False,3.0,0,kontakt mailowy
+100203,2024-02-06,2024-06-01,18.0,,Łódź,B2C,desktop,6.0,40.81,-1.0,False,4.0,0,reklamacja
+100204,2023-05-16,2024-05-09,,23547.0,Poznań,B2C,,7.0,104.34,0.0,True,4.0,1,reklamacja
+100205,2022-10-19,2023-04-21,41.0,25562.0,Kraków,Student,desktop,4.0,42.88,0.0,False,5.0,0,brak uwag
+100206,2024-04-16,2025-01-09,36.0,32686.0,Lublin,VIP,mobile,6.0,27.69,0.0,True,2.0,0,brak uwag
+100207,2024-11-27,2025-10-12,35.0,26958.0,Lublin,B2C,mobile,8.0,72.95,2.0,True,3.0,0,zmiana adresu
+100208,2022-10-16,2023-08-01,36.0,56990.0,Łódź,B2C,desktop,4.0,55.79,1.0,True,4.0,1,kontakt mailowy
+100209,2024-05-02,2025-03-08,40.0,22064.0,Kraków,B2B,desktop,6.0,58.25,1.0,True,,0,brak uwag
+100210,2022-10-13,2023-04-26,26.0,19915.0,Lublin,B2B,tablet,8.0,71.77,2.0,False,4.0,0,reklamacja
+100211,2024-02-24,2024-03-10,46.0,41642.0,Kraków,B2C,,3.0,31.31,0.0,True,3.0,0,reklamacja
+100212,2024-05-13,2024-11-08,46.0,,Gdańsk,B2C,mobile,6.0,39.66,0.0,False,,0,prośba o fakturę
+100213,2023-05-08,2023-07-13,43.0,39649.0,Katowice,B2C,mobile,4.0,38.88,2.0,False,4.0,0,klient powracający
+100214,2024-03-17,2025-02-04,,33857.0,Poznań,B2C,mobile,9.0,23.5,2.0,False,3.0,0,reklamacja
+100215,2022-10-26,2023-01-20,42.0,29507.0,Kraków,B2C,mobile,3.0,37.3,1.0,False,4.0,0,
+100216,2022-03-28,2022-06-19,62.0,76653.0,Warszawa,B2C,desktop,7.0,76.63,0.0,False,5.0,0,duży koszyk
+100217,2022-04-16,2022-07-16,37.0,22726.0,Wrocław,B2C,mobile,4.0,46.73,1.0,True,5.0,0,brak uwag
+100218,2023-05-05,2023-12-25,34.0,99375.0,Łódź,B2C,mobile,7.0,22.92,0.0,False,4.0,0,zmiana adresu
+100219,2024-09-15,2025-04-11,29.0,28269.0,Łódź,B2C,mobile,9.0,20.85,1.0,True,4.0,1,prośba o fakturę
+100220,2022-05-20,2023-05-01,26.0,15853.0,Kraków,B2B,desktop,11.0,88.84,0.0,True,4.0,0,zmiana adresu
+100221,2023-05-15,2023-10-13,23.0,33255.0,Kraków,B2C,desktop,5.0,40.33,0.0,True,4.0,0,kontakt mailowy
+100222,2024-02-10,2024-05-23,27.0,17704.0,Łódź,B2C,mobile,7.0,31.39,1.0,False,4.0,0,prośba o fakturę
+100223,2022-08-10,2022-08-27,37.0,21163.0,Kraków,B2C,mobile,14.0,37.13,0.0,False,4.0,0,brak uwag
+100224,2024-03-01,2024-03-03,42.0,39809.0,Warszawa,Student,mobile,5.0,21.6,0.0,False,3.0,0,klient powracający
+100225,2022-12-02,2023-04-17,39.0,43437.0,Gdańsk,B2C,mobile,6.0,79.68,1.0,True,5.0,1,zmiana adresu
+100226,2024-06-04,2025-05-07,29.0,22727.0,Poznań, B2C ,mobile,9.0,35.19,0.0,False,3.0,0,brak uwag
+100227,2023-09-27,2024-04-05,49.0,55081.0,Kraków,B2C,desktop,7.0,,2.0,False,3.0,0,zmiana adresu
+100228,2023-08-22,2024-07-13,47.0,60483.0,Kraków,Student,desktop,9.0,42.99,2.0,True,4.0,1,klient powracający
+100229,2022-07-13,2022-08-19,36.0,70506.0,Kraków,Student,mobile,10.0,79.91,0.0,False,5.0,0,problem z płatnością
+100230,2023-05-23,2023-06-26,30.0,,WROCŁAW,Student,mobile,6.0,47.14,4.0,False,3.0,1,reklamacja
+100231,2024-07-26,2025-05-26,45.0,67736.0,,B2B,mobile,4.0,61.66,2.0,False,3.0,0,klient powracający
+100232,2022-01-22,2022-03-01,40.0,11374.0,WARSZAWA,B2C,mobile,6.0,58.05,0.0,True,3.0,0,kontakt mailowy
+100233,2024-04-10,2024-04-28,21.0,26867.0,Wrocław,B2C,mobile,2.0,55.6,0.0,False,5.0,0,kontakt mailowy
+100234,2023-06-24,2023-11-18,37.0,19863.0,Warszawa,B2C,desktop,5.0,49.12,1.0,True,1.0,0,kontakt mailowy
+100235,2024-02-27,2025-01-29,41.0,,Wrocław,B2B,mobile,6.0,37.82,1.0,True,3.0,1,klient powracający
+100236,2023-12-28,2024-09-04,27.0,23370.0,Poznań,B2B,desktop,5.0,99.45,0.0,True,5.0,0,
+100237,2023-04-19,2023-05-25,40.0,29205.0,Warszawa,B2C,mobile,9.0,27.93,1.0,False,4.0,0,zmiana adresu
+100238,2022-12-04,2023-10-05,21.0,90101.0,Poznań,Student,desktop,4.0,42.08,1.0,True,3.0,1,problem z płatnością
+100239,2023-11-18,2024-09-20,54.0,29148.0,Poznań,B2C,desktop,8.0,42.28,1.0,False,4.0,0,reklamacja
+100240,2022-06-03,2023-03-22,53.0,40178.0,Poznań,B2C,mobile,6.0,50.34,2.0,True,4.0,0,brak uwag
+100241,2023-10-02,2024-08-26,35.0,28162.0,Łódź,B2C,mobile,5.0,34.62,0.0,False,4.0,0,duży koszyk
+100242,2022-04-14,2022-07-10,42.0,33361.0,Katowice,Student,desktop,10.0,48.39,0.0,True,5.0,0,klient powracający
+100243,2023-12-13,2024-12-04,16.0,,Warszawa,VIP,mobile,6.0,38.93,2.0,False,4.0,0,brak uwag
+100244,2023-11-20,2024-03-16,24.0,40948.0,Kraków,B2C,mobile,4.0,,0.0,False,3.0,0,brak uwag
+100245,2022-04-03,2023-01-20,,60743.0,Wrocław,VIP,mobile,3.0,42.18,1.0,False,,0,zmiana adresu
+100246,2024-04-09,2024-11-06,25.0,79186.0,Łódź,Student,mobile,4.0,25.6,1.0,True,3.0,0,brak uwag
+100247,2023-04-01,2024-01-10,47.0,37941.0,Katowice,Student,desktop,8.0,19.24,2.0,False,3.0,0,problem z płatnością
+100248,2024-05-11,2024-12-26,62.0,44256.0,Lublin,Student,mobile,9.0,44.67,0.0,False,2.0,1,klient powracający
+100249,2022-02-15,2022-10-07,24.0,16992.0,Poznań,B2C,mobile,5.0,52.31,0.0,False,2.0,0,reklamacja
+100250,2022-07-16,2023-02-25,5.0,30490.0,Gdańsk,Student,mobile,3.0,53.23,1.0,True,3.0,1,reklamacja
+100251,2023-06-25,2024-04-04,41.0,53672.0,Gdańsk,B2C,desktop,10.0,54.21,2.0,False,3.0,0,duży koszyk
+100252,2022-07-26,2023-04-21,57.0,51523.0,Warszawa,B2B,desktop,5.0,,1.0,True,4.0,0,reklamacja
+100253,2022-12-28,2023-02-15,23.0,35950.0,Gdańsk,B2C,mobile,4.0,22.76,1.0,True,3.0,0,kontakt mailowy
+100254,2023-12-25,2024-10-21,,,Poznań,Student,mobile,3.0,102.08,3.0,False,1.0,0,brak uwag
+100255,2022-06-08,2022-12-20,60.0,41916.0,, VIP ,mobile,4.0,,0.0,False,3.0,0,duży koszyk
+100256,2024-01-13,2024-05-09,18.0,61924.0,Katowice,B2C,mobile,0.0,,2.0,False,,0,klient powracający
+100257,2022-04-24,2022-10-28,23.0,37520.0,Katowice,VIP,mobile,4.0,30.83,0.0,False,3.0,0,brak uwag
+100258,2022-07-11,2023-06-28,33.0,26314.0,Wrocław,B2C,mobile,3.0,43.53,0.0,True,5.0,0,duży koszyk
+100259,2023-10-06,2024-08-14,32.0,38492.0,Lublin,B2C,mobile,6.0,31.59,1.0,False,3.0,0,kontakt mailowy
+100260,2024-05-18,2025-03-18,48.0,6385.0,Warszawa,B2C,,8.0,54.07,3.0,False,4.0,0,kontakt mailowy
+100261,2022-07-06,2022-12-21,41.0,39501.0,Lublin,Student,mobile,6.0,44.67,1.0,True,4.0,0,prośba o fakturę
+100262,2022-11-25,2023-09-07,17.0,4302.0,Katowice,B2C,desktop,6.0,34.33,1.0,False,4.0,0,prośba o fakturę
+100263,2024-10-10,2025-02-27,44.0,12402.0,Kraków,B2C,mobile,3.0,26.18,0.0,False,3.0,1,duży koszyk
+100264,2024-12-19,2025-08-26,31.0,41026.0,Łódź,B2B,mobile,6.0,47.38,0.0,False,4.0,0,problem z płatnością
+100265,2023-09-29,2024-05-19,53.0,41612.0,Wrocław,B2C,mobile,7.0,24.34,0.0,True,3.0,0,kontakt mailowy
+100266,2023-05-05,2023-08-04,30.0,16885.0,Katowice,B2C,desktop,3.0,50.91,1.0,False,4.0,0,zmiana adresu
+100267,2023-01-15,2023-04-22,30.0,21630.0,Kraków,Student,,8.0,136.95,0.0,False,3.0,0,klient powracający
+100268,2023-11-02,2023-11-24,44.0,68002.0,Kraków,B2B,mobile,6.0,77.11,0.0,False,3.0,0,problem z płatnością
+100269,2023-10-10,2023-11-30,47.0,24521.0,Wrocław,Student,desktop,7.0,58.03,1.0,False,5.0,0,kontakt mailowy
+100270,2022-11-19,2023-04-26,43.0,109875.0,Kraków,B2B,mobile,6.0,40.41,4.0,False,4.0,0,kontakt mailowy
+100271,2022-01-25,2022-07-18,18.0,31966.0,,VIP,mobile,9.0,17.55,1.0,False,3.0,0,prośba o fakturę
+100272,2022-06-15,2022-08-14,44.0,40051.0,Poznań,B2C,mobile,3.0,23.16,0.0,False,4.0,0,prośba o fakturę
+100273,2024-11-15,2025-04-16,26.0,77868.0,Łódź,B2C,mobile,8.0,74.81,1.0,False,4.0,0,reklamacja
+100274,2023-04-03,2023-11-09,41.0,34391.0,Poznań,B2C,mobile,6.0,29.44,3.0,False,3.0,0,brak uwag
+100275,2023-06-13,2023-09-05,,18439.0,Kraków,B2C,desktop,5.0,30.66,1.0,False,4.0,0,brak uwag
+100276,2023-05-27,2023-09-27,43.0,30126.0,,B2B,mobile,8.0,38.98,0.0,True,3.0,0,zmiana adresu
+100277,2024-05-07,2024-09-18,28.0,31379.0,Lublin,Student,mobile,6.0,26.04,1.0,False,3.0,0,klient powracający
+100278,2022-03-13,2022-09-13,23.0,15107.0,Wrocław,B2C,mobile,6.0,24.18,2.0,True,2.0,0,zmiana adresu
+100279,2022-04-01,2022-08-12,47.0,27800.0,Warszawa,B2C,mobile,5.0,41.06,1.0,True,3.0,0,prośba o fakturę
+100280,2022-10-30,2023-07-25,41.0,21275.0,Gdańsk,B2B,mobile,11.0,28.12,0.0,False,4.0,0,klient powracający
+100281,2023-06-17,2023-10-14,31.0,53204.0,Warszawa,VIP,desktop,7.0,30.09,0.0,False,,0,
+100282,2024-01-05,2024-06-11,55.0,32615.0,Wrocław,B2C,desktop,6.0,29.55,0.0,False,5.0,0,
+100283,2023-06-22,2023-11-07,33.0,,Katowice,B2C,mobile,5.0,53.13,0.0,False,4.0,0,zmiana adresu
+100284,2023-04-29,2023-07-04,38.0,30185.0,Wrocław,B2C,desktop,10.0,37.83,1.0,False,5.0,0,duży koszyk
+100285,2024-10-23,2025-06-30,41.0,36178.0,Łódź,B2C,Mobile,12.0,38.76,1.0,False,4.0,0,zmiana adresu
+100286,2022-06-26,2022-09-19,31.0,44925.0,Gdańsk,B2C,mobile,2.0,54.94,1.0,False,5.0,0,zmiana adresu
+100287,2023-09-19,2024-01-05,44.0,,Wrocław,B2C,mobile,8.0,354.59999999999997,1.0,True,3.0,0,zmiana adresu
+100288,2023-08-17,2024-06-01,32.0,18045.0,Łódź,B2B,mobile,7.0,37.06,1.0,False,1.0,1,duży koszyk
+100289,2023-06-03,2024-05-14,33.0,58751.0,Poznań,B2C,mobile,5.0,51.9,0.0,True,3.0,0,klient powracający
+100290,2024-06-03,2025-02-02,54.0,306084.0,,B2C,desktop,4.0,56.73,1.0,True,4.0,0,reklamacja
+100291,2022-10-20,2023-09-19,26.0,,Kraków,B2C,mobile,6.0,39.31,1.0,True,4.0,0,problem z płatnością
+100292,2024-11-10,2025-09-17,16.0,40847.0,Lublin,VIP,desktop,4.0,43.55,0.0,False,4.0,1,brak uwag
+100293,2022-12-30,2023-06-23,57.0,,Kraków,B2C,desktop,5.0,29.54,1.0,False,5.0,0,zmiana adresu
+100294,2023-08-20,2024-05-27,69.0,13789.0,Lublin,B2C,desktop,6.0,28.51,0.0,False,4.0,0,klient powracający
+100295,2023-07-25,2023-11-21,33.0,36305.0,Gdańsk,B2C,mobile,4.0,59.37,1.0,False,4.0,0,problem z płatnością
+100296,2024-07-19,2025-01-03,16.0,47957.0,Lublin,B2B,desktop,3.0,51.31,1.0,False,3.0,1,reklamacja
+100297,2023-04-26,2023-11-07,34.0,39317.0,Wrocław,Student,mobile,7.0,51.55,0.0,True,,0,zmiana adresu
+100298,2022-11-08,2023-10-24,35.0,45301.0,,B2C,mobile,7.0,47.66,0.0,False,5.0,0,reklamacja
+100299,2022-01-24,2022-11-29,36.0,14782.0,Poznań,B2C,mobile,2.0,42.88,1.0,False,4.0,0,prośba o fakturę
+100300,2023-02-03,2023-07-31,25.0,,Wrocław,B2C,desktop,5.0,57.46,3.0,False,3.0,1,kontakt mailowy
+100301,2024-06-23,2025-02-16,45.0,27094.0,Kraków,B2B,mobile,4.0,63.97,0.0,True,,0,zmiana adresu
+100302,2022-01-11,2022-03-25,44.0,24537.0,Poznań,VIP,mobile,3.0,63.29,1.0,True,3.0,0,kontakt mailowy
+100303,2024-09-08,2025-06-28,20.0,51653.0,Łódź,B2C,desktop,4.0,40.14,1.0,False,3.0,0,prośba o fakturę
+100304,2023-08-18,2024-03-06,46.0,72193.0,Wrocław,B2C,mobile,7.0,78.4,1.0,True,3.0,0,klient powracający
+100305,2022-06-03,2022-12-14,63.0,85853.0,Katowice,Student,desktop,2.0,46.55,0.0,False,2.0,0,duży koszyk
+100306,2022-11-27,2023-09-02,40.0,65949.0,Łódź,Student,mobile,7.0,55.83,0.0,False,4.0,0,NA
+100307,2023-08-30,2024-04-17,34.0,30126.0,Kraków,B2C,mobile,6.0,47.68,1.0,True,3.0,0,klient powracający
+100308,2022-12-12,2023-01-07,36.0,38851.0,Lublin,B2C,mobile,6.0,46.94,0.0,True,5.0,0,brak uwag
+100309,2022-04-29,2022-08-12,45.0,48788.0,Warszawa,B2C,mobile,3.0,30.16,1.0,False,4.0,1,NA
+100310,2023-12-31,2024-03-04,17.0,34205.0,Łódź,Student,mobile,8.0,57.59,0.0,False,4.0,0,reklamacja
+100311,2024-01-07,2024-10-01,40.0,34386.0,Gdańsk,B2B,mobile,9.0,151.12,0.0,False,3.0,0,duży koszyk
+100312,2022-05-11,2022-05-23,33.0,50340.0,Łódź,B2B,mobile,4.0,35.48,1.0,True,4.0,1,klient powracający
+100313,2022-11-04,2023-01-16,60.0,30973.0,Katowice,Student,desktop,3.0,,0.0,True,4.0,0,zmiana adresu
+100314,2022-09-25,2023-05-01,36.0,21426.0,Łódź,B2C,desktop,5.0,34.36,1.0,False,4.0,1,zmiana adresu
+100315,2023-12-24,2024-09-02,58.0,25477.0,Łódź,B2C,mobile,9.0,33.72,1.0,False,4.0,1,problem z płatnością
+100316,2024-03-10,2024-09-09,25.0,45349.0,Katowice,B2C,,3.0,84.16,0.0,True,5.0,0,kontakt mailowy
+100317,2024-03-07,2025-01-15,45.0,32053.0,Łódź,Student,mobile,5.0,31.03,0.0,False,4.0,0,kontakt mailowy
+100318,2024-10-24,2025-09-24,42.0,38585.0,Katowice,B2B,desktop,9.0,,0.0,False,4.0,1,reklamacja
+100319,2024-04-21,2024-06-08,28.0,46260.0,Gdańsk,B2C,desktop,6.0,20.56,0.0,False,3.0,0,prośba o fakturę
+100320,2022-12-18,2023-11-30,40.0,26038.0,Kraków,B2C,,2.0,29.87,0.0,False,2.0,0,problem z płatnością
+100321,2022-04-28,2022-12-08,53.0,48505.0,,Student,,7.0,19.47,2.0,False,4.0,0,reklamacja
+100322,2023-11-05,2024-06-24,34.0,39413.0,Poznań,Student,desktop,2.0,55.81,1.0,True,,1,zmiana adresu
+100323,2024-09-30,2024-11-03,18.0,16226.0,Poznań,B2B,desktop,10.0,148.05,1.0,True,4.0,0,brak uwag
+100324,2024-12-03,2025-07-17,38.0,70739.0,Warszawa,B2C,mobile,2.0,35.61,0.0,False,4.0,0,brak uwag
+100325,2022-09-10,2023-06-01,27.0,,Kraków,VIP,desktop,7.0,19.84,0.0,False,3.0,1,klient powracający
+100326,2022-09-16,2023-04-15,34.0,12877.0,,Student,mobile,7.0,62.97,0.0,False,3.0,1,duży koszyk
+100327,2022-02-10,2022-03-12,37.0,18011.0,Łódź,B2B,mobile,2.0,30.28,0.0,False,4.0,1,duży koszyk
+100328,2022-06-04,2022-12-11,18.0,18250.0,Katowice,B2B,desktop,7.0,75.37,2.0,True,4.0,0,reklamacja
+100329,2023-08-31,2024-08-06,19.0,32932.0,Kraków,VIP,mobile,6.0,36.99,1.0,True,3.0,1,zmiana adresu
+100330,2023-08-22,2024-05-12,44.0,27526.0,Warszawa,VIP,mobile,4.0,31.61,1.0,True,5.0,0,problem z płatnością
+100331,2023-02-11,2023-04-02,32.0,26588.0,Wrocław,B2B,desktop,2.0,38.77,0.0,True,,0,reklamacja
+100332,2022-12-06,2023-11-21,16.0,44996.0,Katowice,B2C,desktop,11.0,59.07,3.0,False,3.0,1,problem z płatnością
+100333,2024-06-27,2025-06-11,47.0,38577.0,Poznań,B2C,mobile,4.0,37.91,1.0,False,5.0,0,problem z płatnością
+100334,2023-05-19,2023-07-19,41.0,,Katowice,Student,mobile,6.0,33.59,0.0,False,4.0,1,prośba o fakturę
+100335,2024-06-04,2025-03-23,29.0,40091.0,Gdańsk,B2B,,8.0,38.41,1.0,False,3.0,1,prośba o fakturę
+100336,2024-11-20,2025-04-17,22.0,44908.0,Gdańsk,B2C,,3.0,23.7,1.0,False,4.0,0,reklamacja
+100337,2022-12-14,2023-07-18,48.0,10038.0,Poznań,B2C,tablet,4.0,50.22,0.0,True,4.0,0,duży koszyk
+100338,2022-08-10,2023-01-19,42.0,26188.0,Lublin,VIP,desktop,7.0,18.8,0.0,False,1.0,0,klient powracający
+100339,2024-11-09,2025-08-21,67.0,9647.0,Gdańsk,Student,mobile,8.0,34.39,1.0,True,3.0,0,klient powracający
+100340,2023-11-27,2024-11-24,120.0,32641.0,Poznań,VIP,mobile,2.0,59.11,0.0,False,4.0,1,duży koszyk
+100341,2022-11-15,2023-09-01,43.0,31919.0,Lublin,B2C,desktop,3.0,48.14,0.0,False,3.0,0,reklamacja
+100342,2023-11-12,2024-10-16,36.0,56871.0,Wrocław,Student,,9.0,54.78,2.0,True,,1,duży koszyk
+100343,2023-07-18,2024-06-27,48.0,61494.0,Katowice,Student,,5.0,40.79,1.0,True,5.0,0,kontakt mailowy
+100344,2024-09-18,2024-10-20,46.0,35775.0,Poznań,B2C,mobile,24.0,71.1,1.0,True,3.0,0,klient powracający
+100345,2022-10-08,2023-01-08,53.0,24301.0,Lublin,B2C,desktop,8.0,63.67,1.0,False,3.0,0,reklamacja
+100346,2024-12-21,2025-09-10,32.0,41787.0,Gdańsk,VIP,mobile,12.0,51.34,1.0,True,4.0,0,prośba o fakturę
+100347,2024-10-21,2025-05-24,33.0,23936.0,Łódź,B2C,,6.0,63.76,2.0,True,3.0,0,brak uwag
+100348,2022-07-17,2022-08-04,32.0,,Wrocław,B2B,desktop,9.0,58.87,2.0,True,4.0,0,brak uwag
+100349,2022-06-30,2022-08-03,47.0,,Łódź,B2B,desktop,0.0,34.46,1.0,False,3.0,1,prośba o fakturę

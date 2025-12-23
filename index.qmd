@@ -1,0 +1,36 @@
+---
+title: "Wstep"
+number-sections: false
+---
+
+Książka jest przygotowana dla studentów kierunków *matematyka* oraz *inżynieria i analiza danych*.
+
+## Cel i charakter kursu
+
+Celem niniejszego kursu jest stworzenie studentom możliwości zapoznania się z metodami eksploracji danych oraz klasycznego uczenia maszynowego, ze szczególnym naciskiem na zrozumienie ich założeń, mechanizmów działania oraz miejsca w procesie analizy danych. Kurs ma umożliwić nie tylko poznanie konkretnych algorytmów, lecz przede wszystkim wykształcenie świadomości metodologicznej, która pozwala na świadomy dobór narzędzi analitycznych do charakteru problemu i struktury danych. Eksploracja danych i uczenie maszynowe są w ramach kursu traktowane jako spójny zbiór technik służących do wydobywania wiedzy z danych empirycznych oraz budowy modeli predykcyjnych i decyzyjnych.
+
+Kurs jest osadzony w kontekście analizy danych tablicowych oraz klasycznych problemów klasyfikacji i regresji. Studenci będą mogli zapoznać się z metodami, które odgrywają fundamentalną rolę w praktyce analitycznej i stanowią podstawę wielu współczesnych rozwiązań stosowanych w analizie danych. Omawiane techniki, takie jak regresja logistyczna, analiza dyskryminacyjna, drzewa decyzyjne, metody zespołowe, klasyfikatory bayesowskie, algorytm k najbliższych sąsiadów, modele addytywne oraz maszyny wektorów nośnych, są prezentowane jako elementy spójnej tradycji metod eksploracyjnych i predykcyjnych. Kurs celowo pomija zagadnienia wdrażania modeli oraz głębokich sieci neuronowych, które są realizowane w ramach innych przedmiotów, aby zachować koncentrację na klasycznych fundamentach uczenia maszynowego.
+
+W trakcie kursu studenci będą mogli nauczyć się, że eksploracja danych nie ogranicza się wyłącznie do wizualizacji czy statystyk opisowych, lecz obejmuje również budowę modeli umożliwiających identyfikację wzorców, segmentację obserwacji oraz podejmowanie decyzji na podstawie danych. Jednocześnie będą mogli zrozumieć, że uczenie maszynowe nie sprowadza się jedynie do stosowania algorytmów optymalizacyjnych, lecz stanowi formalny aparat pozwalający na automatyczne uczenie się zależności oraz ocenę jakości predykcji. Takie ujęcie ma umożliwić lepsze zrozumienie, dlaczego te same metody znajdują zastosowanie zarówno w analizie eksploracyjnej, jak i w zadaniach stricte predykcyjnych.
+
+Istotnym elementem kursu jest umożliwienie studentom zapoznania się z etapem przygotowania danych, który w praktyce analizy danych ma kluczowe znaczenie dla jakości modeli. Studenci będą mogli nauczyć się zasad czyszczenia danych, obsługi braków, kodowania zmiennych, standaryzacji oraz wstępnej analizy rozkładów i zależności. Etap ten jest przedstawiany nie jako czynność czysto techniczna, lecz jako integralna część procesu eksploracji danych, wymagająca podejmowania świadomych decyzji analitycznych i uwzględniania kontekstu problemu. Takie podejście ma umożliwić lepsze przygotowanie do pracy z rzeczywistymi danymi empirycznymi.
+
+W dalszej części kursu studenci będą mogli zapoznać się z metodami uczenia nadzorowanego w sposób systematyczny, z naciskiem na ich interpretację, założenia statystyczne oraz różnice pomiędzy podejściami generatywnymi i dyskryminacyjnymi. Kurs ma umożliwić zrozumienie, w jakich sytuacjach zasadne jest stosowanie prostych modeli liniowych, a kiedy warto sięgnąć po metody nieliniowe lub zespołowe. Szczególna uwaga poświęcona jest zagadnieniu interpretowalności modeli oraz kompromisowi pomiędzy złożonością modelu a jego zdolnością do generalizacji, co stanowi jeden z kluczowych problemów w analizie danych stosowanej.
+
+Choć kurs koncentruje się na klasycznych metodach, jego celem jest również umożliwienie studentom zrozumienia szerszego kontekstu uczenia maszynowego. Krótkie wprowadzenia do reinforcement learning, modeli koszykowych oraz wykrywania anomalii mają pozwolić na zapoznanie się z podstawowymi zasadami działania innych paradygmatów uczenia. Zagadnienia te są omawiane na poziomie koncepcyjnym, tak aby studenci mogli rozpoznać, jakie typy problemów wymagają odmiennych podejść oraz jakie są granice stosowalności klasycznych metod eksploracji danych.
+
+Ostatecznie kurs ma umożliwić studentom wykształcenie umiejętności krytycznego myślenia o danych i modelach. Po jego ukończeniu studenci będą mogli nie tylko znać podstawowe algorytmy eksploracji danych i uczenia maszynowego, lecz także rozumieć ich genezę, założenia oraz konsekwencje ich zastosowania. Kurs stanowi fundament dla dalszych zajęć z zakresu zaawansowanego uczenia maszynowego, analizy dużych zbiorów danych oraz systemów opartych na sztucznej inteligencji, dostarczając solidnych podstaw teoretycznych i metodologicznych.
+
+
+## Struktura ksiazki
+
+-   Wprowadzenie i historia
+-   Przygotowanie i czyszczenie danych
+-   Modele liniowe i dyskryminacyjne
+-   Drzewa decyzyjne i zespoly modeli
+-   Klasyfikatory bayesowskie
+-   k-NN
+-   Modele addytywne
+-   SVM
+-   Inne metody
+-   Podsumowanie

@@ -1,0 +1,66 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Eksploracja danych i uczenie maszynowe"
+  date: last-modified
+  reader-mode: true
+  language: setup/polski.yml
+  page-footer:
+    left: |
+      Eksploracja danych i uczenie maszynowe
+    right: |
+      Dariusz Majerek ©2025
+  favicon: images/cover.png
+  cover-image: images/cover.png  
+  repo-url: https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe
+  repo-actions: [issue]
+  sharing: [twitter]
+  search: true
+  author: 
+  - name: Dariusz Majerek
+    affiliation: Politechnika Lubelska
+  sidebar: 
+    logo: images/logo.jpg
+  chapters:
+    - index.qmd
+    - chapters/01-wprowadzenie.qmd
+    - chapters/02-przygotowanie-danych.qmd
+    - chapters/03-klasyfikacja-liniowa.qmd
+    - chapters/04-drzewa-zespoly.qmd
+    - chapters/05-bayes.qmd
+    - chapters/06-knn.qmd
+    - chapters/07-splajny-gam.qmd
+    - chapters/08-svm.qmd
+    - chapters/09-dalsze-zagadnienia.qmd
+    - chapters/10-podsumowanie.qmd
+
+bibliography: references.bib
+reference-location: margin
+lightbox: true
+
+format:
+  html:
+    grid:
+      sidebar-width: 300px
+      body-width: 1400px
+      margin-width: 300px
+      gutter-width: 1.5rem
+    lang: pl
+    theme:
+      light: [flatly, mycss.scss]
+      dark: [darkly, mycss.scss]
+    code-link: true
+    code-fold: show
+    fig-align: center
+    crossref:
+      fig-title: Rys.     
+      tbl-title: Tab.     
+      fig-prefix: Rys.
+      tbl-prefix: Tab.
+
+execute: 
+  warning: false
+
+editor: visual

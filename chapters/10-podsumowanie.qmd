@@ -1,0 +1,10 @@
+---
+title: "Podsumowanie"
+---
+
+W tym wykladzie przeszlismy od rozroznienia eksploracji danych i uczenia maszynowego,
+przez przygotowanie danych, do przegladu algorytmow uczenia nadzorowanego. Kolejnosc
+tematow wspiera stopniowe budowanie wiedzy: definicje, modele liniowe i
+dyskryminacyjne, drzewa i zespoly, klasyfikatory bayesowskie, k-NN, modele addytywne,
+SVM, a nastepnie krotkie wprowadzenie do reinforcement learning, analiz koszykowych i
+detekcji anomalii.
