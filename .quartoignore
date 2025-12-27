@@ -1,0 +1,6 @@
+.git/
+.git/**
+
+# (opcjonalnie) szum systemowy
+.DS_Store
+**/.DS_Store
