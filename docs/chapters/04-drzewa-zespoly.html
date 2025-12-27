@@ -20,7 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -303,7 +358,7 @@ window.Quarto = {
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Eksploracja danych i uczenie maszynowe</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/DariuszMajerek/ML_and_DM" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <a href="https://twitter.com/intent/tweet?url=|url|" title="Twitter" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Przełącz tryb ciemny"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Przełącz tryb czytnika">
@@ -342,7 +397,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/03-klasyfikacja-liniowa.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Klasyfikacja liniowa</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modele liniowe i dyskryminacyjne</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -387,6 +442,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Podsumowanie</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -403,32 +464,31 @@ window.Quarto = {
   <li><a href="#rodzaje-drzew-i-podstawowe-elementy-konstrukcji" id="toc-rodzaje-drzew-i-podstawowe-elementy-konstrukcji" class="nav-link" data-scroll-target="#rodzaje-drzew-i-podstawowe-elementy-konstrukcji"><span class="header-section-number">5.1.2</span> Rodzaje drzew i podstawowe elementy konstrukcji</a></li>
   <li><a href="#reguły-podziału-klasyfikacja-i-regresja" id="toc-reguły-podziału-klasyfikacja-i-regresja" class="nav-link" data-scroll-target="#reguły-podziału-klasyfikacja-i-regresja"><span class="header-section-number">5.1.3</span> Reguły podziału: klasyfikacja i regresja</a></li>
   <li><a href="#jak-szuka-się-optymalnego-podziału" id="toc-jak-szuka-się-optymalnego-podziału" class="nav-link" data-scroll-target="#jak-szuka-się-optymalnego-podziału"><span class="header-section-number">5.1.4</span> Jak szuka się optymalnego podziału</a></li>
-  <li><a href="#predykcja-z-drzewa" id="toc-predykcja-z-drzewa" class="nav-link" data-scroll-target="#predykcja-z-drzewa"><span class="header-section-number">5.1.5</span> Predykcja z drzewa</a></li>
+  <li><a href="#reguły-stopu-stopping-rules" id="toc-reguły-stopu-stopping-rules" class="nav-link" data-scroll-target="#reguły-stopu-stopping-rules"><span class="header-section-number">5.1.5</span> Reguły stopu (<em>stopping rules</em>)</a></li>
+  <li><a href="#predykcja-z-drzewa" id="toc-predykcja-z-drzewa" class="nav-link" data-scroll-target="#predykcja-z-drzewa"><span class="header-section-number">5.1.6</span> Predykcja z drzewa</a></li>
   </ul></li>
   <li><a href="#bagging-i-lasy-losowe" id="toc-bagging-i-lasy-losowe" class="nav-link" data-scroll-target="#bagging-i-lasy-losowe"><span class="header-section-number">5.2</span> Bagging i lasy losowe</a>
   <ul class="collapse">
-  <li><a href="#rys-historyczny-od-bootstrapu-do-lasów-losowych" id="toc-rys-historyczny-od-bootstrapu-do-lasów-losowych" class="nav-link" data-scroll-target="#rys-historyczny-od-bootstrapu-do-lasów-losowych"><span class="header-section-number">5.2.1</span> Rys historyczny: od bootstrapu do lasów losowych</a></li>
-  <li><a href="#koncepcja-baggingu-redukcja-wariancji-przez-agregację" id="toc-koncepcja-baggingu-redukcja-wariancji-przez-agregację" class="nav-link" data-scroll-target="#koncepcja-baggingu-redukcja-wariancji-przez-agregację"><span class="header-section-number">5.2.2</span> Koncepcja baggingu: redukcja wariancji przez agregację</a></li>
-  <li><a href="#algorytm-baggingu-schemat" id="toc-algorytm-baggingu-schemat" class="nav-link" data-scroll-target="#algorytm-baggingu-schemat"><span class="header-section-number">5.2.3</span> Algorytm baggingu (schemat)</a></li>
-  <li><a href="#lasy-losowe-bagging-losowanie-cech-w-węzłach" id="toc-lasy-losowe-bagging-losowanie-cech-w-węzłach" class="nav-link" data-scroll-target="#lasy-losowe-bagging-losowanie-cech-w-węzłach"><span class="header-section-number">5.2.4</span> Lasy losowe: bagging + losowanie cech w węzłach</a></li>
-  <li><a href="#najważniejsze-parametry-i-ich-interpretacja" id="toc-najważniejsze-parametry-i-ich-interpretacja" class="nav-link" data-scroll-target="#najważniejsze-parametry-i-ich-interpretacja"><span class="header-section-number">5.2.5</span> Najważniejsze parametry i ich interpretacja</a></li>
-  <li><a href="#bagging-vs-random-forest-podobieństwa-i-różnice" id="toc-bagging-vs-random-forest-podobieństwa-i-różnice" class="nav-link" data-scroll-target="#bagging-vs-random-forest-podobieństwa-i-różnice"><span class="header-section-number">5.2.6</span> Bagging vs random forest: podobieństwa i różnice</a></li>
-  <li><a href="#dodatkowe-uwagi-praktyczne" id="toc-dodatkowe-uwagi-praktyczne" class="nav-link" data-scroll-target="#dodatkowe-uwagi-praktyczne"><span class="header-section-number">5.2.7</span> Dodatkowe uwagi praktyczne</a></li>
+  <li><a href="#od-bootstrapu-do-lasów-losowych" id="toc-od-bootstrapu-do-lasów-losowych" class="nav-link" data-scroll-target="#od-bootstrapu-do-lasów-losowych"><span class="header-section-number">5.2.1</span> Od bootstrapu do lasów losowych</a></li>
+  <li><a href="#koncepcja-baggingu" id="toc-koncepcja-baggingu" class="nav-link" data-scroll-target="#koncepcja-baggingu"><span class="header-section-number">5.2.2</span> Koncepcja baggingu</a></li>
+  <li><a href="#lasy-losowe" id="toc-lasy-losowe" class="nav-link" data-scroll-target="#lasy-losowe"><span class="header-section-number">5.2.3</span> Lasy losowe</a></li>
+  <li><a href="#najważniejsze-parametry-i-ich-interpretacja" id="toc-najważniejsze-parametry-i-ich-interpretacja" class="nav-link" data-scroll-target="#najważniejsze-parametry-i-ich-interpretacja"><span class="header-section-number">5.2.4</span> Najważniejsze parametry i ich interpretacja</a></li>
+  <li><a href="#bagging-vs-random-forest" id="toc-bagging-vs-random-forest" class="nav-link" data-scroll-target="#bagging-vs-random-forest"><span class="header-section-number">5.2.5</span> Bagging vs random forest</a></li>
+  <li><a href="#własności-drzew-i-modeli-typu-ensamble" id="toc-własności-drzew-i-modeli-typu-ensamble" class="nav-link" data-scroll-target="#własności-drzew-i-modeli-typu-ensamble"><span class="header-section-number">5.2.6</span> Własności drzew i modeli typu <em>ensamble</em></a></li>
   </ul></li>
   <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting"><span class="header-section-number">5.3</span> Boosting</a>
   <ul class="collapse">
-  <li><a href="#rys-historyczny-od-słabych-uczniów-do-gradientowego-boostingu" id="toc-rys-historyczny-od-słabych-uczniów-do-gradientowego-boostingu" class="nav-link" data-scroll-target="#rys-historyczny-od-słabych-uczniów-do-gradientowego-boostingu"><span class="header-section-number">5.3.1</span> Rys historyczny: od „słabych uczniów” do gradientowego boostingu</a></li>
-  <li><a href="#koncepcja-model-addytywny-i-uczenie-na-błędach" id="toc-koncepcja-model-addytywny-i-uczenie-na-błędach" class="nav-link" data-scroll-target="#koncepcja-model-addytywny-i-uczenie-na-błędach"><span class="header-section-number">5.3.2</span> Koncepcja: model addytywny i uczenie „na błędach”</a></li>
-  <li><a href="#adaboost-boosting-przez-wagi-obserwacji-klasyfikacja" id="toc-adaboost-boosting-przez-wagi-obserwacji-klasyfikacja" class="nav-link" data-scroll-target="#adaboost-boosting-przez-wagi-obserwacji-klasyfikacja"><span class="header-section-number">5.3.3</span> AdaBoost: boosting przez wagi obserwacji (klasyfikacja)</a></li>
-  <li><a href="#gradient-boosting-minimalizacja-straty-w-przestrzeni-funkcji" id="toc-gradient-boosting-minimalizacja-straty-w-przestrzeni-funkcji" class="nav-link" data-scroll-target="#gradient-boosting-minimalizacja-straty-w-przestrzeni-funkcji"><span class="header-section-number">5.3.4</span> Gradient Boosting: minimalizacja straty w przestrzeni funkcji</a></li>
-  <li><a href="#xgboost-regularizacja-i-optymalizacje-implementacyjne" id="toc-xgboost-regularizacja-i-optymalizacje-implementacyjne" class="nav-link" data-scroll-target="#xgboost-regularizacja-i-optymalizacje-implementacyjne"><span class="header-section-number">5.3.5</span> XGBoost: regularizacja i optymalizacje implementacyjne</a></li>
-  <li><a href="#catboost-kategorie-i-kontrola-wycieku-informacji" id="toc-catboost-kategorie-i-kontrola-wycieku-informacji" class="nav-link" data-scroll-target="#catboost-kategorie-i-kontrola-wycieku-informacji"><span class="header-section-number">5.3.6</span> CatBoost: kategorie i kontrola wycieku informacji</a></li>
-  <li><a href="#najważniejsze-hiperparametry-i-ryzyko-przeuczenia" id="toc-najważniejsze-hiperparametry-i-ryzyko-przeuczenia" class="nav-link" data-scroll-target="#najważniejsze-hiperparametry-i-ryzyko-przeuczenia"><span class="header-section-number">5.3.7</span> Najważniejsze hiperparametry i ryzyko przeuczenia</a></li>
-  <li><a href="#boosting-vs-bagging-porównanie-i-typowe-pułapki" id="toc-boosting-vs-bagging-porównanie-i-typowe-pułapki" class="nav-link" data-scroll-target="#boosting-vs-bagging-porównanie-i-typowe-pułapki"><span class="header-section-number">5.3.8</span> Boosting vs bagging: porównanie i typowe „pułapki”</a></li>
-  <li><a href="#uwaga-praktyczna-metryki-ważności-cech-i-interpretacja" id="toc-uwaga-praktyczna-metryki-ważności-cech-i-interpretacja" class="nav-link" data-scroll-target="#uwaga-praktyczna-metryki-ważności-cech-i-interpretacja"><span class="header-section-number">5.3.9</span> Uwaga praktyczna: metryki, ważności cech i interpretacja</a></li>
+  <li><a href="#rys-historyczny" id="toc-rys-historyczny" class="nav-link" data-scroll-target="#rys-historyczny"><span class="header-section-number">5.3.1</span> Rys historyczny</a></li>
+  <li><a href="#koncepcja---model-addytywny-i-uczenie-na-błędach" id="toc-koncepcja---model-addytywny-i-uczenie-na-błędach" class="nav-link" data-scroll-target="#koncepcja---model-addytywny-i-uczenie-na-błędach"><span class="header-section-number">5.3.2</span> Koncepcja - model addytywny i uczenie „na błędach”</a></li>
+  <li><a href="#adaboost---boosting-przez-wagi-obserwacji" id="toc-adaboost---boosting-przez-wagi-obserwacji" class="nav-link" data-scroll-target="#adaboost---boosting-przez-wagi-obserwacji"><span class="header-section-number">5.3.3</span> AdaBoost - boosting przez wagi obserwacji</a></li>
+  <li><a href="#gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji" id="toc-gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji" class="nav-link" data-scroll-target="#gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji"><span class="header-section-number">5.3.4</span> Gradient Boosting - minimalizacja straty w przestrzeni funkcji</a></li>
+  <li><a href="#xgboost" id="toc-xgboost" class="nav-link" data-scroll-target="#xgboost"><span class="header-section-number">5.3.5</span> XGBoost</a></li>
+  <li><a href="#catboost" id="toc-catboost" class="nav-link" data-scroll-target="#catboost"><span class="header-section-number">5.3.6</span> CatBoost</a></li>
+  <li><a href="#boosting-vs-bagging" id="toc-boosting-vs-bagging" class="nav-link" data-scroll-target="#boosting-vs-bagging"><span class="header-section-number">5.3.7</span> Boosting vs bagging</a></li>
+  <li><a href="#porównanie-modeli-z-przykładów" id="toc-porównanie-modeli-z-przykładów" class="nav-link" data-scroll-target="#porównanie-modeli-z-przykładów"><span class="header-section-number">5.3.8</span> Porównanie modeli z przykładów</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
@@ -458,13 +518,12 @@ window.Quarto = {
 <section id="klasyczne-rodziny-algorytmów-drzew-i-ich-różnice" class="level3" data-number="5.1.1">
 <h3 data-number="5.1.1" class="anchored" data-anchor-id="klasyczne-rodziny-algorytmów-drzew-i-ich-różnice"><span class="header-section-number">5.1.1</span> Klasyczne rodziny algorytmów drzew i ich różnice</h3>
 <p>W literaturze i praktyce spotyka się kilka „rodzin” algorytmów drzew decyzyjnych. Różnią się one m.in. sposobem doboru podziału (kryterium jakości), dopuszczalną liczbą gałęzi w węźle, obsługą braków danych, strategią przycinania oraz tym, czy wnioski statystyczne są wbudowane w procedurę uczenia.</p>
-<p><strong>ID3 (Iterative Dichotomiser 3)</strong> (Quinlan) to jeden z najwcześniejszych, wpływowych algorytmów drzew klasyfikacyjnych. Uczy drzewo <em>wielogałęziowe</em> (tzn. węzeł może mieć tyle gałęzi, ile kategorii ma dana cecha) i wybiera podział na podstawie <strong>zysku informacji</strong> (<em>information gain</em>), który jest redukcją entropii po podziale. W klasycznej postaci ID3 był projektowany głównie dla cech kategorycznych, nie posiadał pełnego, ustandaryzowanego mechanizmu przycinania i jest wrażliwy na cechy o dużej liczbie kategorii (mogą sztucznie „wygrywać” kryterium entropijne). Z perspektywy ogólnego spojrzenia na drzewa decyzyjne ważne jest to, że ID3 ustanowił wzorzec: <em>rekurencyjne dzielenie + entropia/zysk informacji</em>.</p>
-<p><strong>C4.5</strong> (Quinlan) jest rozwinięciem ID3 i przez wiele lat był stosowanym standardem. Wprowadza on m.in. (i) obsługę <strong>zmiennych ciągłych</strong> przez poszukiwanie progu i podziały binarne dla cech liczbowych, (ii) modyfikację kryterium jakości podziału w postaci <strong>współczynnika zysku informacji</strong> (<em>gain ratio</em>), który koryguje preferencję dla cech o wielu kategoriach, (iii) obsługę <strong>braków danych</strong> przez rozdzielanie obserwacji z brakami „miękko” (z wagami) między gałęzie lub przez dopasowane heurystyki, oraz (iv) przycinanie oparte o oszacowania błędu (tzw. <em>error-based pruning</em>). W praktyce C4.5 produkuje drzewa, które są zwykle mniejsze i bardziej uogólniające niż ID3.</p>
-<p><strong>C5.0</strong> to następca C4.5 (Quinlan), zaprojektowany jako szybszy i bardziej skalowalny, z licznymi usprawnieniami inżynieryjnymi i heurystycznymi. Typowo oferuje lepszą wydajność obliczeniową, mniejsze zużycie pamięci oraz dodatkowe możliwości praktyczne (np. kosztowną klasyfikację, mechanizmy „wzmocnienia” w stylu <em>boosting/committee</em> w niektórych implementacjach). Koncepcyjnie nadal jest to drzewo „w duchu Quinlana”: kryteria entropijne, sprawna obsługa cech ciągłych i braków oraz silny nacisk na praktyczne uogólnianie.</p>
-<p><strong>CART (Classification and Regression Trees)</strong> (Breiman i in.) ujednolica podejście do <strong>klasyfikacji i regresji</strong> w ramach jednego formalizmu. Charakterystyczne cechy CART są następujące: (i) podziały są zazwyczaj <strong>binarne</strong> (nawet dla cech kategorycznych – kategorie dzieli się na dwie grupy), (ii) w klasyfikacji stosuje się zwykle <strong>indeks Giniego</strong> (lub entropię), a w regresji kryterium oparte o <strong>SSE/wariancję</strong>, (iii) kluczowym elementem jest <strong>przycinanie złożoności</strong> (<em>cost-complexity pruning</em>), tj. wybór drzewa przez kompromis między dopasowaniem i złożonością, oraz (iv) mechanizm <strong>reguł zastępczych (surrogate splits)</strong> jako systematyczna odpowiedź na braki danych. CART jest dziś szczególnie ważne, bo stanowi bazę dla wielu metod zespołowych (<em>random forest, gradient boosting</em>) i jest najczęściej spotykaną „architekturą” drzew w ML.</p>
-<p><strong>Conditional inference trees (<em>conditional trees, ctree</em>)</strong> (Hothorn, Hornik, Zeileis) powstały jako odpowiedź na znane uprzedzenia klasycznych kryteriów podziału (Gini/entropia/SSE), które mogą faworyzować cechy o wielu możliwych podziałach (np. zmienne ciągłe lub kategoryczne o wielu poziomach). W ctree wybór podziału ma charakter <strong>statystyczny</strong> i opiera się na <strong>testach permutacyjnych niezależności</strong>. Procedura jest dwuetapowa: najpierw w danym węźle testuje się hipotezę globalną, że zmienna docelowa jest niezależna od wszystkich cech (jeśli brak podstaw do jej odrzucenia, węzeł staje się liściem), a następnie – w razie istotności – wykonuje się testy cząstkowe dla każdej cechy i wybiera tę o najsilniejszej zależności z odpowiednią korektą na wielokrotne porównania. Typ testu zależy od typu zmiennej docelowej i predyktora: dla klasyfikacji (<span class="math inline">\(Y\)</span> kategoryczne) stosuje się permutacyjne testy niezależności odpowiadające m.in. testom <span class="math inline">\(\chi^2\)</span> (gdy <span class="math inline">\(X\)</span> kategoryczne) lub testom porównania rozkładów/średnich typu ANOVA/F (gdy <span class="math inline">\(X\)</span> ciągłe), natomiast dla regresji (<span class="math inline">\(Y\)</span> ciągłe) stosuje się permutacyjne testy zależności odpowiadające testom korelacyjnym/regresyjnym (gdy <span class="math inline">\(X\)</span> ciągłe) albo testom różnic średnich typu ANOVA (gdy <span class="math inline">\(X\)</span> kategoryczne) – zawsze jednak w wersji permutacyjnej. Dzięki temu conditional trees redukują tendencyjność selekcji zmiennych, a kryterium stopu jest naturalnie powiązane z istotnością statystyczną, a nie wyłącznie z heurystycznymi parametrami złożoności.</p>
-<p><strong>CHAID (Chi-squared Automatic Interaction Detection)</strong> to klasyczna metoda drzew wielogałęziowych, szczególnie popularna w analizie marketingowej i badaniach społecznych. Jej znakiem rozpoznawczym są: (i) podziały wybierane na podstawie <strong>testów chi-kwadrat</strong> (dla klasyfikacji) lub testów analogicznych dla zmiennych ciągłych, (ii) możliwość <strong>łączenia kategorii</strong> cech kategorycznych w większe grupy przed wykonaniem podziału, oraz (iii) częste stosowanie podziałów <strong>wielogałęziowych</strong> (niekoniecznie binarnych). CHAID jest ceniony za interpretowalność i naturalne traktowanie interakcji w kategoriach, ale w porównaniu do CART bywa mniej „ML-owy” w sensie typowych współczesnych pipeline’ów i częściej występuje w narzędziach statystycznych/BI.</p>
-<p>Zasada działania drzewa jest rekurencyjna: przestrzeń cech jest dzielona na coraz mniejsze obszary przez kolejne pytania o wartości cech. Każdy podział wybiera jedną cechę i warunek (np. <span class="math inline">\(x_j \le t\)</span>), który rozdziela obserwacje na dwie (lub więcej) grupy. Proces powtarza się w powstałych podzbiorach aż do spełnienia kryterium stopu (np. minimalna liczba obserwacji w węźle, maksymalna głębokość, brak istotnej poprawy jakości). W efekcie otrzymujemy model złożony z węzłów wewnętrznych (podziały) oraz liści (obszary decyzyjne).</p>
+<p><strong>ID3 (Iterative Dichotomiser 3)</strong> <span class="citation" data-cites="quinlan1986">(<a href="reference.html#ref-quinlan1986" role="doc-biblioref">J. R. Quinlan 1986</a>)</span> to jeden z najwcześniejszych, wpływowych algorytmów drzew klasyfikacyjnych. Uczy drzewo <em>wielogałęziowe</em> (tzn. węzeł może mieć tyle gałęzi, ile kategorii ma dana cecha) i wybiera podział na podstawie <strong>zysku informacji</strong> (<em>information gain</em>), który jest redukcją entropii po podziale. W klasycznej postaci ID3 był projektowany głównie dla cech kategorycznych, nie posiadał pełnego, ustandaryzowanego mechanizmu przycinania i jest wrażliwy na cechy o dużej liczbie kategorii (mogą sztucznie „wygrywać” kryterium entropijne). Z perspektywy ogólnego spojrzenia na drzewa decyzyjne ważne jest to, że ID3 ustanowił wzorzec: <em>rekurencyjne dzielenie + entropia/zysk informacji</em>.</p>
+<p><strong>C4.5</strong> <span class="citation" data-cites="quinlan1993">(<a href="reference.html#ref-quinlan1993" role="doc-biblioref">J. Ross Quinlan 1993</a>)</span> jest rozwinięciem ID3 i przez wiele lat był stosowanym standardem. Wprowadza on m.in. (i) obsługę <strong>zmiennych ciągłych</strong> przez poszukiwanie progu i podziały binarne dla cech liczbowych, (ii) modyfikację kryterium jakości podziału w postaci <strong>współczynnika zysku informacji</strong> (<em>gain ratio</em>), który koryguje preferencję dla cech o wielu kategoriach, (iii) obsługę <strong>braków danych</strong> przez rozdzielanie obserwacji z brakami „miękko” (z wagami) między gałęzie lub przez dopasowane heurystyki, oraz (iv) przycinanie oparte o oszacowania błędu (tzw. <em>error-based pruning</em>). W praktyce C4.5 produkuje drzewa, które są zwykle mniejsze i bardziej uogólniające niż ID3.</p>
+<p><strong>C5.0</strong> to następca C4.5 <span class="citation" data-cites="kuhn2018">(<a href="reference.html#ref-kuhn2018" role="doc-biblioref">Kuhn i Quinlan 2018</a>)</span>, zaprojektowany jako szybszy i bardziej skalowalny, z licznymi usprawnieniami inżynieryjnymi i heurystycznymi. Typowo oferuje lepszą wydajność obliczeniową, mniejsze zużycie pamięci oraz dodatkowe możliwości praktyczne (np. kosztowną klasyfikację, mechanizmy „wzmocnienia” w stylu <em>boosting/committee</em> w niektórych implementacjach). Koncepcyjnie nadal jest to drzewo „w duchu Quinlana”: kryteria entropijne, sprawna obsługa cech ciągłych i braków oraz silny nacisk na praktyczne uogólnianie.</p>
+<p><strong>CART (Classification and Regression Trees)</strong> <span class="citation" data-cites="breiman2017">(<a href="reference.html#ref-breiman2017" role="doc-biblioref">Breiman i in. 2017</a>)</span> ujednolica podejście do <strong>klasyfikacji i regresji</strong> w ramach jednego formalizmu. Charakterystyczne cechy CART są następujące: (i) podziały są zazwyczaj <strong>binarne</strong> (nawet dla cech kategorycznych – kategorie dzieli się na dwie grupy), (ii) w klasyfikacji stosuje się zwykle <strong>indeks Giniego</strong> (lub entropię), a w regresji kryterium oparte o <strong>SSE/wariancję</strong>, (iii) kluczowym elementem jest <strong>przycinanie złożoności</strong> (<em>cost-complexity pruning</em>), tj. wybór drzewa przez kompromis między dopasowaniem i złożonością, oraz (iv) mechanizm <strong>reguł zastępczych (<em>surrogate splits</em>)</strong> jako systematyczna odpowiedź na braki danych. CART jest dziś szczególnie ważne, bo stanowi bazę dla wielu metod zespołowych (<em>random forest, gradient boosting</em>) i jest najczęściej spotykaną „architekturą” drzew w ML.</p>
+<p><strong>Conditional inference trees (<em>conditional trees, ctree</em>)</strong> <span class="citation" data-cites="hothorn2006">(<a href="reference.html#ref-hothorn2006" role="doc-biblioref">Hothorn, Hornik, i Zeileis 2006</a>)</span> powstały jako odpowiedź na znane uprzedzenia klasycznych kryteriów podziału (Gini/entropia/SSE), które mogą faworyzować cechy o wielu możliwych podziałach (np. zmienne ciągłe lub kategoryczne o wielu poziomach). W ctree wybór podziału ma charakter <strong>statystyczny</strong> i opiera się na <strong>testach permutacyjnych niezależności</strong>. Procedura jest dwuetapowa: najpierw w danym węźle testuje się hipotezę globalną, że zmienna docelowa jest niezależna od wszystkich cech (jeśli brak podstaw do jej odrzucenia, węzeł staje się liściem), a następnie – w razie istotności – wykonuje się testy cząstkowe dla każdej cechy i wybiera tę o najsilniejszej zależności z odpowiednią korektą na wielokrotne porównania. Typ testu zależy od typu zmiennej docelowej i predyktora: dla klasyfikacji (<span class="math inline">\(Y\)</span> kategoryczne) stosuje się permutacyjne testy niezależności odpowiadające m.in. testom <span class="math inline">\(\chi^2\)</span> (gdy <span class="math inline">\(X\)</span> kategoryczne) lub testom porównania rozkładów/średnich typu ANOVA/F (gdy <span class="math inline">\(X\)</span> ciągłe), natomiast dla regresji (<span class="math inline">\(Y\)</span> ciągłe) stosuje się permutacyjne testy zależności odpowiadające testom korelacyjnym/regresyjnym (gdy <span class="math inline">\(X\)</span> ciągłe) albo testom różnic średnich typu ANOVA (gdy <span class="math inline">\(X\)</span> kategoryczne) – zawsze jednak w wersji permutacyjnej. Dzięki temu <em>conditional trees</em> redukują tendencyjność selekcji zmiennych, a kryterium stopu jest naturalnie powiązane z istotnością statystyczną, a nie wyłącznie z heurystycznymi parametrami złożoności.</p>
+<p><strong>CHAID (Chi-squared Automatic Interaction Detection)</strong> <span class="citation" data-cites="kass1980">(<a href="reference.html#ref-kass1980" role="doc-biblioref">Kass 1980</a>)</span> to klasyczna metoda drzew wielogałęziowych, szczególnie popularna w analizie marketingowej i badaniach społecznych. Jej znakiem rozpoznawczym są: (i) podziały wybierane na podstawie <strong>testów chi-kwadrat</strong> (dla klasyfikacji) lub testów analogicznych dla zmiennych ciągłych, (ii) możliwość <strong>łączenia kategorii</strong> cech kategorycznych w większe grupy przed wykonaniem podziału, oraz (iii) częste stosowanie podziałów <strong>wielogałęziowych</strong> (niekoniecznie binarnych). CHAID jest ceniony za interpretowalność i naturalne traktowanie interakcji w kategoriach, ale w porównaniu do CART bywa mniej „ML-owy” w sensie typowych współczesnych pipeline’ów i częściej występuje w narzędziach statystycznych/BI.</p>
 </section>
 <section id="rodzaje-drzew-i-podstawowe-elementy-konstrukcji" class="level3" data-number="5.1.2">
 <h3 data-number="5.1.2" class="anchored" data-anchor-id="rodzaje-drzew-i-podstawowe-elementy-konstrukcji"><span class="header-section-number">5.1.2</span> Rodzaje drzew i podstawowe elementy konstrukcji</h3>
@@ -543,13 +602,13 @@ I_{\text{SSE}}(S) = \sum_{i\in S} (y_i - \bar{y}_S)^2.
 </section>
 <section id="braki-danych-a-wybór-podziału" class="level4 page-columns page-full" data-number="5.1.4.3">
 <h4 data-number="5.1.4.3" class="anchored" data-anchor-id="braki-danych-a-wybór-podziału"><span class="header-section-number">5.1.4.3</span> Braki danych a wybór podziału</h4>
-<p>W zależności od algorytmu i implementacji, braki mogą być obsługiwane na kilka sposobów: przez wcześniejszą imputację, przez traktowanie „braku” jako osobnej kategorii (częste w praktyce), przez wybór domyślnego kierunku podziału (np. brak <span class="math inline">\(\to\)</span> lewa gałąź) lub przez mechanizmy takie jak <strong>surrogate splits</strong> w CART <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Istotne jest, że sposób obsługi braków wpływa zarówno na wynik <span class="math inline">\(\Delta I(s)\)</span>, jak i na stabilność drzewa.</p>
+<p>W zależności od algorytmu i implementacji, braki mogą być obsługiwane na kilka sposobów: przez wcześniejszą imputację, przez traktowanie „braku” jako osobnej kategorii (częste w praktyce), przez wybór domyślnego kierunku podziału (np. brak <span class="math inline">\(\to\)</span> lewa gałąź) lub przez mechanizmy takie jak <em>surrogate splits</em> w CART <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Reguły zastępcze to mechanizm kojarzony przede wszystkim z CART, używany gdy dla obserwacji brakuje wartości cechy, według której w danym węźle wykonywany jest podział. Zamiast odrzucać obserwację lub imputować brak, drzewo może wybrać <strong>alternatywną regułę podziału</strong> opartą o inną cechę, która możliwie najlepiej „naśladuje” podział główny. W praktyce buduje się ranking reguł zastępczych na podstawie zgodności przypisań do gałęzi (np. jak często podział zastępczy wysyła obserwacje do tej samej strony co podział główny w danych treningowych). Dzięki temu drzewo zachowuje spójność działania nawet przy brakach danych.</p></div></div></section>
 <section id="kontrola-złożoności-pre-pruning-i-w-cart-post-pruning" class="level4" data-number="5.1.4.4">
 <h4 data-number="5.1.4.4" class="anchored" data-anchor-id="kontrola-złożoności-pre-pruning-i-w-cart-post-pruning"><span class="header-section-number">5.1.4.4</span> Kontrola złożoności: pre-pruning i (w CART) post-pruning</h4>
 <p>Ponieważ strategia zachłanna łatwo prowadzi do bardzo głębokich drzew, w praktyce kontroluje się złożoność na dwa sposoby:</p>
 <ul>
-<li><p><strong>pre-pruning</strong> (ograniczenia w trakcie budowy): zamiast budować bardzo głębokie drzewo, można narzucić ograniczenia już na etapie wzrostu, aby zmniejszyć wariancję i ryzyko przeuczenia.</p>
+<li><p><strong>pre-pruning</strong> (ograniczenia w trakcie budowy) - zamiast budować bardzo głębokie drzewo, można narzucić ograniczenia już na etapie wzrostu, aby zmniejszyć wariancję i ryzyko przeuczenia.</p>
 <ul>
 <li><code>max_depth</code> – maksymalna głębokość drzewa (liczba krawędzi/poziomów od korzenia do liścia). Małe wartości ograniczają liczbę kolejnych podziałów, co zwykle zwiększa bias, ale zmniejsza wariancję.</li>
 <li><code>min_samples_split</code> – minimalna liczba obserwacji w węźle, aby w ogóle rozważać jego podział. Jeśli węzeł ma mniej obserwacji, staje się liściem.</li>
@@ -557,7 +616,7 @@ I_{\text{SSE}}(S) = \sum_{i\in S} (y_i - \bar{y}_S)^2.
 <li><code>max_leaf_nodes</code> – maksymalna liczba liści w całym drzewie. To bezpośrednia kontrola złożoności, bo liczba liści determinuje liczbę regionów decyzyjnych.</li>
 <li><code>min_impurity_decrease</code> – minimalna wymagana redukcja nieczystości <span class="math inline">\(\Delta I(s)\)</span>, aby zaakceptować podział. Jeśli najlepszy możliwy podział w węźle nie daje spadku nieczystości większego od progu, algorytm przerywa wzrost i tworzy liść.</li>
 </ul></li>
-<li><p><strong>post-pruning</strong> (przycinanie po zbudowaniu dużego drzewa): w CART standardowo buduje się najpierw drzewo „maksymalne” (silnie dopasowane, często aż do spełnienia minimalnych ograniczeń liczności), a następnie usuwa się jego gałęzie, wybierając takie poddrzewo, które najlepiej równoważy <strong>dopasowanie</strong> i <strong>złożoność</strong>. Klasyczne podejście to <em>cost-complexity pruning</em> (znane też jako <em>weakest-link pruning</em>), w którym rozważa się rodzinę poddrzew <span class="math inline">\(T_\alpha\)</span> minimalizujących kompromis</p>
+<li><p><strong>post-pruning</strong> (przycinanie po zbudowaniu dużego drzewa) - w CART standardowo buduje się najpierw drzewo „maksymalne” (silnie dopasowane, często aż do spełnienia minimalnych ograniczeń liczności), a następnie usuwa się jego gałęzie, wybierając takie poddrzewo, które najlepiej równoważy <strong>dopasowanie</strong> i <strong>złożoność</strong>. Klasyczne podejście to <em>cost-complexity pruning</em> (znane też jako <em>weakest-link pruning</em>), w którym rozważa się rodzinę poddrzew <span class="math inline">\(T_\alpha\)</span> minimalizujących kompromis</p>
 <p><span class="math display">\[
 R(T) + \alpha\,|T|,
 \]</span></p>
@@ -576,39 +635,341 @@ g(t) = \frac{R(t) - R(T_t)}{|T_t| - 1},
 T_0 \supset T_1 \supset \cdots \supset T_M,
 \]</span></p>
 <p>odpowiadających rosnącym wartościom <span class="math inline">\(\alpha\)</span>. Dzięki temu zamiast przeszukiwać wszystkie możliwe drzewa, analizujemy tylko tę sekwencję kandydatów.</p>
-<p><strong>Dobór <span class="math inline">\(\alpha\)</span> (czyli wybór końcowego drzewa).</strong> Parametr <span class="math inline">\(\alpha\)</span> dobiera się zwykle przez walidację krzyżową: dla każdego kandydata <span class="math inline">\(T_m\)</span> estymuje się błąd generalizacji i wybiera drzewo o najlepszej jakości. Często stosuje się też zasadę <strong>1-SE</strong>: wybiera się najmniejsze drzewo, którego błąd walidacyjny jest nie większy niż minimum powiększone o jedno odchylenie standardowe, aby preferować model prostszy i stabilniejszy.</p></li>
+<p>Dobór <span class="math inline">\(\alpha\)</span> (czyli wybór końcowego drzewa) - parametr <span class="math inline">\(\alpha\)</span> dobiera się zwykle przez walidację krzyżową: dla każdego kandydata <span class="math inline">\(T_m\)</span> estymuje się błąd generalizacji i wybiera drzewo o najlepszej jakości. Często stosuje się też zasadę <strong>1-SE</strong>: wybiera się najmniejsze drzewo, którego błąd walidacyjny jest nie większy niż minimum powiększone o jedno odchylenie standardowe, aby preferować model prostszy i stabilniejszy.</p></li>
 </ul>
 </section>
 </section>
-<section id="predykcja-z-drzewa" class="level3" data-number="5.1.5">
-<h3 data-number="5.1.5" class="anchored" data-anchor-id="predykcja-z-drzewa"><span class="header-section-number">5.1.5</span> Predykcja z drzewa</h3>
+<section id="reguły-stopu-stopping-rules" class="level3" data-number="5.1.5">
+<h3 data-number="5.1.5" class="anchored" data-anchor-id="reguły-stopu-stopping-rules"><span class="header-section-number">5.1.5</span> Reguły stopu (<em>stopping rules</em>)</h3>
+<p>Wzrost drzewa (rekurencyjne dzielenie) nie może trwać w nieskończoność. W pewnym momencie węzeł powinien zostać liściem. Z punktu widzenia konstrukcji algorytmu reguły stopu można podzielić na dwie grupy:</p>
+<ol type="1">
+<li><strong>Reguły „merytoryczne” (lokalne)</strong> - mówią, że dalszy podział nie ma sensu, bo nie poprawia jakości lub nie da się go wykonać (np. wszystkie obserwacje należą do jednej klasy).</li>
+<li><strong>Reguły „regularizacyjne” (kontrola złożoności)</strong> - narzucają ograniczenia, aby ograniczyć przeuczenie (np. limit głębokości, minimalna liczność liścia).</li>
+</ol>
+<section id="typowe-reguły-stopu" class="level4" data-number="5.1.5.1">
+<h4 data-number="5.1.5.1" class="anchored" data-anchor-id="typowe-reguły-stopu"><span class="header-section-number">5.1.5.1</span> Typowe reguły stopu</h4>
+<p>Poniżej najczęściej spotykane kryteria, które zatrzymują wzrost drzewa w danym węźle:</p>
+<ul>
+<li><p><strong>Czystość węzła (purity).</strong></p>
+<ul>
+<li>klasyfikacja: jeśli węzeł jest jednorodny, tzn. <span class="math inline">\(p_k=1\)</span> dla pewnej klasy <span class="math inline">\(k\)</span>, to <span class="math inline">\(I(S)=0\)</span> i dalszy podział nie ma sensu,</li>
+<li>regresja: analogicznie, jeśli wszystkie <span class="math inline">\(y_i\)</span> w węźle są identyczne (wariancja = 0), podział nie poprawi SSE.</li>
+</ul></li>
+<li><p><strong>Brak dopuszczalnego podziału.</strong> Dla każdej cechy może się okazać, że nie istnieje próg/kombinacja kategorii, która tworzy dwie niepuste gałęzie i spełnia ograniczenia liczności.</p></li>
+<li><p><strong>Minimalna poprawa jakości (próg na</strong> <span class="math inline">\(\Delta I\)</span>). Jeżeli najlepszy możliwy podział w węźle daje redukcję nieczystości mniejszą niż ustalony próg, to przerywamy wzrost:</p>
+<p><span class="math display">\[
+\max_s \Delta I(s) &lt; \tau \quad \Rightarrow \quad \text{węzeł staje się liściem.}
+\]</span></p></li>
+<li><p><strong>Minimalna liczność węzła i liścia.</strong></p>
+<ul>
+<li>aby rozważać podział: <span class="math inline">\(|S| \ge n_{\text{split}}\)</span>,</li>
+<li>aby zaakceptować podział: <span class="math inline">\(|S_L|,|S_R| \ge n_{\text{leaf}}\)</span>.</li>
+</ul></li>
+<li><p><strong>Ograniczenie głębokości lub liczby liści.</strong> W praktyce kontroluje liczbę regionów decyzyjnych i stabilność modelu.</p></li>
+</ul>
+<p>W drzewach typu <em>ctree</em> (<em>conditional inference</em>) reguła stopu może wynikać wprost z testowania: jeśli brak istotnej zależności (po korekcji na wielokrotne porównania), węzeł staje się liściem. W klasycznym CART reguły stopu mają zwykle charakter heurystyczny/regularizacyjny (parametry złożoności), a dodatkową kontrolę zapewnia post-pruning.</p>
+</section>
+</section>
+<section id="predykcja-z-drzewa" class="level3" data-number="5.1.6">
+<h3 data-number="5.1.6" class="anchored" data-anchor-id="predykcja-z-drzewa"><span class="header-section-number">5.1.6</span> Predykcja z drzewa</h3>
 <p>Predykcja polega na „przejściu” obserwacji przez drzewo od korzenia do liścia, wykonując po drodze kolejne testy.</p>
 <ul>
 <li><strong>Drzewo klasyfikacyjne:</strong> w liściu przechowuje się rozkład klas (częstości) <span class="math inline">\(\hat{p}_k\)</span>. Predykcją klasy jest zwykle <span class="math inline">\(\arg\max_k \hat{p}_k\)</span>, a predykcją probabilistyczną – wektor <span class="math inline">\((\hat{p}_1,\dots,\hat{p}_K)\)</span>.</li>
 <li><strong>Drzewo regresyjne:</strong> w liściu przechowuje się wartość liczbową, najczęściej średnią <span class="math inline">\(\bar{y}_S\)</span> (lub medianę, zależnie od kryterium). Predykcja to ta wartość przypisana do liścia, do którego trafia obserwacja.</li>
 </ul>
+<div id="exm-1" class="theorem example">
+<p><span class="theorem-title"><strong>Przykład 5.1 (Przykład: drzewo klasyfikacyjne dla gatunku muzycznego (Spotify))</strong></span> Poniżej budujemy proste drzewo klasyfikacyjne przewidujące <strong>gatunek muzyczny</strong> na podstawie numerycznych cech akustycznych utworów (np. <em>danceability, energy, loudness, tempo</em>). Jest to typowy przypadek danych tablicowych, gdzie drzewa decyzyjne są dobrym modelem bazowym.</p>
+<p>W tym przykładzie <strong>nie wykonujemy klasycznego preprocessingu typu standaryzacja/normalizacja</strong>. Wynika to z faktu, że reguły w drzewach mają postać progów porównujących wartości cech (np. <span class="math inline">\(x_j \le t\)</span>), więc skala zmiennych nie wpływa na sens podziału w taki sposób jak w metodach opartych o iloczyny skalarne (np. regresja logistyczna, SVM). Innymi słowy: drzewo nie korzysta z odległości euklidesowej ani z norm współczynników, tylko z porównań i wyboru progów, dlatego <strong>skalowanie cech nie jest wymagane</strong>. W praktyce pozostają jedynie „minimalne” kroki porządkowe: wybór cech liczbowych i ewentualne uzupełnienie braków (jeśli występują).</p>
+<p>Uwaga dydaktyczna: zbiór Spotify zawiera wiele klas (gatunków). Aby uzyskać czytelny przykład (i sensowną macierz pomyłek), ograniczamy się do <span class="math inline">\(K=10\)</span> najczęstszych gatunków.</p>
+<div id="670dc88d" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> load_dataset</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, FunctionTransformer</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeClassifier, plot_tree, export_text</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    accuracy_score,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    balanced_accuracy_score,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    f1_score,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    classification_report,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    confusion_matrix,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    ConfusionMatrixDisplay,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Wczytanie danych (Hugging Face Datasets)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_dataset(<span class="st">"maharshipandya/spotify-tracks-dataset"</span>, split<span class="op">=</span><span class="st">"train"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> ds.to_pandas()</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Kolumna docelowa</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">"track_genre"</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> target <span class="kw">not</span> <span class="kw">in</span> df.columns:</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"Nie znaleziono kolumny docelowej '</span><span class="sc">{</span>target<span class="sc">}</span><span class="ss">'. Dostępne kolumny: "</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> <span class="st">", "</span>.join(df.columns)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Ograniczamy się do 10 najczęstszych gatunków</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>top_k <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>top_genres <span class="op">=</span> df[target].value_counts().head(top_k).index</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[target].isin(top_genres)].copy()</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[target]).copy()</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 4) Usuwamy zmienne, które nie niosą sensownej informacji predykcyjnej</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>drop_cols <span class="op">=</span> [<span class="st">"Unnamed: 0"</span>, <span class="st">"track_id"</span>, <span class="st">"album_name"</span>, <span class="st">"track_name"</span>, <span class="st">"artists"</span>]</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop(columns<span class="op">=</span>[c <span class="cf">for</span> c <span class="kw">in</span> drop_cols <span class="cf">if</span> c <span class="kw">in</span> df.columns]).copy()</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 5) Braki danych (po filtracji i czyszczeniu)</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>missing_by_col <span class="op">=</span> df.isna().<span class="bu">sum</span>()</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>missing_total <span class="op">=</span> <span class="bu">int</span>(missing_by_col.<span class="bu">sum</span>())</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Braki danych (łącznie): </span><span class="sc">{</span>missing_total<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Braki danych (łącznie): 0</code></pre>
+</div>
+</div>
+<div id="27ea2f7c" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) Cechy: bierzemy tylko numeryczne (+ bool jako 0/1), bo DecisionTreeClassifier nie przyjmuje stringów</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>[<span class="st">"number"</span>, <span class="st">"bool"</span>, <span class="st">"boolean"</span>]).drop(columns<span class="op">=</span>[target], errors<span class="op">=</span><span class="st">"ignore"</span>).copy()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> X.columns:</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">str</span>(X[col].dtype) <span class="kw">in</span> (<span class="st">"bool"</span>, <span class="st">"boolean"</span>):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        X[col] <span class="op">=</span> X[col].astype(<span class="st">"int8"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[target].astype(<span class="bu">str</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 7) Podział na train/test (stratyfikacja utrzymuje proporcje klas)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">44</span>, stratify<span class="op">=</span>y</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 8) Model: samo drzewo (bez pipeline/preprocessingu)</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> DecisionTreeClassifier(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    min_samples_leaf<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>tree.fit(X_train, y_train)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 9) Pełne drzewo tekstowo (cała struktura)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>feature_names <span class="op">=</span> <span class="bu">list</span>(X.columns)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># nie będę wyświetlał bo jest to bardzo duże drzewo</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># print(export_text(tree, feature_names=feature_names))</span></span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="275012da" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 10) Predykcja i metryki</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> tree.predict(X_test)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>bacc <span class="op">=</span> balanced_accuracy_score(y_test, y_pred)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>f1m <span class="op">=</span> f1_score(y_test, y_pred, average<span class="op">=</span><span class="st">"macro"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Metryki (test):"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Accuracy          : </span><span class="sc">{</span>acc<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Balanced accuracy : </span><span class="sc">{</span>bacc<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  F1 macro          : </span><span class="sc">{</span>f1m<span class="sc">:.4f}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Classification report (macro/weighted):"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred))</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 11) Macierz pomyłek</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> tree.classes_</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y_test, y_pred, labels<span class="op">=</span>labels)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm, display_labels<span class="op">=</span>labels)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>disp.plot(ax<span class="op">=</span>ax, xticks_rotation<span class="op">=</span><span class="dv">45</span>, values_format<span class="op">=</span><span class="st">"d"</span>, colorbar<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Drzewo decyzyjne: macierz pomyłek (test)"</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Metryki (test):
+  Accuracy          : 0.6910
+  Balanced accuracy : 0.6910
+  F1 macro          : 0.6913
+
+Classification report (macro/weighted):
+                   precision    recall  f1-score   support
+
+         acoustic       0.60      0.58      0.59       200
+            opera       0.75      0.78      0.77       200
+           pagode       0.88      0.83      0.85       200
+            party       0.70      0.73      0.71       200
+            piano       0.79      0.58      0.67       200
+              pop       0.55      0.81      0.66       200
+         pop-film       0.69      0.62      0.66       200
+        power-pop       0.76      0.62      0.68       200
+progressive-house       0.63      0.61      0.62       200
+        punk-rock       0.67      0.73      0.70       200
+
+         accuracy                           0.69      2000
+        macro avg       0.70      0.69      0.69      2000
+     weighted avg       0.70      0.69      0.69      2000
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="04-drzewa-zespoly_files/figure-html/cell-4-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="04-drzewa-zespoly_files/figure-html/cell-4-output-2.png" width="764" height="758" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="1595dc57" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 12) Wizualizacja drzewa (okrojona)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">10</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plot_tree(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    tree,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    feature_names<span class="op">=</span>feature_names,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    class_names<span class="op">=</span><span class="bu">list</span>(labels),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    filled<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    rounded<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    fontsize<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Drzewo klasyfikacyjne (podgląd pierwszych trzech poziomów)"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="04-drzewa-zespoly_files/figure-html/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="04-drzewa-zespoly_files/figure-html/cell-5-output-1.png" width="1323" height="950" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Spróbujemy teraz przyciąć drzewo w celu poprawy jego zdolności generalizacyjnych.</p>
+<div id="6d4d1f91" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> StratifiedKFold, cross_val_score</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Post-pruning (CART): cost-complexity pruning sterowane parametrem ccp_alpha.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Dla rosnących wartości ccp_alpha dostajemy coraz mniejsze poddrzewa.</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Ścieżka przycinania (kandydaci na alpha)</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> tree.cost_complexity_pruning_path(X_train, y_train)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>ccp_alphas <span class="op">=</span> path.ccp_alphas</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Zwykle ostatnia wartość alpha daje drzewo 1-węzłowe (sam korzeń), więc ją pomijamy.</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ccp_alphas <span class="op">=</span> ccp_alphas[:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Liczba kandydatów ccp_alpha: </span><span class="sc">{</span><span class="bu">len</span>(ccp_alphas)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Zakres ccp_alpha: [</span><span class="sc">{</span>ccp_alphas<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.6g}</span><span class="ss">, </span><span class="sc">{</span>ccp_alphas<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.6g}</span><span class="ss">]"</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Dobór ccp_alpha przez CV na zbiorze treningowym</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>mean_scores <span class="op">=</span> []</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>base_params <span class="op">=</span> tree.get_params()</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a <span class="kw">in</span> ccp_alphas:</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> DecisionTreeClassifier(</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span>base_params[<span class="st">"random_state"</span>],</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>        max_depth<span class="op">=</span>base_params[<span class="st">"max_depth"</span>],</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        min_samples_leaf<span class="op">=</span>base_params[<span class="st">"min_samples_leaf"</span>],</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        ccp_alpha<span class="op">=</span><span class="bu">float</span>(a),</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> cross_val_score(t, X_train, y_train, cv<span class="op">=</span>cv, scoring<span class="op">=</span><span class="st">"balanced_accuracy"</span>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    mean_scores.append(scores.mean())</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>mean_scores <span class="op">=</span> np.array(mean_scores)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>best_idx <span class="op">=</span> <span class="bu">int</span>(mean_scores.argmax())</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>best_alpha <span class="op">=</span> <span class="bu">float</span>(ccp_alphas[best_idx])</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Najlepsze ccp_alpha (CV): </span><span class="sc">{</span>best_alpha<span class="sc">:.6g}</span><span class="ss">"</span>)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Najlepszy balanced_accuracy (CV): </span><span class="sc">{</span>mean_scores[best_idx]<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co"># (opcjonalnie) wykres: alpha vs wynik CV</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>))</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>plt.plot(ccp_alphas, mean_scores, marker<span class="op">=</span><span class="st">"o"</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>plt.axvline(best_alpha, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"ccp_alpha"</span>)</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"CV balanced_accuracy"</span>)</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Dobór ccp_alpha (cost-complexity pruning)"</span>)</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Uczenie drzewa przyciętego najlepszym alpha i porównanie z bazowym</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>tree_pruned <span class="op">=</span> DecisionTreeClassifier(</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span>base_params[<span class="st">"random_state"</span>],</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=</span>base_params[<span class="st">"max_depth"</span>],</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>    min_samples_leaf<span class="op">=</span>base_params[<span class="st">"min_samples_leaf"</span>],</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    ccp_alpha<span class="op">=</span>best_alpha,</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>tree_pruned.fit(X_train, y_train)</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> describe_tree(model, name: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: node_count=</span><span class="sc">{</span>model<span class="sc">.</span>tree_<span class="sc">.</span>node_count<span class="sc">}</span><span class="ss">, leaves=</span><span class="sc">{</span>model<span class="sc">.</span>get_n_leaves()<span class="sc">}</span><span class="ss">, depth=</span><span class="sc">{</span>model<span class="sc">.</span>get_depth()<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>describe_tree(tree, <span class="st">"Drzewo bazowe"</span>)</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>describe_tree(tree_pruned, <span class="st">"Drzewo przycięte"</span>)</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>y_pred_pruned <span class="op">=</span> tree_pruned.predict(X_test)</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Metryki (test) po przycinaniu:"</span>)</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Accuracy          : </span><span class="sc">{</span>accuracy_score(y_test, y_pred_pruned)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Balanced accuracy : </span><span class="sc">{</span>balanced_accuracy_score(y_test, y_pred_pruned)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  F1 macro          : </span><span class="sc">{</span>f1_score(y_test, y_pred_pruned, average<span class="op">=</span><span class="st">'macro'</span>)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Liczba kandydatów ccp_alpha: 160
+Zakres ccp_alpha: [0, 0.0396533]
+Najlepsze ccp_alpha (CV): 0.000325397
+Najlepszy balanced_accuracy (CV): 0.6794</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="04-drzewa-zespoly_files/figure-html/cell-6-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="04-drzewa-zespoly_files/figure-html/cell-6-output-2.png" width="758" height="374" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Drzewo bazowe: node_count=345, leaves=173, depth=8
+Drzewo przycięte: node_count=271, leaves=136, depth=8
+
+Metryki (test) po przycinaniu:
+  Accuracy          : 0.6930
+  Balanced accuracy : 0.6930
+  F1 macro          : 0.6936</code></pre>
+</div>
+</div>
+<p>Przycinanie drzewa nie poprawiło znacząco jakości klasyfikacji, ale model został uproszczony, zatem otrzymaliśmy przy nieco mniejszym obciążeniu (<em>bias</em>) model o niższej wariancji. Głębokość drzewa się nie zmieniła ale liczba węzłów i liści. To samo w sobie jest wartością dodaną otrzymaną poprzez przycięcie drzewa.</p>
+</div>
 </section>
 </section>
-<section id="bagging-i-lasy-losowe" class="level2 page-columns page-full" data-number="5.2">
+<section id="bagging-i-lasy-losowe" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="bagging-i-lasy-losowe"><span class="header-section-number">5.2</span> Bagging i lasy losowe</h2>
 <p>Bagging (<em>bootstrap aggregating</em>) i lasy losowe (<em>random forests</em>) należą do metod <strong>zespołowych</strong> (<em>ensemble methods</em>), w których wiele słabych/średnich modeli (zwykle drzew) łączy się w jeden silniejszy predyktor. Kluczowa intuicja jest taka, że pojedyncze drzewo decyzyjne ma zwykle <strong>niskie obciążenie (bias)</strong>, ale <strong>wysoką wariancję</strong> – niewielka zmiana danych uczących może prowadzić do zauważalnie innej struktury drzewa i innych predykcji. Bagging i random forest redukują wariancję przez <strong>uśrednianie (agregację) wielu „odmian” tego samego algorytmu</strong>, uczonych na lekko zmodyfikowanych próbkach.</p>
-<section id="rys-historyczny-od-bootstrapu-do-lasów-losowych" class="level3 page-columns page-full" data-number="5.2.1">
-<h3 data-number="5.2.1" class="anchored" data-anchor-id="rys-historyczny-od-bootstrapu-do-lasów-losowych"><span class="header-section-number">5.2.1</span> Rys historyczny: od bootstrapu do lasów losowych</h3>
+<section id="od-bootstrapu-do-lasów-losowych" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="od-bootstrapu-do-lasów-losowych"><span class="header-section-number">5.2.1</span> Od bootstrapu do lasów losowych</h3>
 <p>Rozwój tych metod można zrozumieć jako sekwencję pomysłów, które stopniowo zwiększały stabilność modeli i jakość uogólniania:</p>
 <ul>
-<li><strong>Bootstrap</strong> (Efron, 1979)<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> - technika resamplingu „z powtórzeniami” do przybliżania rozkładów estymatorów i błędu. To właśnie bootstrap dał naturalny mechanizm generowania wielu „wersji” zbioru treningowego.<br>
-</li>
-<li><strong>Bagging</strong> (Breiman, 1996)<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> - pomysł, aby trenować ten sam algorytm na wielu próbkach bootstrapowych i agregować wyniki. Breiman pokazał, że bagging szczególnie dobrze stabilizuje metody niestabilne (jak drzewa).<br>
-</li>
-<li><strong>Random subspace / losowanie cech</strong> (Ho, 1998)<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> - idea, aby dodatkowo losować podzbiór cech, na których uczony jest model. To zmniejsza korelację między modelami w zespole.<br>
-</li>
-<li><strong>Random Forest</strong> (Breiman, 2001)<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> - połączenie baggingu drzew z losowaniem cech <em>w każdym węźle</em> drzewa (a nie tylko raz na drzewo). To okazało się bardzo skutecznym i prostym „domyślnym” modelem dla danych tablicowych.<br>
-</li>
-<li><strong>Extremely Randomized Trees</strong> (Geurts i in., 2006)<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> - dalsza randomizacja poprzez losowanie progów podziału, co jeszcze bardziej dekoreluje drzewa, czasem poprawiając wynik kosztem większego bias.</li>
+<li><strong>Bootstrap</strong> <span class="citation" data-cites="efron1979">(<a href="reference.html#ref-efron1979" role="doc-biblioref">Efron 1979</a>)</span>- technika resamplingu „z powtórzeniami” do przybliżania rozkładów estymatorów i błędu. To właśnie bootstrap dał naturalny mechanizm generowania wielu „wersji” zbioru treningowego.</li>
+<li><strong>Bagging</strong> <span class="citation" data-cites="breiman1996">(<a href="reference.html#ref-breiman1996" role="doc-biblioref">Breiman 1996</a>)</span>- pomysł, aby trenować ten sam algorytm na wielu próbkach bootstrapowych i agregować wyniki. Breiman pokazał, że bagging szczególnie dobrze stabilizuje metody niestabilne (jak drzewa).</li>
+<li><strong>Random subspace / losowanie cech</strong> <span class="citation" data-cites="tinkamho1998">(<a href="reference.html#ref-tinkamho1998" role="doc-biblioref">Tin Kam Ho 1998</a>)</span>- idea, aby dodatkowo losować podzbiór cech, na których uczony jest model. To zmniejsza korelację między modelami w zespole.</li>
+<li><strong>Random Forest</strong> <span class="citation" data-cites="breiman2001">(<a href="reference.html#ref-breiman2001" role="doc-biblioref">Breiman 2001</a>)</span>- połączenie baggingu drzew z losowaniem cech <em>w każdym węźle</em> drzewa (a nie tylko raz na drzewo). To okazało się bardzo skutecznym i prostym „domyślnym” modelem dla danych tablicowych.</li>
+<li><strong>Extremely Randomized Trees</strong> <span class="citation" data-cites="geurts2006">(<a href="reference.html#ref-geurts2006" role="doc-biblioref">Geurts, Ernst, i Wehenkel 2006</a>)</span> - dalsza randomizacja poprzez losowanie progów podziału, co jeszcze bardziej dekoreluje drzewa, czasem poprawiając wynik kosztem większego bias.</li>
 </ul>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;B. Efron (1979), <em>Bootstrap Methods: Another Look at the Jackknife</em>, The Annals of Statistics.</p></div><div id="fn3"><p><sup>3</sup>&nbsp;L. Breiman (1996), <em>Bagging Predictors</em>, Machine Learning.</p></div><div id="fn4"><p><sup>4</sup>&nbsp;T. K. Ho (1998), <em>The Random Subspace Method for Constructing Decision Forests</em>, IEEE TPAMI.</p></div><div id="fn5"><p><sup>5</sup>&nbsp;L. Breiman (2001), <em>Random Forests</em>, Machine Learning.</p></div><div id="fn6"><p><sup>6</sup>&nbsp;P. Geurts, D. Ernst, L. Wehenkel (2006), <em>Extremely Randomized Trees</em>, Machine Learning.</p></div></div></section>
-<section id="koncepcja-baggingu-redukcja-wariancji-przez-agregację" class="level3" data-number="5.2.2">
-<h3 data-number="5.2.2" class="anchored" data-anchor-id="koncepcja-baggingu-redukcja-wariancji-przez-agregację"><span class="header-section-number">5.2.2</span> Koncepcja baggingu: redukcja wariancji przez agregację</h3>
+</section>
+<section id="koncepcja-baggingu" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="koncepcja-baggingu"><span class="header-section-number">5.2.2</span> Koncepcja baggingu</h3>
 <p>Niech <span class="math inline">\(\mathcal{D} = \{(x_i, y_i)\}_{i=1}^n\)</span> oznacza zbiór uczący, a <span class="math inline">\(\hat f(\cdot;\mathcal{D})\)</span> – model (np. drzewo) wyuczony na danych <span class="math inline">\(\mathcal{D}\)</span>. W baggingu generujemy <span class="math inline">\(B\)</span> próbek bootstrapowych <span class="math inline">\(\mathcal{D}^{(1)},\dots,\mathcal{D}^{(B)}\)</span>, gdzie każda <span class="math inline">\(\mathcal{D}^{(b)}\)</span> ma rozmiar <span class="math inline">\(n\)</span> i powstaje przez losowanie obserwacji z <span class="math inline">\(\mathcal{D}\)</span> <em>z powtórzeniami</em>.</p>
 <ul>
 <li><p><strong>Bagging w regresji (uśrednianie):</strong></p>
@@ -622,7 +983,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 \]</span></p>
 <p>W wersji probabilistycznej często uśrednia się estymowane prawdopodobieństwa klas.</p></li>
 </ul>
-<p><strong>Dlaczego to działa (intuicja bias–variance).</strong> Jeśli pojedynczy model ma wariancję <span class="math inline">\(\mathrm{Var}(\hat f(x))\)</span>, to uśrednienie <span class="math inline">\(B\)</span> modeli obniża wariancję. W idealnym przypadku niezależności modeli:</p>
+<p><strong>Dlaczego to działa?</strong> Jeśli pojedynczy model ma wariancję <span class="math inline">\(\mathrm{Var}(\hat f(x))\)</span>, to uśrednienie <span class="math inline">\(B\)</span> modeli obniża wariancję. W idealnym przypadku niezależności modeli:</p>
 <p><span class="math display">\[
 \mathrm{Var}\big(\hat f_{\text{bag}}(x)\big) = \frac{1}{B}\,\mathrm{Var}(\hat f(x)).
 \]</span></p>
@@ -630,23 +991,13 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <p><span class="math display">\[
 \mathrm{Var}\big(\hat f_{\text{bag}}(x)\big) \approx \rho\,\mathrm{Var}(\hat f(x)) + \frac{1-\rho}{B}\,\mathrm{Var}(\hat f(x)).
 \]</span></p>
-<p>Zatem kluczowe są dwa elementy: <strong>(i) duża liczba drzew <span class="math inline">\(B\)</span></strong> oraz <strong>(ii) mała korelacja <span class="math inline">\(\rho\)</span></strong> między drzewami. Bagging zwiększa różnorodność przez bootstrap, a random forest dodatkowo obniża korelację przez losowanie cech.</p>
+<p>Zatem kluczowe są dwa elementy: <strong>(i) duża liczba drzew</strong> <span class="math inline">\(B\)</span> oraz <strong>(ii) mała korelacja</strong> <span class="math inline">\(\rho\)</span> między drzewami. Bagging zwiększa różnorodność przez bootstrap, a <em>random forest</em> dodatkowo obniża korelację przez losowanie cech.</p>
 </section>
-<section id="algorytm-baggingu-schemat" class="level3" data-number="5.2.3">
-<h3 data-number="5.2.3" class="anchored" data-anchor-id="algorytm-baggingu-schemat"><span class="header-section-number">5.2.3</span> Algorytm baggingu (schemat)</h3>
-<p>Dla <span class="math inline">\(b=1,\dots,B\)</span>:</p>
-<ol type="1">
-<li>Wylosuj próbkę bootstrapową <span class="math inline">\(\mathcal{D}^{(b)}\)</span> o rozmiarze <span class="math inline">\(n\)</span> ze zbioru <span class="math inline">\(\mathcal{D}\)</span>.</li>
-<li>Naucz model bazowy <span class="math inline">\(\hat f^{(b)}\)</span> na <span class="math inline">\(\mathcal{D}^{(b)}\)</span> (często jest to drzewo głębokie, słabo przycinane).</li>
-<li>Zapisz model <span class="math inline">\(\hat f^{(b)}\)</span>.</li>
-</ol>
-<p>Predykcja: agreguj <span class="math inline">\(\{\hat f^{(b)}\}\)</span> przez średnią (regresja) lub głosowanie (klasyfikacja).</p>
-</section>
-<section id="lasy-losowe-bagging-losowanie-cech-w-węzłach" class="level3" data-number="5.2.4">
-<h3 data-number="5.2.4" class="anchored" data-anchor-id="lasy-losowe-bagging-losowanie-cech-w-węzłach"><span class="header-section-number">5.2.4</span> Lasy losowe: bagging + losowanie cech w węzłach</h3>
-<p>Random forest jest specjalnym przypadkiem baggingu, gdzie modelem bazowym jest drzewo decyzyjne, ale w każdym węźle drzewa <strong>nie rozważa się wszystkich <span class="math inline">\(p\)</span> cech</strong>, tylko losowy podzbiór <span class="math inline">\(m\)</span> cech (często oznaczany jako <em>mtry</em>). Następnie wybiera się najlepszy podział <strong>tylko wśród tych <span class="math inline">\(m\)</span> cech</strong>. Dzięki temu różne drzewa stają się mniej do siebie podobne (mniejsza korelacja), a zespół lepiej redukuje wariancję.</p>
-<section id="algorytm-budowy-lasu-losowego-rf" class="level4" data-number="5.2.4.1">
-<h4 data-number="5.2.4.1" class="anchored" data-anchor-id="algorytm-budowy-lasu-losowego-rf"><span class="header-section-number">5.2.4.1</span> Algorytm budowy lasu losowego (RF)</h4>
+<section id="lasy-losowe" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="lasy-losowe"><span class="header-section-number">5.2.3</span> Lasy losowe</h3>
+<p>Random forest jest specjalnym przypadkiem baggingu, gdzie modelem bazowym jest drzewo decyzyjne, ale w każdym węźle drzewa <strong>nie rozważa się wszystkich</strong> <span class="math inline">\(p\)</span> cech, tylko losowy podzbiór <span class="math inline">\(m\)</span> cech (często oznaczany jako <em>mtry</em>). Następnie wybiera się najlepszy podział <strong>tylko wśród tych</strong> <span class="math inline">\(m\)</span> cech. Dzięki temu różne drzewa stają się mniej do siebie podobne (mniejsza korelacja), a zespół lepiej redukuje wariancję.</p>
+<section id="algorytm-budowy-lasu-losowego" class="level4" data-number="5.2.3.1">
+<h4 data-number="5.2.3.1" class="anchored" data-anchor-id="algorytm-budowy-lasu-losowego"><span class="header-section-number">5.2.3.1</span> Algorytm budowy lasu losowego</h4>
 <p>Dla <span class="math inline">\(b=1,\dots,B\)</span>:</p>
 <ol type="1">
 <li>Wylosuj próbkę bootstrapową <span class="math inline">\(\mathcal{D}^{(b)}\)</span>.</li>
@@ -664,83 +1015,162 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 </ul>
 </section>
 </section>
-<section id="najważniejsze-parametry-i-ich-interpretacja" class="level3" data-number="5.2.5">
-<h3 data-number="5.2.5" class="anchored" data-anchor-id="najważniejsze-parametry-i-ich-interpretacja"><span class="header-section-number">5.2.5</span> Najważniejsze parametry i ich interpretacja</h3>
-<p>Poniżej zebrano parametry typowe dla implementacji w stylu scikit-learn (nazwy mogą się różnić w innych bibliotekach, ale sens jest ten sam).</p>
-<section id="parametry-wspólne-bagging-drzew-i-random-forest" class="level4" data-number="5.2.5.1">
-<h4 data-number="5.2.5.1" class="anchored" data-anchor-id="parametry-wspólne-bagging-drzew-i-random-forest"><span class="header-section-number">5.2.5.1</span> Parametry wspólne (bagging drzew i random forest)</h4>
+<section id="najważniejsze-parametry-i-ich-interpretacja" class="level3" data-number="5.2.4">
+<h3 data-number="5.2.4" class="anchored" data-anchor-id="najważniejsze-parametry-i-ich-interpretacja"><span class="header-section-number">5.2.4</span> Najważniejsze parametry i ich interpretacja</h3>
+<p>Poniżej zebrano parametry typowe dla implementacji w stylu <code>scikit-learn</code> (nazwy mogą się różnić w innych bibliotekach, ale sens jest ten sam).</p>
+<section id="parametry-wspólne-bagging-drzew-i-random-forest" class="level4" data-number="5.2.4.1">
+<h4 data-number="5.2.4.1" class="anchored" data-anchor-id="parametry-wspólne-bagging-drzew-i-random-forest"><span class="header-section-number">5.2.4.1</span> Parametry wspólne (bagging drzew i random forest)</h4>
 <ul>
-<li><strong><code>n_estimators</code> (<span class="math inline">\(B\)</span>) – liczba drzew.</strong> Zwiększanie <span class="math inline">\(B\)</span> zwykle poprawia stabilność i jakość (wariancja maleje), ale z malejącymi przyrostami. W praktyce dobiera się <span class="math inline">\(B\)</span> tak, aby wynik się „stabilizował”.</li>
-<li><strong><code>bootstrap</code> / <code>max_samples</code> – sposób i rozmiar próbkowania.</strong> Klasycznie losuje się <span class="math inline">\(n\)</span> obserwacji z powtórzeniami; <code>max_samples</code> pozwala użyć ułamka danych (czasem przyspiesza, czasem zwiększa różnorodność).</li>
-<li><strong>Parametry drzewa bazowego (kontrola złożoności):</strong> <code>max_depth</code>, <code>min_samples_leaf</code>, <code>min_samples_split</code>, <code>max_leaf_nodes</code>, <code>min_impurity_decrease</code>. W zespołach często pozwala się drzewom rosnąć głęboko (niski bias), a wariancję kontroluje się przez agregację.</li>
+<li><code>n_estimators</code> (<span class="math inline">\(B\)</span>) – liczba drzew. Zwiększanie <span class="math inline">\(B\)</span> zwykle poprawia stabilność i jakość (wariancja maleje), ale z malejącymi przyrostami. W praktyce dobiera się <span class="math inline">\(B\)</span> tak, aby wynik się „stabilizował”.</li>
+<li><code>bootstrap</code> / <code>max_samples</code> – sposób i rozmiar próbkowania. Klasycznie losuje się <span class="math inline">\(n\)</span> obserwacji z powtórzeniami; <code>max_samples</code> pozwala użyć ułamka danych (czasem przyspiesza, czasem zwiększa różnorodność).</li>
+<li>Parametry drzewa bazowego (kontrola złożoności) - <code>max_depth</code>, <code>min_samples_leaf</code>, <code>min_samples_split</code>, <code>max_leaf_nodes</code>, <code>min_impurity_decrease</code>. W zespołach często pozwala się drzewom rosnąć głęboko (niski <em>bias</em>), a wariancję kontroluje się przez agregację.</li>
 </ul>
 </section>
-<section id="parametry-specyficzne-dla-random-forest" class="level4" data-number="5.2.5.2">
-<h4 data-number="5.2.5.2" class="anchored" data-anchor-id="parametry-specyficzne-dla-random-forest"><span class="header-section-number">5.2.5.2</span> Parametry specyficzne dla random forest</h4>
+<section id="parametry-specyficzne-dla-random-forest" class="level4" data-number="5.2.4.2">
+<h4 data-number="5.2.4.2" class="anchored" data-anchor-id="parametry-specyficzne-dla-random-forest"><span class="header-section-number">5.2.4.2</span> Parametry specyficzne dla random forest</h4>
 <ul>
-<li><p><strong><code>max_features</code> (<span class="math inline">\(m\)</span>, <em>mtry</em>) – liczba losowanych cech w węźle.</strong> To parametr krytyczny dla korelacji między drzewami.</p>
+<li><p><code>max_features</code> (<span class="math inline">\(m\)</span>, <em>mtry</em>) – liczba losowanych cech w węźle. To parametr krytyczny dla korelacji między drzewami.</p>
 <ul>
 <li>Jeśli <span class="math inline">\(m=p\)</span>, random forest redukuje się do klasycznego baggingu drzew (drzewa są bardziej podobne).</li>
 <li>Jeśli <span class="math inline">\(m\)</span> jest małe, drzewa są bardziej zróżnicowane (mniejsza korelacja), ale pojedyncze drzewo jest słabsze (większy bias).</li>
 </ul>
 <p>Popularne heurystyki startowe: w klasyfikacji <span class="math inline">\(m\approx\sqrt{p}\)</span>, w regresji <span class="math inline">\(m\approx p/3\)</span> (to są reguły kciuka, a nie prawa).</p></li>
-<li><p><strong><code>oob_score</code> – ocena out-of-bag (OOB).</strong> W bootstrapie ok. <span class="math inline">\(1-1/e\approx 63.2\%\)</span> obserwacji trafia do danej próbki, a pozostałe <span class="math inline">\(~36.8\%\)</span> są „poza próbką” dla tego drzewa (<em>out-of-bag</em>). Można więc estymować błąd generalizacji bez osobnego zbioru walidacyjnego: dla każdej obserwacji agreguje się predykcje tylko z drzew, które jej nie widziały.</p></li>
-<li><p><strong>Ważność cech (feature importance).</strong> Najczęściej spotkasz dwa podejścia:</p>
+<li><p><code>oob_score</code> – ocena <em>out-of-bag</em> (OOB). W bootstrapie ok. <span class="math inline">\(1-1/e\approx 63.2\%\)</span> obserwacji trafia do danej próbki, a pozostałe <span class="math inline">\(~36.8\%\)</span> są „poza próbką” dla tego drzewa (<em>out-of-bag</em>). Można więc estymować błąd generalizacji bez osobnego zbioru walidacyjnego: dla każdej obserwacji agreguje się predykcje tylko z drzew, które jej nie widziały.</p></li>
+<li><p><strong>Ważność cech (feature importance).</strong> Najczęściej spotykamy dwa podejścia:</p>
 <ol type="1">
-<li><strong>MDI (mean decrease in impurity)</strong> – uśredniona redukcja nieczystości przypisana do danej cechy po wszystkich węzłach i drzewach.</li>
-<li><strong>Permutation importance</strong> – mierzy spadek jakości (np. accuracy/AUC) po losowym przemieszaniu wartości danej cechy; to podejście jest zwykle bardziej wiarygodne, bo mierzy wpływ na predykcję, ale jest droższe obliczeniowo.</li>
+<li><strong>MDI (<em>mean decrease in impurity</em>)</strong> – uśredniona redukcja nieczystości przypisana do danej cechy po wszystkich węzłach i drzewach.</li>
+<li><strong><em>Permutation importance</em></strong> – mierzy spadek jakości (np. accuracy/AUC) po losowym przemieszaniu wartości danej cechy; to podejście jest zwykle bardziej wiarygodne, bo mierzy wpływ na predykcję, ale jest droższe obliczeniowo.</li>
 </ol>
-<p>Uwaga praktyczna: MDI może faworyzować cechy ciągłe lub o wielu poziomach; permutation importance jest na to mniej wrażliwa, choć wciąż może cierpieć przy silnie skorelowanych cechach.</p></li>
+<p>Uwaga praktyczna: MDI może faworyzować cechy ciągłe lub o wielu poziomach; <em>permutation importance</em> jest na to mniej wrażliwa, choć wciąż może cierpieć przy silnie skorelowanych cechach.</p></li>
 </ul>
 </section>
 </section>
-<section id="bagging-vs-random-forest-podobieństwa-i-różnice" class="level3" data-number="5.2.6">
-<h3 data-number="5.2.6" class="anchored" data-anchor-id="bagging-vs-random-forest-podobieństwa-i-różnice"><span class="header-section-number">5.2.6</span> Bagging vs random forest: podobieństwa i różnice</h3>
+<section id="bagging-vs-random-forest" class="level3" data-number="5.2.5">
+<h3 data-number="5.2.5" class="anchored" data-anchor-id="bagging-vs-random-forest"><span class="header-section-number">5.2.5</span> Bagging vs random forest</h3>
 <ul>
-<li><strong>Wspólne:</strong> oba podejścia uczą wiele drzew na próbkach bootstrapowych i agregują ich predykcje. Głównym celem jest redukcja wariancji.</li>
-<li><strong>Różnica kluczowa:</strong> random forest wprowadza dodatkową losowość przez <code>max_features</code> w każdym węźle, co <strong>obniża korelację między drzewami</strong> i zwykle poprawia wynik względem czystego baggingu drzew.</li>
-<li><strong>Kiedy bagging wystarcza:</strong> gdy liczba cech jest mała i drzewa i tak są zróżnicowane, zysk z losowania cech może być niewielki.</li>
-<li><strong>Kiedy RF wygrywa:</strong> gdy jest wiele cech i/lub część cech dominuje (silnie predykcyjnych) – losowanie cech zapobiega sytuacji, w której wszystkie drzewa w kółko wybierają te same pierwsze podziały.</li>
+<li><strong>Wspólne</strong> - oba podejścia uczą wiele drzew na próbkach bootstrapowych i agregują ich predykcje. Głównym celem jest redukcja wariancji.</li>
+<li><strong>Różnica kluczowa</strong> - random forest wprowadza dodatkową losowość przez <code>max_features</code> w każdym węźle, co <strong>obniża korelację między drzewami</strong> i zwykle poprawia wynik względem czystego baggingu drzew.</li>
+<li><strong>Kiedy bagging wystarcza</strong> - gdy liczba cech jest mała i drzewa i tak są zróżnicowane, zysk z losowania cech może być niewielki.</li>
+<li><strong>Kiedy RF jest lepszy</strong> - gdy jest wiele cech i/lub część cech dominuje (silnie predykcyjnych) – losowanie cech zapobiega sytuacji, w której wszystkie drzewa w kółko wybierają te same pierwsze podziały.</li>
 </ul>
 </section>
-<section id="dodatkowe-uwagi-praktyczne" class="level3" data-number="5.2.7">
-<h3 data-number="5.2.7" class="anchored" data-anchor-id="dodatkowe-uwagi-praktyczne"><span class="header-section-number">5.2.7</span> Dodatkowe uwagi praktyczne</h3>
+<section id="własności-drzew-i-modeli-typu-ensamble" class="level3" data-number="5.2.6">
+<h3 data-number="5.2.6" class="anchored" data-anchor-id="własności-drzew-i-modeli-typu-ensamble"><span class="header-section-number">5.2.6</span> Własności drzew i modeli typu <em>ensamble</em></h3>
 <ul>
-<li><strong>Brak potrzeby skalowania:</strong> drzewom i ich zespołom zwykle nie przeszkadzają różne skale cech (dzielą według progów), więc standaryzacja nie jest wymagana.</li>
-<li><strong>Odporność na nieliniowości i interakcje:</strong> RF i bagging drzew automatycznie modelują interakcje i nieliniowości, co czyni je mocnym baseline’em.</li>
-<li><strong>Interpretowalność:</strong> pojedyncze drzewo jest czytelne, ale las jest mniej transparentny. W praktyce stosuje się ważności cech, wykresy PDP/ICE czy SHAP (na innych zajęciach) do interpretacji.</li>
-<li><strong>Nieregularne braki i kategorie:</strong> w zależności od implementacji potrzebujesz imputacji/kodowania kategorii; część nowoczesnych bibliotek (np. CatBoost) rozwiązuje to natywnie, ale klasyczny RF często wymaga przygotowania danych.</li>
+<li><strong>Brak potrzeby skalowania</strong> - drzewom i ich zespołom zwykle nie przeszkadzają różne skale cech (dzielą według progów), więc standaryzacja nie jest wymagana.</li>
+<li><strong>Odporność na nieliniowości i interakcje</strong> - RF i bagging drzew automatycznie modelują interakcje i nieliniowości, co czyni je mocnym baseline’em.</li>
+<li><strong>Interpretowalność</strong> - pojedyncze drzewo jest czytelne, natomiast model bagging lub las losowy jest mniej przejrzysty. W praktyce stosuje się ważności cech, wykresy PDP czy SHAP do interpretacji.</li>
+<li><strong>Nieregularne braki i kategorie</strong> - w zależności od implementacji potrzebujemy imputacji/kodowania kategorii; część nowoczesnych bibliotek (np. <code>CatBoost</code>) rozwiązuje to natywnie, ale klasyczny RF często wymaga przygotowania danych.</li>
 </ul>
+<div id="exm-2" class="theorem example">
+<p><span class="theorem-title"><strong>Przykład 5.2</strong></span> Dla tych samych danych co w <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> przeprowadzimy trening modeli bagging i lasu losowego.</p>
+<div id="f8ad2521" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> BaggingClassifier, RandomForestClassifier</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bagging i Random Forest na tych samych danych (X_train/X_test, y_train/y_test)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_bagging(estimator):</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sklearn zmieniał nazwę parametru z base_estimator -&gt; estimator</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> BaggingClassifier(</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            estimator<span class="op">=</span>estimator,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            n_estimators<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>            bootstrap<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>            n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>            random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">TypeError</span>:</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> BaggingClassifier(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>            base_estimator<span class="op">=</span>estimator,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>            n_estimators<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>            bootstrap<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>            n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>            random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_model(model, name: <span class="bu">str</span>):</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    yhat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"model"</span>: name,</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"accuracy"</span>: accuracy_score(y_test, yhat),</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"balanced_accuracy"</span>: balanced_accuracy_score(y_test, yhat),</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"f1_macro"</span>: f1_score(y_test, yhat, average<span class="op">=</span><span class="st">"macro"</span>),</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Bagging (drzewo jako estimator bazowy)</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>base_tree <span class="op">=</span> DecisionTreeClassifier(</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=</span>tree.get_params()[<span class="st">"max_depth"</span>],</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    min_samples_leaf<span class="op">=</span>tree.get_params()[<span class="st">"min_samples_leaf"</span>],</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>bag <span class="op">=</span> make_bagging(base_tree)</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>bag.fit(X_train, y_train)</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Random Forest</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestClassifier(</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">300</span>,</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>    max_features<span class="op">=</span><span class="st">"sqrt"</span>,</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>rf.fit(X_train, y_train)</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Porównanie z drzewem surowym i przyciętym</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> [</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>    eval_model(tree, <span class="st">"Drzewo (surowe)"</span>),</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>    eval_model(tree_pruned, <span class="st">"Drzewo (przycięte)"</span>),</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>    eval_model(bag, <span class="st">"Bagging"</span>),</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>    eval_model(rf, <span class="st">"Random Forest"</span>),</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> pd.DataFrame(results).sort_values(<span class="st">"balanced_accuracy"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>             model  accuracy  balanced_accuracy  f1_macro
+     Random Forest    0.7705             0.7705    0.7697
+           Bagging    0.7310             0.7310    0.7314
+Drzewo (przycięte)    0.6930             0.6930    0.6936
+   Drzewo (surowe)    0.6910             0.6910    0.6913</code></pre>
+</div>
+</div>
+<p>Jak widać z powyższych wyników las losowy okazał się najlepiej dopasowanym modelem. W większości przypadków (jak nie w każdym) modele <em>ensamble</em> będą przewyższać jakością pojedyncze drzewo decyzyjne.</p>
+</div>
 </section>
 </section>
-<section id="boosting" class="level2 page-columns page-full" data-number="5.3">
+<section id="boosting" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="boosting"><span class="header-section-number">5.3</span> Boosting</h2>
-<p>Boosting to druga fundamentalna rodzina metod zespołowych, w której modele buduje się <strong>sekwencyjnie</strong>: każdy kolejny model ma korygować błędy poprzednich. W odróżnieniu od baggingu, który przede wszystkim redukuje wariancję przez uśrednianie wielu podobnych modeli uczonych niezależnie, boosting jest projektowany tak, aby stopniowo zmniejszać <strong>błąd systematyczny (bias)</strong>, budując coraz lepszy predyktor addytywny. W praktyce boosting często daje bardzo wysoką jakość na danych tablicowych, ale wymaga ostrożnej kontroli złożoności, bo potrafi łatwiej niż bagging dopasować się nadmiernie do danych.</p>
-<section id="rys-historyczny-od-słabych-uczniów-do-gradientowego-boostingu" class="level3 page-columns page-full" data-number="5.3.1">
-<h3 data-number="5.3.1" class="anchored" data-anchor-id="rys-historyczny-od-słabych-uczniów-do-gradientowego-boostingu"><span class="header-section-number">5.3.1</span> Rys historyczny: od „słabych uczniów” do gradientowego boostingu</h3>
-<p>Rozwój boostingu można przedstawić jako przejście od idei teoretycznej do bardzo wydajnych implementacji inżynieryjnych:</p>
+<p><em>Boosting</em> to druga fundamentalna rodzina metod zespołowych, w której modele buduje się <strong>sekwencyjnie</strong> - każdy kolejny model ma korygować błędy poprzednich. W odróżnieniu od baggingu, który przede wszystkim redukuje wariancję przez uśrednianie wielu podobnych modeli uczonych niezależnie, boosting jest projektowany tak, aby stopniowo zmniejszać <strong>błąd systematyczny (<em>bias</em>)</strong>, budując coraz lepszy predyktor addytywny. W praktyce boosting często daje bardzo wysoką jakość na danych tablicowych, ale wymaga ostrożnej kontroli złożoności, bo potrafi łatwiej niż bagging dopasować się nadmiernie do danych.</p>
+<section id="rys-historyczny" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="rys-historyczny"><span class="header-section-number">5.3.1</span> Rys historyczny</h3>
+<p>Rozwój boostingu można przedstawić jako przejście od idei teoretycznej do bardzo wydajnych implementacji:</p>
 <ul>
-<li><strong>Idea „wzmacniania” słabych klasyfikatorów</strong> (Schapire, 1990)<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> - pokazano, że jeśli istnieje algorytm osiągający wynik minimalnie lepszy niż losowy (<em>weak learner</em>), to można go „wzmocnić” do klasyfikatora o dowolnie małym błędzie treningowym przez odpowiednią procedurę zespołową.<br>
+<li><strong>Idea „wzmacniania” słabych klasyfikatorów</strong> <span class="citation" data-cites="schapire1990">(<a href="reference.html#ref-schapire1990" role="doc-biblioref">Schapire 1990</a>)</span>- pokazano, że jeśli istnieje algorytm osiągający wynik minimalnie lepszy niż losowy (<em>weak learner</em>), to można go „wzmocnić” do klasyfikatora o dowolnie małym błędzie treningowym przez odpowiednią procedurę zespołową.<br>
 </li>
-<li><strong>AdaBoost</strong> (Freund &amp; Schapire, 1996/1997)<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> - praktyczny algorytm boostingu, w którym kolejne klasyfikatory uczą się na danych z wagami, skupiając się na obserwacjach trudnych (wcześniej błędnie klasyfikowanych).<br>
+<li><strong>AdaBoost</strong> <span class="citation" data-cites="freund1997">(<a href="reference.html#ref-freund1997" role="doc-biblioref">Freund i Schapire 1997</a>)</span>- praktyczny algorytm boostingu, w którym kolejne klasyfikatory uczą się na danych z wagami, skupiając się na obserwacjach trudnych (wcześniej błędnie klasyfikowanych).<br>
 </li>
-<li><strong>Gradient Boosting / MART</strong> (Friedman, 2001)<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> - uogólnienie boostingu do postaci optymalizacji funkcji straty w przestrzeni funkcji, interpretowane jako „zejście gradientowe” w modelu addytywnym.<br>
+<li><strong>Gradient Boosting / Multiple Additive Regression Trees</strong> <span class="citation" data-cites="friedman2001">(<a href="reference.html#ref-friedman2001" role="doc-biblioref">Friedman 2001</a>)</span>- uogólnienie boostingu do postaci optymalizacji funkcji straty w przestrzeni funkcji, interpretowane jako „zejście gradientowe” w modelu addytywnym.<br>
 </li>
-<li><strong>XGBoost</strong> (Chen &amp; Guestrin, 2016)<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> - bardzo wydajna implementacja gradientowego boostingu drzew z regularizacją, obsługą braków i szeregiem optymalizacji obliczeniowych (m.in. przyspieszone wyznaczanie podziałów, równoległość, przycinanie przez ograniczenia).<br>
+<li><strong>XGBoost</strong> <span class="citation" data-cites="chen2016">(<a href="reference.html#ref-chen2016" role="doc-biblioref">Chen i Guestrin 2016</a>)</span>- bardzo wydajna implementacja gradientowego boostingu drzew z regularizacją, obsługą braków i szeregiem optymalizacji obliczeniowych (m.in. przyspieszone wyznaczanie podziałów, równoległość, przycinanie przez ograniczenia).<br>
 </li>
-<li><strong>CatBoost</strong> (Prokhorenkova i in., 2018)<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> - boosting drzew z natywną obsługą zmiennych kategorycznych oraz mechanizmami ograniczającymi <em>target leakage</em> i przeuczenie (m.in. uporządkowane statystyki docelowe, <em>ordered boosting</em>).</li>
+<li><strong>CatBoost</strong> <span class="citation" data-cites="singh2025">(<a href="reference.html#ref-singh2025" role="doc-biblioref">Singh i Susan 2025</a>)</span> - boosting drzew z natywną obsługą zmiennych kategorycznych oraz mechanizmami ograniczającymi <em>target leakage</em> i przeuczenie (m.in. uporządkowane statystyki docelowe, <em>ordered boosting</em>).</li>
 </ul>
-<div class="no-row-height column-margin column-container"><div id="fn7"><p><sup>7</sup>&nbsp;R. E. Schapire (1990), <em>The Strength of Weak Learnability</em>, Machine Learning.</p></div><div id="fn8"><p><sup>8</sup>&nbsp;Y. Freund, R. E. Schapire (1997), <em>A Decision-Theoretic Generalization of On-Line Learning and an Application to Boosting</em>, Journal of Computer and System Sciences.</p></div><div id="fn9"><p><sup>9</sup>&nbsp;J. H. Friedman (2001), <em>Greedy Function Approximation: A Gradient Boosting Machine</em>, Annals of Statistics.</p></div><div id="fn10"><p><sup>10</sup>&nbsp;T. Chen, C. Guestrin (2016), <em>XGBoost: A Scalable Tree Boosting System</em>, KDD.</p></div><div id="fn11"><p><sup>11</sup>&nbsp;L. Prokhorenkova, G. Gusev, A. Vorobev, A. Dorogush, A. Gulin (2018), <em>CatBoost: unbiased boosting with categorical features</em>, NeurIPS.</p></div></div></section>
-<section id="koncepcja-model-addytywny-i-uczenie-na-błędach" class="level3" data-number="5.3.2">
-<h3 data-number="5.3.2" class="anchored" data-anchor-id="koncepcja-model-addytywny-i-uczenie-na-błędach"><span class="header-section-number">5.3.2</span> Koncepcja: model addytywny i uczenie „na błędach”</h3>
-<p>W większości współczesnych wariantów boosting buduje model addytywny postaci:</p>
+</section>
+<section id="koncepcja---model-addytywny-i-uczenie-na-błędach" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="koncepcja---model-addytywny-i-uczenie-na-błędach"><span class="header-section-number">5.3.2</span> Koncepcja - model addytywny i uczenie „na błędach”</h3>
+<p>W większości współczesnych wariantów <em>boosting</em> buduje model addytywny postaci:</p>
 <p><span class="math display">\[
 F_M(x) = \sum_{m=0}^M \nu\, f_m(x),
 \]</span></p>
-<p>gdzie <span class="math inline">\(f_m\)</span> to kolejne modele bazowe (często płytkie drzewa), a <span class="math inline">\(\nu\in(0,1]\)</span> to współczynnik uczenia (<em>learning rate</em>, <em>shrinkage</em>). Sens jest następujący: zamiast uśredniać niezależne modele (jak w baggingu), boosting <strong>dokłada</strong> kolejne składniki tak, aby minimalizować stratę <span class="math inline">\(\mathcal{L}(y, F(x))\)</span>. Małe <span class="math inline">\(\nu\)</span> spowalnia uczenie, ale zwykle poprawia uogólnianie (wymaga wtedy większej liczby iteracji).</p>
+<p>gdzie <span class="math inline">\(f_m\)</span> to kolejne modele bazowe (często płytkie drzewa), a <span class="math inline">\(\nu\in(0,1]\)</span> to współczynnik uczenia (<em>learning rate</em>, <em>shrinkage</em>). Sens jest następujący: zamiast uśredniać niezależne modele (jak w baggingu), boosting dokłada kolejne składniki tak, aby minimalizować stratę <span class="math inline">\(\mathcal{L}(y, F(x))\)</span>. Małe <span class="math inline">\(\nu\)</span> spowalnia uczenie, ale zwykle poprawia generalizację (wymaga wtedy większej liczby iteracji).</p>
 </section>
-<section id="adaboost-boosting-przez-wagi-obserwacji-klasyfikacja" class="level3" data-number="5.3.3">
-<h3 data-number="5.3.3" class="anchored" data-anchor-id="adaboost-boosting-przez-wagi-obserwacji-klasyfikacja"><span class="header-section-number">5.3.3</span> AdaBoost: boosting przez wagi obserwacji (klasyfikacja)</h3>
+<section id="adaboost---boosting-przez-wagi-obserwacji" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="adaboost---boosting-przez-wagi-obserwacji"><span class="header-section-number">5.3.3</span> AdaBoost - boosting przez wagi obserwacji</h3>
 <p>W klasycznej wersji AdaBoost dla klasyfikacji binarnej <span class="math inline">\(y_i\in\{-1,+1\}\)</span> uczymy sekwencję klasyfikatorów <span class="math inline">\(h_m\)</span>. Algorytm utrzymuje rozkład wag <span class="math inline">\(w_i^{(m)}\)</span> na obserwacjach, który w kolejnych iteracjach zwiększa znaczenie przykładów błędnie klasyfikowanych.</p>
 <ol type="1">
 <li><p>Inicjalizacja: <span class="math inline">\(w_i^{(1)}=1/n\)</span>.</p></li>
@@ -768,8 +1198,8 @@ H(x)=\mathrm{sign}\Big(\sum_{m=1}^M \alpha_m h_m(x)\Big).
 \]</span></p>
 <p>Interpretacyjnie AdaBoost minimalizuje wykładniczą stratę <span class="math inline">\(\sum_i \exp(-y_i F(x_i))\)</span>, a <span class="math inline">\(\alpha_m\)</span> rośnie, gdy <span class="math inline">\(h_m\)</span> jest lepszy (ma mniejszy <span class="math inline">\(\varepsilon_m\)</span>). W praktyce jako <span class="math inline">\(h_m\)</span> stosuje się często bardzo proste modele, np. <em>decision stumps</em> (drzewa głębokości 1), co wzmacnia efekt „uczenia na błędach”.</p>
 </section>
-<section id="gradient-boosting-minimalizacja-straty-w-przestrzeni-funkcji" class="level3" data-number="5.3.4">
-<h3 data-number="5.3.4" class="anchored" data-anchor-id="gradient-boosting-minimalizacja-straty-w-przestrzeni-funkcji"><span class="header-section-number">5.3.4</span> Gradient Boosting: minimalizacja straty w przestrzeni funkcji</h3>
+<section id="gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji"><span class="header-section-number">5.3.4</span> Gradient Boosting - minimalizacja straty w przestrzeni funkcji</h3>
 <p>Gradient boosting uogólnia ideę „poprawiania błędów” na dowolną funkcję straty <span class="math inline">\(\mathcal{L}\)</span>. Model addytywny jest budowany iteracyjnie:</p>
 <p><span class="math display">\[
 F_m(x) = F_{m-1}(x) + \nu\, f_m(x).
@@ -786,7 +1216,7 @@ r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right
 <section id="algorytm-schemat-gradientowego-boostingu-drzew" class="level4" data-number="5.3.4.1">
 <h4 data-number="5.3.4.1" class="anchored" data-anchor-id="algorytm-schemat-gradientowego-boostingu-drzew"><span class="header-section-number">5.3.4.1</span> Algorytm (schemat) gradientowego boostingu drzew</h4>
 <ol type="1">
-<li>Ustal inicjalny model <span class="math inline">\(F_0(x)\)</span> (np. stałą minimalizującą stratę: średnią dla MSE, logit priory dla log-loss).</li>
+<li>Ustal początkowy model <span class="math inline">\(F_0(x)\)</span> (np. stałą minimalizującą stratę: średnią dla MSE, logit rozkładów apriori dla log-loss).</li>
 <li>Dla <span class="math inline">\(m=1,\dots,M\)</span>:
 <ul>
 <li>oblicz pseudo-reszty <span class="math inline">\(r_{im}\)</span>,</li>
@@ -798,44 +1228,271 @@ r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right
 <p>Ważna intuicja: w regresji z MSE pseudo-reszty są po prostu resztami <span class="math inline">\(r_{im}=y_i-F_{m-1}(x_i)\)</span>, więc boosting faktycznie „doucza” kolejne drzewo na błędach poprzedniego modelu.</p>
 </section>
 </section>
-<section id="xgboost-regularizacja-i-optymalizacje-implementacyjne" class="level3" data-number="5.3.5">
-<h3 data-number="5.3.5" class="anchored" data-anchor-id="xgboost-regularizacja-i-optymalizacje-implementacyjne"><span class="header-section-number">5.3.5</span> XGBoost: regularizacja i optymalizacje implementacyjne</h3>
-<p>XGBoost jest implementacją gradient boosting drzew, która dodaje silną <strong>regularizację</strong> oraz usprawnienia obliczeniowe. W typowej postaci minimalizuje się funkcję celu:</p>
+<section id="xgboost" class="level3" data-number="5.3.5">
+<h3 data-number="5.3.5" class="anchored" data-anchor-id="xgboost"><span class="header-section-number">5.3.5</span> XGBoost</h3>
+<p>XGBoost jest implementacją <em>gradient boosting</em> drzew, która dodaje silną <strong>regularizację</strong> oraz usprawnienia obliczeniowe. W typowej postaci minimalizuje się funkcję celu:</p>
 <p><span class="math display">\[
 \sum_{i=1}^n \mathcal{L}(y_i, \hat y_i) + \sum_{m=1}^M \Omega(f_m),
 \]</span></p>
 <p>gdzie <span class="math inline">\(\Omega\)</span> karze złożoność drzew, np. przez liczbę liści i normę wag w liściach (w praktyce: <code>reg_alpha</code>, <code>reg_lambda</code>, <code>gamma</code>, itp.). Implementacyjnie istotne są m.in. efektywne wyznaczanie podziałów, obsługa braków (domyślny kierunek dla <code>missing</code> w węzłach), <code>subsample</code> i <code>colsample_*</code> (losowanie wierszy i cech) oraz możliwość wczesnego zatrzymania (<em>early stopping</em>) na zbiorze walidacyjnym.</p>
 </section>
-<section id="catboost-kategorie-i-kontrola-wycieku-informacji" class="level3" data-number="5.3.6">
-<h3 data-number="5.3.6" class="anchored" data-anchor-id="catboost-kategorie-i-kontrola-wycieku-informacji"><span class="header-section-number">5.3.6</span> CatBoost: kategorie i kontrola wycieku informacji</h3>
-<p>CatBoost jest boostowaniem drzew ukierunkowanym na dane z licznymi zmiennymi kategorycznymi. Zamiast prostego one-hot dla wielu poziomów stosuje się <strong>statystyki docelowe</strong> (<em>target statistics</em>), ale liczone w sposób, który ogranicza wyciek informacji: dla danej obserwacji statystyka jest wyliczana na podstawie „wcześniejszych” obserwacji w losowej permutacji (<em>ordered target encoding</em>), a proces uczenia używa wariantu <em>ordered boosting</em>. Dzięki temu CatBoost często daje bardzo dobre wyniki na danych mieszanych (numeryczne + kategorie) bez rozbudowanego preprocessingu.</p>
-</section>
-<section id="najważniejsze-hiperparametry-i-ryzyko-przeuczenia" class="level3" data-number="5.3.7">
-<h3 data-number="5.3.7" class="anchored" data-anchor-id="najważniejsze-hiperparametry-i-ryzyko-przeuczenia"><span class="header-section-number">5.3.7</span> Najważniejsze hiperparametry i ryzyko przeuczenia</h3>
-<p>Boosting ma wiele „pokręteł”, ale kilka z nich dominuje praktykę:</p>
+<section id="catboost" class="level3" data-number="5.3.6">
+<h3 data-number="5.3.6" class="anchored" data-anchor-id="catboost"><span class="header-section-number">5.3.6</span> CatBoost</h3>
+<p>CatBoost jest odmianą gradientowego boostingu drzew, zaprojektowaną specjalnie z myślą o danych tablicowych, w których występuje wiele zmiennych kategorycznych (często o wysokiej krotności). W klasycznych pipeline’ach takie zmienne koduje się np. przez <em>one-hot encoding</em> lub przez różne warianty <em>target encoding</em>. Problem polega na tym, że (i) <em>one-hot</em> może gwałtownie zwiększać wymiarowość, a (ii) naiwne <em>target encoding</em> łatwo prowadzi do <strong>wycieku informacji (target leakage)</strong>: wartość cechy tworzonej z wykorzystaniem etykiety może pośrednio „zdradzać” modelowi prawdziwy target także dla obserwacji, na której później uczymy.</p>
+<p>W praktyce siła CatBoost wynika z dwóch ściśle powiązanych mechanizmów:</p>
+<section id="ordered-target-statistics" class="level4" data-number="5.3.6.1">
+<h4 data-number="5.3.6.1" class="anchored" data-anchor-id="ordered-target-statistics"><span class="header-section-number">5.3.6.1</span> Ordered target statistics</h4>
+<p>Załóżmy klasyfikację binarną <span class="math inline">\(Y\in\{0,1\}\)</span> oraz zmienną kategoryczną <span class="math inline">\(X\)</span> o poziomach <span class="math inline">\(c\)</span>. Klasyczna (naiwna) statystyka docelowa miałaby postać:</p>
+<p><span class="math display">\[
+\text{TE}(c)=\mathbb{E}[Y\mid X=c]\approx \frac{\sum_{i: X_i=c} y_i}{\#\{i: X_i=c\}}.
+\]</span></p>
+<p>Jeżeli jednak policzymy ją na całym zbiorze treningowym, to dla obserwacji <span class="math inline">\(i\)</span> w kodowaniu <span class="math inline">\(\text{TE}(X_i)\)</span> pojawia się jej własny target <span class="math inline">\(y_i\)</span>. Model uczony na tak zakodowanych danych uzyskuje informację, której w predykcji na nowych danych nie będzie miał – to klasyczny <strong>target leakage</strong>.</p>
+<p>CatBoost eliminuje ten problem przez losową permutację obserwacji i liczenie statystyk tylko na prefiksie („przeszłości”) tej permutacji.</p>
 <ul>
-<li><strong><code>n_estimators</code> (<span class="math inline">\(M\)</span>) – liczba iteracji/drzew.</strong> Większa liczba zwiększa potencjał dopasowania; bez kontroli może prowadzić do przeuczenia.</li>
-<li><strong><code>learning_rate</code> (<span class="math inline">\(\nu\)</span>) – shrinkage.</strong> Mniejsze <span class="math inline">\(\nu\)</span> zwykle poprawia uogólnianie, ale wymaga większego <span class="math inline">\(M\)</span>. W praktyce parę <span class="math inline">\((M,\nu)\)</span> traktuje się łącznie.</li>
-<li><strong>Złożoność drzew:</strong> <code>max_depth</code>, <code>max_leaf_nodes</code>, <code>min_samples_leaf</code> (lub ich odpowiedniki). Płytkie drzewa (np. <code>max_depth</code> 2–6) są standardem w boosting (inaczej model łatwo „przepala” dane).</li>
-<li><strong>Losowanie obserwacji i cech:</strong> <code>subsample</code> (stochastic gradient boosting), <code>colsample_bytree</code>, <code>colsample_bylevel</code> (w XGBoost). Mniejsze wartości działają jak regularizacja i zmniejszają wariancję.</li>
-<li><strong>Regularizacja w XGBoost:</strong> <code>reg_lambda</code> (L2), <code>reg_alpha</code> (L1), <code>gamma</code> (minimalna poprawa, by wykonać split), <code>min_child_weight</code> (minimalna „waga”/liczność w węźle). Te parametry ograniczają tworzenie zbyt szczegółowych podziałów.</li>
-<li><strong>Wczesne zatrzymanie (early stopping):</strong> w praktyce często monitoruje się błąd na zbiorze walidacyjnym i przerywa uczenie, gdy brak poprawy przez określoną liczbę iteracji. To jedna z najskuteczniejszych metod kontroli przeuczenia w boosting.</li>
+<li><strong>Krok A – permutacja.</strong> Losujemy permutację indeksów danych: <span class="math display">\[
+\pi=(\pi_1,\ldots,\pi_n).
+\]</span></li>
+<li><strong>Krok B – statystyka z prefiksu.</strong> Dla pozycji <span class="math inline">\(t\)</span> w permutacji i kategorii <span class="math inline">\(c=X_{\pi_t}\)</span> definiujemy:
+<ul>
+<li><span class="math inline">\(S_t(c)\)</span> - sumę targetów wśród obserwacji wcześniejszych <span class="math inline">\(\pi_1,\ldots,\pi_{t-1}\)</span> o tej samej kategorii,</li>
+<li><span class="math inline">\(N_t(c)\)</span> - liczbę takich obserwacji.</li>
+</ul></li>
+</ul>
+<p>Następnie wartość kodowania dla obserwacji <span class="math inline">\(\pi_t\)</span> jest liczona (z wygładzaniem):</p>
+<p><span class="math display">\[
+\text{TE}_{\pi}(x_{\pi_t})=\frac{S_t(c)+a\,\mu}{N_t(c)+a},
+\]</span></p>
+<p>gdzie <span class="math inline">\(\mu\)</span> jest średnią globalną (np. <span class="math inline">\(\mu=\mathbb{E}[Y]\)</span>), a <span class="math inline">\(a&gt;0\)</span> jest parametrem prioru/wygładzania. Kluczowe jest to, że w liczniku nie ma <span class="math inline">\(y_{\pi_t}\)</span>, bo używamy tylko obserwacji wcześniejszych. Oznacza to, że kodowanie nie „widzi” własnej etykiety i nie przenosi jej do cechy.</p>
+<p><strong>Wiele permutacji i stabilizacja.</strong> W praktyce CatBoost wykorzystuje wiele permutacji oraz (w zależności od ustawień) uśrednianie/kompozycję statystyk, aby zmniejszyć wariancję kodowania dla rzadkich kategorii (szczególnie na początku permutacji, gdy <span class="math inline">\(N_t(c)\)</span> jest małe).</p>
+<p><strong>Interakcje kategorii.</strong> Dodatkowo CatBoost może tworzyć statystyki docelowe nie tylko dla pojedynczych zmiennych kategorycznych, ale również dla ich kombinacji (np. <span class="math inline">\(\text{city}\times\text{device}\)</span>), co pozwala uchwycić istotne interakcje bez eksplozji wymiaru typowej dla pełnego one-hot.</p>
+</section>
+<section id="ordered-boosting" class="level4" data-number="5.3.6.2">
+<h4 data-number="5.3.6.2" class="anchored" data-anchor-id="ordered-boosting"><span class="header-section-number">5.3.6.2</span> Ordered boosting</h4>
+<p>W klasycznym gradient boosting w kroku <span class="math inline">\(m\)</span> oblicza się pseudo-reszty jako ujemny gradient straty względem bieżących predykcji:</p>
+<p><span class="math display">\[
+r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right|_{F=F_{m-1}}.
+\]</span></p>
+<p>W praktyce <span class="math inline">\(F_{m-1}\)</span> jest modelem uczonym na całych danych, więc każda obserwacja ma wpływ na predykcje, na których później liczymy jej własny gradient. To wprowadza pewien rodzaj <em>biasu optymistycznego</em>, który może zwiększać skłonność do przeuczenia. CatBoost ogranicza to przez <em>ordered boosting</em>. W ujęciu koncepcyjnym, dla permutacji <span class="math inline">\(\pi\)</span> predykcja dla obserwacji <span class="math inline">\(\pi_t\)</span> w iteracji <span class="math inline">\(m\)</span> jest liczona na podstawie modelu, który „widział” jedynie prefiks <span class="math inline">\(\pi_1,\ldots,\pi_{t-1}\)</span>. Innymi słowy, gradient dla <span class="math inline">\(\pi_t\)</span> jest obliczany z predykcji modelu, który nie był uczony na <span class="math inline">\(\pi_t\)</span>.</p>
+<p>Można myśleć o rodzinie modeli prefiksowych <span class="math inline">\(F^{(m)}_{t}\)</span> (po <span class="math inline">\(m\)</span> iteracjach boostingu, uczonych na pierwszych <span class="math inline">\(t\)</span> obserwacjach permutacji). Wtedy pseudo-reszta dla obserwacji <span class="math inline">\(\pi_t\)</span> jest liczona jako:</p>
+<p><span class="math display">\[
+r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\partial F(x_{\pi_t})}\right|_{F=F^{(m-1)}_{t-1}}.
+\]</span></p>
+<p>W implementacji CatBoost nie trenuje dosłownie <span class="math inline">\(n\)</span> pełnych modeli prefiksowych (to byłoby zbyt kosztowne), ale algorytmicznie to właśnie ta idea – „gradienty z przeszłości” – stoi za ograniczeniem wycieku i poprawą uogólniania.</p>
+</section>
+<section id="catboost-pseudokod" class="level4" data-number="5.3.6.3">
+<h4 data-number="5.3.6.3" class="anchored" data-anchor-id="catboost-pseudokod"><span class="header-section-number">5.3.6.3</span> CatBoost (pseudokod)</h4>
+<p>Dla uproszczenia rozważmy dane <span class="math inline">\((X,Y)\)</span> z cechami numerycznymi i kategorycznymi.</p>
+<ol type="1">
+<li><strong>Permutacje</strong> - wybierz <span class="math inline">\(P\)</span> losowych permutacji danych <span class="math inline">\(\pi^{(1)},\ldots,\pi^{(P)}\)</span>.</li>
+<li><strong>Kodowanie kategorii (dla każdej permutacji)</strong> - dla każdej cechy kategorycznej (i wybranych kombinacji) policz <span class="math inline">\(\text{TE}_{\pi}\)</span> dla obserwacji w kolejności permutacji, używając tylko prefiksu.</li>
+<li><strong>Uczenie boostingu (ordered):</strong>
+<ul>
+<li>zainicjuj model <span class="math inline">\(F_0\)</span> (np. stała minimalizująca stratę),</li>
+<li>dla <span class="math inline">\(m=1,\ldots,M\)</span>:
+<ul>
+<li>dla każdej obserwacji policz pseudo-resztę/gradient na podstawie predykcji modelu z „przeszłości” w permutacji,</li>
+<li>dopasuj płytkie drzewo <span class="math inline">\(f_m\)</span> do pseudo-reszt,</li>
+<li>zaktualizuj <span class="math inline">\(F_m = F_{m-1} + \nu f_m\)</span>.</li>
+</ul></li>
+</ul></li>
+</ol>
+<p>Wynik: model boostingowy, który korzysta z informacyjnych statystyk dla kategorii, ale minimalizuje ryzyko <em>leakage</em> oraz ogranicza przeuczenie dzięki uporządkowanemu uczeniu.</p>
+</section>
+<section id="dlaczego-to-jest-istotne-w-praktyce" class="level4" data-number="5.3.6.4">
+<h4 data-number="5.3.6.4" class="anchored" data-anchor-id="dlaczego-to-jest-istotne-w-praktyce"><span class="header-section-number">5.3.6.4</span> Dlaczego to jest istotne w praktyce?</h4>
+<ul>
+<li><strong>Mniej preprocessingu</strong> - w wielu przypadkach nie trzeba ręcznie wykonywać <em>one-hot encoding</em> ani skomplikowanego <em>target-encoding</em>.</li>
+<li><strong>Lepsze uogólnianie dla kategorii o dużej krotności</strong> - rzadkie poziomy są stabilizowane przez prior i permutacje.</li>
+<li><strong>Kontrola wycieku informacji</strong> - kluczowe jest, że zarówno kodowanie, jak i obliczanie gradientów odbywa się „bez przyszłości”.</li>
+<li><strong>Dobre wyniki na danych mieszanych</strong> - CatBoost jest często silnym modelem bazowym dla problemów, gdzie współistnieją cechy liczbowe i kategoryczne.</li>
 </ul>
 </section>
-<section id="boosting-vs-bagging-porównanie-i-typowe-pułapki" class="level3" data-number="5.3.8">
-<h3 data-number="5.3.8" class="anchored" data-anchor-id="boosting-vs-bagging-porównanie-i-typowe-pułapki"><span class="header-section-number">5.3.8</span> Boosting vs bagging: porównanie i typowe „pułapki”</h3>
+<section id="najważniejsze-hiperparametry-i-ryzyko-przeuczenia" class="level4" data-number="5.3.6.5">
+<h4 data-number="5.3.6.5" class="anchored" data-anchor-id="najważniejsze-hiperparametry-i-ryzyko-przeuczenia"><span class="header-section-number">5.3.6.5</span> Najważniejsze hiperparametry i ryzyko przeuczenia</h4>
+<p>Boosting ma wiele hiperparametrów ale najważniejsze to:</p>
 <ul>
-<li><strong>Cel:</strong> bagging redukuje wariancję (średnia wielu modeli), boosting redukuje bias (sekwencyjna korekta błędów).</li>
-<li><strong>Równoległość:</strong> bagging łatwo zrównoleglić (drzewa niezależne); boosting jest z natury sekwencyjny (choć implementacje optymalizują wnętrze kroku).</li>
-<li><strong>Wrażliwość na szum/outliery:</strong> boosting może silniej „gonić” obserwacje odstające i szum etykiet, bo kolejne kroki koncentrują się na błędach. Bagging zwykle jest pod tym względem bardziej odporny.</li>
-<li><strong>Najczęstsze źródła przeuczenia w boosting:</strong> zbyt duże <span class="math inline">\(M\)</span>, zbyt duże drzewa, zbyt duży <span class="math inline">\(\nu\)</span> oraz brak regularizacji/losowania.</li>
+<li><strong><code>n_estimators</code> (</strong><span class="math inline">\(M\)</span>) – liczba iteracji/drzew. Większa liczba zwiększa potencjał dopasowania; bez kontroli może prowadzić do przeuczenia.</li>
+<li><strong><code>learning_rate</code> (</strong><span class="math inline">\(\nu\)</span>) – shrinkage. Mniejsze <span class="math inline">\(\nu\)</span> zwykle poprawia uogólnianie, ale wymaga większego <span class="math inline">\(M\)</span>. W praktyce parę <span class="math inline">\((M,\nu)\)</span> traktuje się łącznie.</li>
+<li><strong>Złożoność drzew</strong> - <code>max_depth</code>, <code>max_leaf_nodes</code>, <code>min_samples_leaf</code> (lub ich odpowiedniki). Płytkie drzewa (np. <code>max_depth</code> 2–6) są standardem w boosting.</li>
+<li><strong>Losowanie obserwacji i cech</strong> - <code>subsample</code> (stochastic gradient boosting), <code>colsample_bytree</code>, <code>colsample_bylevel</code> (w XGBoost). Mniejsze wartości działają jak regularizacja i zmniejszają wariancję.</li>
+<li><strong>Regularizacja w XGBoost</strong> - <code>reg_lambda</code> (L2), <code>reg_alpha</code> (L1), <code>gamma</code> (minimalna poprawa, by wykonać split), <code>min_child_weight</code> (minimalna „waga”/liczność w węźle). Te parametry ograniczają tworzenie zbyt szczegółowych podziałów.</li>
+<li><strong>Wczesne zatrzymanie (early stopping)</strong> - w praktyce często monitoruje się błąd na zbiorze walidacyjnym i przerywa uczenie, gdy brak poprawy przez określoną liczbę iteracji. To jedna z najskuteczniejszych metod kontroli przeuczenia w boosting.</li>
 </ul>
 </section>
-<section id="uwaga-praktyczna-metryki-ważności-cech-i-interpretacja" class="level3" data-number="5.3.9">
-<h3 data-number="5.3.9" class="anchored" data-anchor-id="uwaga-praktyczna-metryki-ważności-cech-i-interpretacja"><span class="header-section-number">5.3.9</span> Uwaga praktyczna: metryki, ważności cech i interpretacja</h3>
-<p>W boostingu (podobnie jak w RF) często raportuje się „ważność cech”, ale należy pamiętać o ograniczeniach: miary oparte o redukcję nieczystości mogą faworyzować cechy ciągłe lub o wielu poziomach, a silna korelacja cech rozmywa interpretację. W praktyce bardziej wiarygodne są podejścia oparte o permutacje lub metody wyjaśnialności (np. SHAP), choć są one obliczeniowo droższe.</p>
+</section>
+<section id="boosting-vs-bagging" class="level3" data-number="5.3.7">
+<h3 data-number="5.3.7" class="anchored" data-anchor-id="boosting-vs-bagging"><span class="header-section-number">5.3.7</span> Boosting vs bagging</h3>
+<ul>
+<li><strong>Cel -</strong> bagging redukuje wariancję (średnia wielu modeli), boosting redukuje bias (sekwencyjna korekta błędów).</li>
+<li><strong>Zrównoleglanie obliczeń -</strong> bagging łatwo zrównoleglić (drzewa niezależne); boosting jest z natury sekwencyjny (istnieją implementację zrównoleglające obliczenia pojedynczych drzew).</li>
+<li><strong>Wrażliwość na szum/outliery -</strong> boosting bywa bardziej wrażliwy na szum i obserwacje odstające, ponieważ konstrukcja zespołu ma charakter sekwencyjny: kolejne modele są dopasowywane do reszt (lub gradientów funkcji straty) generowanych przez bieżący predyktor. W konsekwencji obserwacje o dużych błędach — w tym outliery oraz przypadki z błędnie przypisaną etykietą (<em>label noise</em>) — mogą otrzymywać relatywnie większą „wagę” w kolejnych iteracjach, co sprzyja ich nadmiernemu dopasowaniu i może pogarszać zdolność uogólniania, jeśli te błędy wynikają z losowego zakłócenia, a nie z rzeczywistej struktury danych. W metodach baggingowych (w tym w lasach losowych) poszczególne modele bazowe są uczone niezależnie na próbkach bootstrapowych, a predykcja jest agregowana przez uśrednianie lub głosowanie. Taka agregacja działa jak mechanizm tłumienia wpływu pojedynczych, nietypowych obserwacji: outliery trafiają tylko do części próbek, a ich efekt jest „rozmywany” przez średnią/większość. Z tego względu <em>bagging</em> zazwyczaj wykazuje większą odporność na szum i wartości odstające niż boosting, przy czym skala tej różnicy zależy od doboru funkcji straty oraz regularizacji (np. <em>shrinkage</em>, <em>subsampling</em>, ograniczenia głębokości) w modelach boostingowych.</li>
+<li><strong>Najczęstsze źródła przeuczenia w boosting</strong> - zbyt duże <span class="math inline">\(M\)</span>, zbyt głębokie drzewa, zbyt duży <span class="math inline">\(\nu\)</span> oraz brak regularizacji/losowania.</li>
+</ul>
+<div id="exm-3" class="theorem example">
+<p><span class="theorem-title"><strong>Przykład 5.3</strong></span> Teraz dokonamy porównania dotychczasowych modeli (z <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> i <a href="#exm-2" class="quarto-xref">Przykład&nbsp;<span>5.2</span></a>) z modelami AdaBoost, XGBoost, CatBoost.</p>
+<div id="b4cb3f1c" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> AdaBoostClassifier</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> [</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    eval_model(tree, <span class="st">"Drzewo (surowe)"</span>), <span class="co"># eval_model było już zdefiniowane</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    eval_model(tree_pruned, <span class="st">"Drzewo (przycięte)"</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeśli w sesji istnieją modele z exm-2 (bagging / random forest), dodajemy je do porównania.</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">"bag"</span> <span class="kw">in</span> <span class="bu">globals</span>():</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    results.append(eval_model(bag, <span class="st">"Bagging"</span>))</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">"rf"</span> <span class="kw">in</span> <span class="bu">globals</span>():</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    results.append(eval_model(rf, <span class="st">"Random Forest"</span>))</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) AdaBoost (wieloklasowo): najczęściej używa się bardzo płytkich drzew jako weak learner</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>stump <span class="op">=</span> DecisionTreeClassifier(</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    ada <span class="op">=</span> AdaBoostClassifier(</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        estimator<span class="op">=</span>stump,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        n_estimators<span class="op">=</span><span class="dv">800</span>,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">TypeError</span>:</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># starsze sklearn: parametr nazywa się base_estimator</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    ada <span class="op">=</span> AdaBoostClassifier(</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        base_estimator<span class="op">=</span>stump,</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        n_estimators<span class="op">=</span><span class="dv">800</span>,</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>ada.fit(X_train, y_train)</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>results.append(eval_model(ada, <span class="st">"AdaBoost"</span>))</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) XGBoost</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> xgboost <span class="im">import</span> XGBClassifier</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>le <span class="op">=</span> LabelEncoder()</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>y_train_enc <span class="op">=</span> le.fit_transform(y_train)</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>y_test_enc <span class="op">=</span> le.transform(y_test)</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>xgb <span class="op">=</span> XGBClassifier(</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span><span class="fl">0.05</span>,</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    subsample<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>    colsample_bytree<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    reg_lambda<span class="op">=</span><span class="fl">1.0</span>,</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>    objective<span class="op">=</span><span class="st">"multi:softprob"</span>,</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    num_class<span class="op">=</span><span class="bu">len</span>(le.classes_),</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>    eval_metric<span class="op">=</span><span class="st">"mlogloss"</span>,</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>xgb.fit(X_train, y_train_enc)</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="co"># predykcja: etykiety int -&gt; string</span></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>yhat_xgb <span class="op">=</span> le.inverse_transform(xgb.predict(X_test).astype(<span class="bu">int</span>))</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>results.append(</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">"model"</span>: <span class="st">"XGBoost"</span>,</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">"accuracy"</span>: accuracy_score(y_test, yhat_xgb),</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">"balanced_accuracy"</span>: balanced_accuracy_score(y_test, yhat_xgb),</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">"f1_macro"</span>: f1_score(y_test, yhat_xgb, average<span class="op">=</span><span class="st">"macro"</span>),</span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) CatBoost </span></span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> catboost <span class="im">import</span> CatBoostClassifier</span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>cat <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>    iterations<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>    depth<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>    loss_function<span class="op">=</span><span class="st">"MultiClass"</span>,</span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>    random_seed<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>cat.fit(X_train, y_train)</span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>results.append(eval_model(cat, <span class="st">"CatBoost"</span>))</span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> pd.DataFrame(results).sort_values(<span class="st">"balanced_accuracy"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>             model  accuracy  balanced_accuracy  f1_macro
+           XGBoost    0.7950             0.7950    0.7958
+          CatBoost    0.7805             0.7805    0.7809
+     Random Forest    0.7705             0.7705    0.7697
+           Bagging    0.7310             0.7310    0.7314
+Drzewo (przycięte)    0.6930             0.6930    0.6936
+   Drzewo (surowe)    0.6910             0.6910    0.6913
+          AdaBoost    0.5425             0.5425    0.5118</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="porównanie-modeli-z-przykładów" class="level3" data-number="5.3.8">
+<h3 data-number="5.3.8" class="anchored" data-anchor-id="porównanie-modeli-z-przykładów"><span class="header-section-number">5.3.8</span> Porównanie modeli z przykładów</h3>
+<p>Wyniki porównania wskazują wyraźną hierarchię jakości w tym zadaniu wieloklasowym (klasy gatunków): <strong>XGBoost</strong> osiąga najlepsze dopasowanie (accuracy = 0.7950, balanced_accuracy = 0.7950, F1_macro = 0.7958), następnie <strong>CatBoost</strong> (0.7805 / 0.7805 / 0.7809) i <strong>Random Forest</strong> (0.7705 / 0.7705 / 0.7697). Dalej plasują się <strong>Bagging</strong> (0.7310 / 0.7310 / 0.7314) oraz pojedyncze drzewa (<strong>przycięte</strong>: 0.6930 / 0.6930 / 0.6936, <strong>surowe</strong>: 0.6910 / 0.6910 / 0.6913). Najsłabiej wypadł <strong>AdaBoost</strong> (0.5425 / 0.5425 / 0.5118), co w tym kontekście jest istotną informacją diagnostyczną.</p>
+<p>Po pierwsze, w tym konkretnym zbiorze (po wcześniejszej selekcji cech numerycznych) przewagę mają metody oparte o <strong>gradient boosting drzew</strong>. XGBoost wygrywa zwykle wtedy, gdy relacje między cechami a klasami są nieliniowe i wymagają kolejnych korekt na resztach/gradientach, a jednocześnie potrzebna jest skuteczna regularizacja (<em>shrinkage</em>, <em>subsampling</em>, kary złożoności). W praktyce XGBoost łączy wysoką elastyczność z wieloma mechanizmami kontroli przeuczenia, co często daje najlepszy kompromis <em>bias–variance</em>.</p>
+<p>CatBoost uzyskał wynik nieco słabszy od XGBoost. Jest to spójne z intuicją: główna przewaga CatBoost ujawnia się w danych z licznymi zmiennymi kategorycznymi (<em>ordered target statistics</em>, <em>ordered boosting</em>), natomiast w naszym pipeline’ie korzystamy niemal wyłącznie z cech liczbowych. CatBoost pozostaje jednak bardzo konkurencyjny, bo jest silnym wariantem boostingu drzew również dla danych numerycznych, a różnica jakości może wynikać zarówno z doboru hiperparametrów, jak i z tego, że XGBoost w tej konfiguracji lepiej dopasował kompromis między głębokością drzew a regularizacją.</p>
+<p>Random Forest jest najlepszą metodą „baggingową” w zestawieniu. Wynik lepszy niż Bagging jest typowy: losowanie cech w węzłach (<code>max_features</code>) dodatkowo <strong>dekoruluje drzewa</strong>, co mocniej redukuje wariancję zespołu. Jednocześnie RF z reguły nie „dopycha” biasu tak skutecznie jak boosting, dlatego – przy porównywalnym nakładzie obliczeń – bywa minimalnie słabszy od dobrze nastrojonego gradient boostingu.</p>
+<p>Bagging poprawia pojedyncze drzewo głównie przez redukcję wariancji (uśrednianie wielu modeli uczonych na próbkach bootstrapowych). Jest to widoczne w przeskoku z okolic 0.69 (pojedyncze drzewo) do okolic 0.73 (bagging). Różnica między drzewem surowym a przyciętym jest natomiast mała, co sugeruje, że w tej konfiguracji przycinanie redukuje złożoność, ale nie zmienia istotnie granic decyzyjnych w obszarach, które dominują w teście. Z dydaktycznego punktu widzenia to dobry przykład faktu, że <strong>upraszczanie drzewa</strong> często poprawia interpretowalność i stabilność, ale nie gwarantuje zauważalnego wzrostu metryk – szczególnie, gdy problem jest złożony, a pojedyncze drzewo ma ograniczoną moc aproksymacyjną.</p>
+<p>Słaby wynik AdaBoost jest w tym zadaniu szczególnie pouczający. W wersji wieloklasowej (oraz przy płytkich <em>weak learners</em>) AdaBoost może gorzej radzić sobie, gdy granice klas są złożone, klasy są do siebie podobne w przestrzeni cech, a „trudne” obserwacje (które dostają większe wagi) zawierają szum lub są niejednoznaczne. Wówczas algorytm może nadmiernie koncentrować się na przykładach trudnych do rozdzielenia i tracić jakość globalną (spadek macro-F1 jest tu wyraźny). W praktyce AdaBoost bywa dobry jako prosty baseline, ale w zadaniach tablicowych częściej ustępuje nowocześniejszym wariantom gradient boostingu.</p>
+<p>Warto zauważyć, że w tym porównaniu <strong>accuracy</strong>, <strong>balanced_accuracy</strong> i <strong>F1_macro</strong> są bardzo zbliżone dla najlepszych modeli. To oznacza, że (po ograniczeniu do 10 najczęstszych gatunków) nie obserwujemy silnego problemu dominacji jednej klasy; w takich warunkach macro-F1 jest szczególnie użyteczne jako miara „sprawiedliwości” względem klas, bo każdej klasie przypisuje podobną wagę.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-breiman1996" class="csl-entry" role="listitem">
+Breiman, Leo. 1996. <span>„Bagging Predictors”</span>. <em>Machine Learning</em> 24 (2): 123–40. <a href="https://doi.org/10.1023/a:1018054314350">https://doi.org/10.1023/a:1018054314350</a>.
+</div>
+<div id="ref-breiman2001" class="csl-entry" role="listitem">
+———. 2001. <span>„Random Forests”</span>. <em>Machine Learning</em> 45 (1): 5–32. <a href="https://doi.org/10.1023/a:1010933404324">https://doi.org/10.1023/a:1010933404324</a>.
+</div>
+<div id="ref-breiman2017" class="csl-entry" role="listitem">
+Breiman, Leo, Jerome Friedman, R. A. Olshen, i Charles J. Stone. 2017. <em>Classification and Regression Trees</em>. New York: Chapman; Hall/CRC.
+</div>
+<div id="ref-chen2016" class="csl-entry" role="listitem">
+Chen, Tianqi, i Carlos Guestrin. 2016. <span>„XGBoost”</span>. <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, sierpień, 785–94. <a href="https://doi.org/10.1145/2939672.2939785">https://doi.org/10.1145/2939672.2939785</a>.
+</div>
+<div id="ref-efron1979" class="csl-entry" role="listitem">
+Efron, B. 1979. <span>„Bootstrap Methods: Another Look at the Jackknife”</span>. <em>The Annals of Statistics</em> 7 (1). <a href="https://doi.org/10.1214/aos/1176344552">https://doi.org/10.1214/aos/1176344552</a>.
+</div>
+<div id="ref-freund1997" class="csl-entry" role="listitem">
+Freund, Yoav, i Robert E Schapire. 1997. <span>„A Decision-Theoretic Generalization of On-Line Learning and an Application to Boosting”</span>. <em>Journal of Computer and System Sciences</em> 55 (1): 119–39. <a href="https://doi.org/10.1006/jcss.1997.1504">https://doi.org/10.1006/jcss.1997.1504</a>.
+</div>
+<div id="ref-friedman2001" class="csl-entry" role="listitem">
+Friedman, Jerome H. 2001. <span>„Greedy function approximation: A gradient boosting machine.”</span> <em>The Annals of Statistics</em> 29 (5). <a href="https://doi.org/10.1214/aos/1013203451">https://doi.org/10.1214/aos/1013203451</a>.
+</div>
+<div id="ref-geurts2006" class="csl-entry" role="listitem">
+Geurts, Pierre, Damien Ernst, i Louis Wehenkel. 2006. <span>„Extremely Randomized Trees”</span>. <em>Machine Learning</em> 63 (1): 3–42. <a href="https://doi.org/10.1007/s10994-006-6226-1">https://doi.org/10.1007/s10994-006-6226-1</a>.
+</div>
+<div id="ref-hothorn2006" class="csl-entry" role="listitem">
+Hothorn, Torsten, Kurt Hornik, i Achim Zeileis. 2006. <span>„Unbiased Recursive Partitioning: A Conditional Inference Framework”</span>. <em>Journal of Computational and Graphical Statistics</em> 15 (3): 651–74. <a href="https://doi.org/10.1198/106186006X133933">https://doi.org/10.1198/106186006X133933</a>.
+</div>
+<div id="ref-kass1980" class="csl-entry" role="listitem">
+Kass, G. V. 1980. <span>„An Exploratory Technique for Investigating Large Quantities of Categorical Data”</span>. <em>Applied Statistics</em> 29 (2): 119. <a href="https://doi.org/10.2307/2986296">https://doi.org/10.2307/2986296</a>.
+</div>
+<div id="ref-kuhn2018" class="csl-entry" role="listitem">
+Kuhn, Max, i Ross Quinlan. 2018. <em>C50: C5.0 Decision Trees and Rule-Based Models</em>. <a href="https://CRAN.R-project.org/package=C50">https://CRAN.R-project.org/package=C50</a>.
+</div>
+<div id="ref-quinlan1993" class="csl-entry" role="listitem">
+Quinlan, J Ross. 1993. <em>C4. 5: Programs for Machine Learning</em>. Morgan Kaufmann.
+</div>
+<div id="ref-quinlan1986" class="csl-entry" role="listitem">
+Quinlan, J. R. 1986. <span>„Induction of Decision Trees”</span>. <em>Machine Learning</em> 1 (1): 81–106. <a href="https://doi.org/10.1007/BF00116251">https://doi.org/10.1007/BF00116251</a>.
+</div>
+<div id="ref-schapire1990" class="csl-entry" role="listitem">
+Schapire, Robert E. 1990. <span>„The Strength of Weak Learnability”</span>. <em>Machine Learning</em> 5 (2): 197–227. <a href="https://doi.org/10.1023/a:1022648800760">https://doi.org/10.1023/a:1022648800760</a>.
+</div>
+<div id="ref-singh2025" class="csl-entry" role="listitem">
+Singh, Pranjal Kumar, i Seba Susan. 2025. <span>„EfficientNetB0-CatBoost: Deep Learning With Categorical Boosting for Food Image Recognition”</span>. <em>Cureus Journal of Computer Science</em>, październik. <a href="https://doi.org/10.7759/s44389-025-03791-2">https://doi.org/10.7759/s44389-025-03791-2</a>.
+</div>
+<div id="ref-tinkamho1998" class="csl-entry" role="listitem">
+Tin Kam Ho. 1998. <span>„The random subspace method for constructing decision forests”</span>. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em> 20 (8): 832–44. <a href="https://doi.org/10.1109/34.709601">https://doi.org/10.1109/34.709601</a>.
+</div>
+</div>
 </section>
 </section>
 
@@ -1256,8 +1913,8 @@ r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/03-klasyfikacja-liniowa.html" class="pagination-link" aria-label="Klasyfikacja liniowa">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Klasyfikacja liniowa</span></span>
+      <a href="../chapters/03-klasyfikacja-liniowa.html" class="pagination-link" aria-label="Modele liniowe i dyskryminacyjne">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modele liniowe i dyskryminacyjne</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -1274,7 +1931,7 @@ r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Dariusz Majerek ©2025</p>
 </div>

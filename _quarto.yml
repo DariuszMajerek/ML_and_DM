@@ -14,7 +14,7 @@ book:
       Dariusz Majerek ©2025
   favicon: images/cover.png
   cover-image: images/cover.png  
-  repo-url: https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe
+  repo-url: https://github.com/DariuszMajerek/ML_and_DM
   repo-actions: [issue]
   sharing: [twitter]
   search: true
@@ -35,6 +35,7 @@ book:
     - chapters/08-svm.qmd
     - chapters/09-dalsze-zagadnienia.qmd
     - chapters/10-podsumowanie.qmd
+    - chapters/reference.qmd
 
 bibliography: references.bib
 reference-location: margin
@@ -62,5 +63,3 @@ format:
 
 execute: 
   warning: false
-
-editor: visual

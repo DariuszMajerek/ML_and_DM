@@ -1,5 +1,5 @@
 ---
-title: "Klasyfikacja liniowa"
+title: "Modele liniowe i dyskryminacyjne"
 ---
 
 ## Modele liniowe w uczeniu nadzorowanym
@@ -956,5 +956,3 @@ plt.tight_layout()
 plt.show()
 ```
 :::
-
-## Literatura {.unnumbered}

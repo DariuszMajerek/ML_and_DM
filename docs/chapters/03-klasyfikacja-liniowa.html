@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Klasyfikacja liniowa – Eksploracja danych i uczenie maszynowe</title>
+<title>4&nbsp; Modele liniowe – Eksploracja danych i uczenie maszynowe</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -337,7 +337,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03-klasyfikacja-liniowa.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Klasyfikacja liniowa</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03-klasyfikacja-liniowa.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modele liniowe</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Szukaj" onclick="window.quartoOpenSearch();">
@@ -358,7 +358,7 @@ window.Quarto = {
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Eksploracja danych i uczenie maszynowe</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/DariuszMajerek/ML_and_DM" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <a href="https://twitter.com/intent/tweet?url=|url|" title="Twitter" class="quarto-navigation-tool px-1" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Przełącz tryb ciemny"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Przełącz tryb czytnika">
@@ -397,7 +397,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/03-klasyfikacja-liniowa.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Klasyfikacja liniowa</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modele liniowe</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -442,6 +442,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Podsumowanie</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -478,9 +484,8 @@ window.Quarto = {
   <li><a href="#sigmai-sigma_ksigma-sigma_k-dowolne" id="toc-sigmai-sigma_ksigma-sigma_k-dowolne" class="nav-link" data-scroll-target="#sigmai-sigma_ksigma-sigma_k-dowolne"><span class="header-section-number">4.5.4</span> <span class="math inline">\(\Sigma=I\)</span>, <span class="math inline">\(\Sigma_k=\Sigma\)</span>, <span class="math inline">\(\Sigma_k\)</span> dowolne</a></li>
   <li><a href="#jak-estymuje-się-parametry-w-uczeniu-nadzorowanym" id="toc-jak-estymuje-się-parametry-w-uczeniu-nadzorowanym" class="nav-link" data-scroll-target="#jak-estymuje-się-parametry-w-uczeniu-nadzorowanym"><span class="header-section-number">4.5.5</span> Jak estymuje się parametry w uczeniu nadzorowanym?</a></li>
   </ul></li>
-  <li><a href="#literatura" id="toc-literatura" class="nav-link" data-scroll-target="#literatura">Literatura</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
@@ -488,7 +493,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Klasyfikacja liniowa</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modele liniowe</span></h1>
 </div>
 
 
@@ -542,7 +547,7 @@ kaggle datasets download -d fedesoriano/the-boston-houseprice-data -p chapters/k
 ls -la chapters/kaggle_boston
 unzip -o chapters/kaggle_boston/*.zip -d chapters/kaggle_boston || true</code></pre>
 <p>Następnie przejdziemy do budowy modelu</p>
-<div id="831a2389" class="cell" data-execution_count="1">
+<div id="36e24c55" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -712,7 +717,7 @@ z_{ij} = \frac{x_{ij}-\mu_j}{\sigma_j}.
 \]</span></p>
 <p>Po standaryzacji „jednostka” każdej cechy jest porównywalna (1 odchylenie standardowe), więc kara na współczynnikach działa symetrycznie. Dlatego w praktyce dla regresji logistycznej, ridge/lasso oraz większości modeli liniowych z regularyzacją standaryzacja jest traktowana jako element obowiązkowy.</p>
 <p>W ujęciu uczenia maszynowego regularyzacja jest narzędziem kontrolowania złożoności modelu. <span class="math inline">\(\lambda\)</span> staje się hiperparametrem, który dobiera się na podstawie jakości generalizacji (np. przez walidację). Wraz ze wzrostem <span class="math inline">\(\lambda\)</span> model staje się prostszy i stabilniejszy, ale może gorzej dopasowywać dane treningowe. Standaryzacja jest integralną częścią tego procesu, bo zapewnia, że dobór <span class="math inline">\(\lambda\)</span> i sama kara mają sens niezależnie od jednostek i skali cech.</p>
-<div id="22600a22" class="cell" data-execution_count="2">
+<div id="b85bf8b9" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -879,7 +884,7 @@ PTRATIO -1.999596
 </div>
 </div>
 <p>Widać wyraźnie, że kalibaracja parametrów <span class="math inline">\(\lambda\)</span> i <span class="math inline">\(\alpha\)</span> sprowadziła praktycznie model do regresji grzbietowej (<em>ridge</em>) z parametrem <span class="math inline">\(\lambda=0.01\)</span>. Wyniki porównania <span class="math inline">\(R^2\)</span> pomiędzy zbiorem treningowym i testowym po regularyzacji się nie zmieniły. Dalej występuje różnica <span class="math inline">\(\approx 0.08\)</span>. To pokazuje, że sama regularyzacja nie wystarczy do usunięcia tego przeuczenia (swoją drogą nie jest ono bardzo duże). Na koniec aby przekonać się jak modele (<em>raw</em> i <em>ridge</em>) są wrażliwe na podział zbioru dokonamy ich porównania z wykorzystaniem walidacji krzyżowej.</p>
-<div id="5b356bc5" class="cell" data-execution_count="3">
+<div id="f6c63ced" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1020,7 +1025,7 @@ L(\beta_0,\beta) = \prod_{i=1}^n p_i^{y_i}(1-p_i)^{1-y_i}.
 <p>Wreszcie, jest to model nadzorowany w sensie ML, ponieważ parametry <span class="math inline">\((\beta_0,\beta)\)</span> uczymy na oznakowanych parach <span class="math inline">\((x_i,y_i)\)</span> poprzez minimalizację funkcji straty. W odróżnieniu od metod nienadzorowanych, tutaj etykieta <span class="math inline">\(y_i\)</span> jest bezpośrednio składnikiem funkcji celu, a „uczenie” polega na takim doborze parametrów, aby model możliwie dobrze odtwarzał zależność między cechami a klasą docelową, nie tylko na danych uczących, ale przede wszystkim na danych niewidzianych.</p>
 <div id="exm-2" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 4.2</strong></span> &nbsp;</p>
-<div id="5758cf0a" class="cell" data-execution_count="4">
+<div id="473137c5" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1206,7 +1211,7 @@ Macierz pomyłek (rows=true, cols=pred):
 <section id="modele-dyskryminacyjne" class="level2 page-columns page-full" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="modele-dyskryminacyjne"><span class="header-section-number">4.5</span> Modele dyskryminacyjne</h2>
 <p>Analiza dyskryminacyjna to klasa klasycznych metod klasyfikacji, które bardzo naturalnie wpisują się w logikę uczenia nadzorowanego: mając etykiety klas <span class="math inline">\(y \in \{1,\dots,K\}\)</span>, uczymy parametry rozkładów cech w każdej klasie (część „generatywna”), a następnie stosujemy regułę Bayesa do przypisania nowej obserwacji do najbardziej prawdopodobnej klasy. W odróżnieniu od regresji logistycznej, która modeluje bezpośrednio <span class="math inline">\(\mathbb{P}(y\mid x)\)</span>, LDA/QDA modelują <span class="math inline">\(\mathbb{P}(x\mid y)\)</span> oraz priory <span class="math inline">\(\mathbb{P}(y)\)</span>, po czym wyznaczają <span class="math inline">\(\mathbb{P}(y\mid x)\)</span> pośrednio.</p>
-<p>Historycznie do analizy dyskryminacyjnej dochodzono co najmniej dwiema drogami. Pierwsza (zwykle kojarzona z Fisherem) wynikała z problemu znalezienia kierunku projekcji, na którym klasy są najlepiej rozdzielone w sensie stosunku wariancji „między klasami” do wariancji „wewnątrz klas” <span class="citation" data-cites="fisher1936">(<a href="#ref-fisher1936" role="doc-biblioref">Fisher 1936</a>)</span>. Druga droga <span class="citation" data-cites="wardjr1963">(<a href="#ref-wardjr1963" role="doc-biblioref">WardJR i Hook 1963</a>)</span>ma charakter „decyzyjno-probabilistyczny”: zaczynamy od założeń o rozkładach klas (najczęściej normalnych) i z reguły Bayesa wyprowadzamy regułę klasyfikacji w postaci porównania pewnych funkcji punktacji dla klas. Ten drugi sposób jest bardzo bliski temu, jak dziś prezentuje się LDA/QDA w uczeniu maszynowym (jako klasyfikatory generatywne) <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>Historycznie do analizy dyskryminacyjnej dochodzono co najmniej dwiema drogami. Pierwsza (zwykle kojarzona z Fisherem) wynikała z problemu znalezienia kierunku projekcji, na którym klasy są najlepiej rozdzielone w sensie stosunku wariancji „między klasami” do wariancji „wewnątrz klas” <span class="citation" data-cites="fisher1936">(<a href="reference.html#ref-fisher1936" role="doc-biblioref">Fisher 1936</a>)</span>. Druga droga <span class="citation" data-cites="wardjr1963">(<a href="reference.html#ref-wardjr1963" role="doc-biblioref">WardJR i Hook 1963</a>)</span>ma charakter „decyzyjno-probabilistyczny”: zaczynamy od założeń o rozkładach klas (najczęściej normalnych) i z reguły Bayesa wyprowadzamy regułę klasyfikacji w postaci porównania pewnych funkcji punktacji dla klas. Ten drugi sposób jest bardzo bliski temu, jak dziś prezentuje się LDA/QDA w uczeniu maszynowym (jako klasyfikatory generatywne) <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Fisher (1936) pokazał ideę rozdzielania klas przez znalezienie projekcji maksymalizującej separację (stosunek wariancji między klasami do wariancji wewnątrz klas) i zastosował ją do danych irysów. Ward (1963) jest często przywoływany w kontekście rozwoju metod grupowania i analiz wielowymiarowych; w praktyce dydaktycznej warto podkreślić, że równolegle do „drogi Fishera” (kryterium separacji/projekcji) rozwijała się droga „proceduralna” w analizie wielowymiarowej: najpierw grupowanie/definicja grup, potem konstrukcja funkcji dyskryminacyjnych do klasyfikacji i rozumienia różnic między grupami.</p></div></div><section id="założenia-modelu-normalność-wielowymiarowa-i-rozkłady-apriori-klas" class="level3" data-number="4.5.1">
 <h3 data-number="4.5.1" class="anchored" data-anchor-id="założenia-modelu-normalność-wielowymiarowa-i-rozkłady-apriori-klas"><span class="header-section-number">4.5.1</span> Założenia modelu: normalność wielowymiarowa i rozkłady apriori klas</h3>
 <p>W klasycznym wariancie zakładamy, że dla każdej klasy <span class="math inline">\(k\)</span> wektor cech ma rozkład normalny:</p>
@@ -1302,7 +1307,7 @@ x \mid (y=k) \sim \mathcal{N}(\mu_k, \Sigma_k),
 <li>pokazujemy log-loss jako miarę jakości probabilistycznej,</li>
 <li>narysujemy brzegi decyzyjne obu metod.</li>
 </ul>
-<div id="8783216c" class="cell" data-execution_count="5">
+<div id="0354d55c" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1540,13 +1545,9 @@ Iris-virginica             0                0              13</code></pre>
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="literatura" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="literatura">Literatura</h2>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-fisher1936" class="csl-entry" role="listitem">
 Fisher, R. A. 1936. <span>„The Use of Multiple Measurements in Taxonomic Problems”</span>. <em>Annals of Eugenics</em> 7 (2): 179–88. <a href="https://doi.org/10.1111/j.1469-1809.1936.tb02137.x">https://doi.org/10.1111/j.1469-1809.1936.tb02137.x</a>.
 </div>
@@ -1554,6 +1555,7 @@ Fisher, R. A. 1936. <span>„The Use of Multiple Measurements in Taxonomic Probl
 WardJR, Joe H., i Marion E. Hook. 1963. <span>„Application of an Hierarchical Grouping Procedure to a Problem of Grouping Profiles”</span>. <em>Educational and Psychological Measurement</em> 23 (1): 69–81. <a href="https://doi.org/10.1177/001316446302300107">https://doi.org/10.1177/001316446302300107</a>.
 </div>
 </div>
+</section>
 </section>
 
 
@@ -1991,7 +1993,7 @@ WardJR, Joe H., i Marion E. Hook. 1963. <span>„Application of an Hierarchical 
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Dariusz Majerek ©2025</p>
 </div>

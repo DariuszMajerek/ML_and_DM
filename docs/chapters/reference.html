@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Metoda SVM – Eksploracja danych i uczenie maszynowe</title>
+<title>References – Eksploracja danych i uczenie maszynowe</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -30,8 +49,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../chapters/09-dalsze-zagadnienia.html" rel="next">
-<link href="../chapters/07-splajny-gam.html" rel="prev">
+<link href="../chapters/10-podsumowanie.html" rel="prev">
 <link href="../images/cover.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -250,7 +268,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/08-svm.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/reference.html">References</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Szukaj" onclick="window.quartoOpenSearch();">
@@ -339,7 +357,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/08-svm.html" class="sidebar-item-text sidebar-link active">
+  <a href="../chapters/08-svm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></span></a>
   </div>
 </li>
@@ -357,7 +375,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/reference.html" class="sidebar-item-text sidebar-link">
+  <a href="../chapters/reference.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -375,7 +393,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></h1>
+<h1 class="title">References</h1>
 </div>
 
 
@@ -392,14 +410,67 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<ul>
-<li>Support Vector Machines (SVM) szukaja hiperpłaszczyzny maksymalizujacej margines miedzy klasami.</li>
-<li>Kluczowe pojecia: hiperpłaszczyzna, wektory nosne, margines i jadra.</li>
-<li>Twardy margines wymaga braku bledow klasyfikacji, miekkim marginesem steruje parametr regularyzacji.</li>
-<li>Typy jader: liniowe, wielomianowe, RBF.</li>
-<li>Zalety: skutecznosc w danych wysokowymiarowych i przy malych probach.</li>
-<li>Wady: koniecznosc doboru parametrow i wrazliwosc na skale cech.</li>
-</ul>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-breiman1996" class="csl-entry" role="listitem">
+Breiman, Leo. 1996. <span>“Bagging Predictors.”</span> <em>Machine
+Learning</em> 24 (2): 123–40. <a href="https://doi.org/10.1023/a:1018054314350">https://doi.org/10.1023/a:1018054314350</a>.
+</div>
+<div id="ref-breiman2001" class="csl-entry" role="listitem">
+———. 2001. <span>“Random Forests.”</span> <em>Machine Learning</em> 45
+(1): 5–32. <a href="https://doi.org/10.1023/a:1010933404324">https://doi.org/10.1023/a:1010933404324</a>.
+</div>
+<div id="ref-breiman2017" class="csl-entry" role="listitem">
+Breiman, Leo, Jerome Friedman, R. A. Olshen, and Charles J. Stone. 2017.
+<em>Classification and Regression Trees</em>. New York: Chapman;
+Hall/CRC.
+</div>
+<div id="ref-efron1979" class="csl-entry" role="listitem">
+Efron, B. 1979. <span>“Bootstrap Methods: Another Look at the
+Jackknife.”</span> <em>The Annals of Statistics</em> 7 (1). <a href="https://doi.org/10.1214/aos/1176344552">https://doi.org/10.1214/aos/1176344552</a>.
+</div>
+<div id="ref-fisher1936" class="csl-entry" role="listitem">
+Fisher, R. A. 1936. <span>“The Use of Multiple Measurements in Taxonomic
+Problems.”</span> <em>Annals of Eugenics</em> 7 (2): 179–88. <a href="https://doi.org/10.1111/j.1469-1809.1936.tb02137.x">https://doi.org/10.1111/j.1469-1809.1936.tb02137.x</a>.
+</div>
+<div id="ref-geurts2006" class="csl-entry" role="listitem">
+Geurts, Pierre, Damien Ernst, and Louis Wehenkel. 2006. <span>“Extremely
+Randomized Trees.”</span> <em>Machine Learning</em> 63 (1): 3–42. <a href="https://doi.org/10.1007/s10994-006-6226-1">https://doi.org/10.1007/s10994-006-6226-1</a>.
+</div>
+<div id="ref-hothorn2006" class="csl-entry" role="listitem">
+Hothorn, Torsten, Kurt Hornik, and Achim Zeileis. 2006. <span>“Unbiased
+Recursive Partitioning: A Conditional Inference Framework.”</span>
+<em>Journal of Computational and Graphical Statistics</em> 15 (3):
+651–74. <a href="https://doi.org/10.1198/106186006X133933">https://doi.org/10.1198/106186006X133933</a>.
+</div>
+<div id="ref-kass1980" class="csl-entry" role="listitem">
+Kass, G. V. 1980. <span>“An Exploratory Technique for Investigating
+Large Quantities of Categorical Data.”</span> <em>Applied
+Statistics</em> 29 (2): 119. <a href="https://doi.org/10.2307/2986296">https://doi.org/10.2307/2986296</a>.
+</div>
+<div id="ref-kuhn2018" class="csl-entry" role="listitem">
+Kuhn, Max, and Ross Quinlan. 2018. <em>C50: C5.0 Decision Trees and
+Rule-Based Models</em>. <a href="https://CRAN.R-project.org/package=C50">https://CRAN.R-project.org/package=C50</a>.
+</div>
+<div id="ref-quinlan1993" class="csl-entry" role="listitem">
+Quinlan, J Ross. 1993. <em>C4. 5: Programs for Machine Learning</em>.
+Morgan Kaufmann.
+</div>
+<div id="ref-quinlan1986" class="csl-entry" role="listitem">
+Quinlan, J. R. 1986. <span>“Induction of Decision Trees.”</span>
+<em>Machine Learning</em> 1 (1): 81–106. <a href="https://doi.org/10.1007/BF00116251">https://doi.org/10.1007/BF00116251</a>.
+</div>
+<div id="ref-tinkamho1998" class="csl-entry" role="listitem">
+Tin Kam Ho. 1998. <span>“The Random Subspace Method for Constructing
+Decision Forests.”</span> <em>IEEE Transactions on Pattern Analysis and
+Machine Intelligence</em> 20 (8): 832–44. <a href="https://doi.org/10.1109/34.709601">https://doi.org/10.1109/34.709601</a>.
+</div>
+<div id="ref-wardjr1963" class="csl-entry" role="listitem">
+WardJR, Joe H., and Marion E. Hook. 1963. <span>“Application of an
+Hierarchical Grouping Procedure to a Problem of Grouping
+Profiles.”</span> <em>Educational and Psychological Measurement</em> 23
+(1): 69–81. <a href="https://doi.org/10.1177/001316446302300107">https://doi.org/10.1177/001316446302300107</a>.
+</div>
+</div>
 
 
 
@@ -819,14 +890,11 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../chapters/07-splajny-gam.html" class="pagination-link" aria-label="Modele addytywne i splajny">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modele addytywne i splajny</span></span>
+      <a href="../chapters/10-podsumowanie.html" class="pagination-link" aria-label="Podsumowanie">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Podsumowanie</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../chapters/09-dalsze-zagadnienia.html" class="pagination-link" aria-label="Inne metody">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Inne metody</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
