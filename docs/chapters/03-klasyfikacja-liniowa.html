@@ -20,7 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -48,6 +103,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-6b8c1b7f874bdd152064db223e7d36ae.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark-7becdd8e1b79f26ea566d6ea537c1a09.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../site_libs/bootstrap/bootstrap-6b8c1b7f874bdd152064db223e7d36ae.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -76,10 +134,39 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
-<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -365,13 +452,38 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Spis treści</h2>
    
   <ul>
-  <li><a href="#regresja-logistyczna" id="toc-regresja-logistyczna" class="nav-link active" data-scroll-target="#regresja-logistyczna"><span class="header-section-number">4.1</span> Regresja logistyczna</a></li>
-  <li><a href="#dyskryminacja-liniowa-i-kwadratowa" id="toc-dyskryminacja-liniowa-i-kwadratowa" class="nav-link" data-scroll-target="#dyskryminacja-liniowa-i-kwadratowa"><span class="header-section-number">4.2</span> Dyskryminacja liniowa i kwadratowa</a></li>
+  <li><a href="#modele-liniowe-w-uczeniu-nadzorowanym" id="toc-modele-liniowe-w-uczeniu-nadzorowanym" class="nav-link active" data-scroll-target="#modele-liniowe-w-uczeniu-nadzorowanym"><span class="header-section-number">4.1</span> Modele liniowe w uczeniu nadzorowanym</a></li>
+  <li><a href="#regresja-wieloraka" id="toc-regresja-wieloraka" class="nav-link" data-scroll-target="#regresja-wieloraka"><span class="header-section-number">4.2</span> Regresja wieloraka</a>
+  <ul class="collapse">
+  <li><a href="#definicja-modelu" id="toc-definicja-modelu" class="nav-link" data-scroll-target="#definicja-modelu"><span class="header-section-number">4.2.1</span> Definicja modelu</a></li>
+  <li><a href="#estymacja-jako-problem-uczenia-nadzorowanego" id="toc-estymacja-jako-problem-uczenia-nadzorowanego" class="nav-link" data-scroll-target="#estymacja-jako-problem-uczenia-nadzorowanego"><span class="header-section-number">4.2.2</span> Estymacja jako problem uczenia nadzorowanego</a></li>
+  </ul></li>
+  <li><a href="#regularyzacja-modeli-liniowych" id="toc-regularyzacja-modeli-liniowych" class="nav-link" data-scroll-target="#regularyzacja-modeli-liniowych"><span class="header-section-number">4.3</span> Regularyzacja modeli liniowych</a>
+  <ul class="collapse">
+  <li><a href="#cel-stosowania" id="toc-cel-stosowania" class="nav-link" data-scroll-target="#cel-stosowania"><span class="header-section-number">4.3.1</span> Cel stosowania</a></li>
+  <li><a href="#ridge-regression-kara-l_2" id="toc-ridge-regression-kara-l_2" class="nav-link" data-scroll-target="#ridge-regression-kara-l_2"><span class="header-section-number">4.3.2</span> Ridge regression (kara <span class="math inline">\(L_2\)</span>)</a></li>
+  <li><a href="#lasso-kara-l_1" id="toc-lasso-kara-l_1" class="nav-link" data-scroll-target="#lasso-kara-l_1"><span class="header-section-number">4.3.3</span> LASSO (kara <span class="math inline">\(L_1\)</span>)</a></li>
+  <li><a href="#elastic-net-kara-mieszana" id="toc-elastic-net-kara-mieszana" class="nav-link" data-scroll-target="#elastic-net-kara-mieszana"><span class="header-section-number">4.3.4</span> Elastic Net (kara mieszana)</a></li>
+  <li><a href="#interpretacja-i-praktyka" id="toc-interpretacja-i-praktyka" class="nav-link" data-scroll-target="#interpretacja-i-praktyka"><span class="header-section-number">4.3.5</span> Interpretacja i praktyka</a></li>
+  </ul></li>
+  <li><a href="#regresja-logistyczna" id="toc-regresja-logistyczna" class="nav-link" data-scroll-target="#regresja-logistyczna"><span class="header-section-number">4.4</span> Regresja logistyczna</a>
+  <ul class="collapse">
+  <li><a href="#definicja-modelu-1" id="toc-definicja-modelu-1" class="nav-link" data-scroll-target="#definicja-modelu-1"><span class="header-section-number">4.4.1</span> Definicja modelu</a></li>
+  </ul></li>
+  <li><a href="#modele-dyskryminacyjne" id="toc-modele-dyskryminacyjne" class="nav-link" data-scroll-target="#modele-dyskryminacyjne"><span class="header-section-number">4.5</span> Modele dyskryminacyjne</a>
+  <ul class="collapse">
+  <li><a href="#założenia-modelu-normalność-wielowymiarowa-i-rozkłady-apriori-klas" id="toc-założenia-modelu-normalność-wielowymiarowa-i-rozkłady-apriori-klas" class="nav-link" data-scroll-target="#założenia-modelu-normalność-wielowymiarowa-i-rozkłady-apriori-klas"><span class="header-section-number">4.5.1</span> Założenia modelu: normalność wielowymiarowa i rozkłady apriori klas</a></li>
+  <li><a href="#funkcje-dyskryminacyjne-po-co-są-i-co-robią" id="toc-funkcje-dyskryminacyjne-po-co-są-i-co-robią" class="nav-link" data-scroll-target="#funkcje-dyskryminacyjne-po-co-są-i-co-robią"><span class="header-section-number">4.5.2</span> Funkcje dyskryminacyjne: po co są i co robią?</a></li>
+  <li><a href="#lda-vs-qda" id="toc-lda-vs-qda" class="nav-link" data-scroll-target="#lda-vs-qda"><span class="header-section-number">4.5.3</span> LDA vs QDA</a></li>
+  <li><a href="#sigmai-sigma_ksigma-sigma_k-dowolne" id="toc-sigmai-sigma_ksigma-sigma_k-dowolne" class="nav-link" data-scroll-target="#sigmai-sigma_ksigma-sigma_k-dowolne"><span class="header-section-number">4.5.4</span> <span class="math inline">\(\Sigma=I\)</span>, <span class="math inline">\(\Sigma_k=\Sigma\)</span>, <span class="math inline">\(\Sigma_k\)</span> dowolne</a></li>
+  <li><a href="#jak-estymuje-się-parametry-w-uczeniu-nadzorowanym" id="toc-jak-estymuje-się-parametry-w-uczeniu-nadzorowanym" class="nav-link" data-scroll-target="#jak-estymuje-się-parametry-w-uczeniu-nadzorowanym"><span class="header-section-number">4.5.5</span> Jak estymuje się parametry w uczeniu nadzorowanym?</a></li>
+  </ul></li>
+  <li><a href="#literatura" id="toc-literatura" class="nav-link" data-scroll-target="#literatura">Literatura</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/eksploracja-danych-uczenie-maszynowe/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -393,31 +505,1057 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="regresja-logistyczna" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="regresja-logistyczna"><span class="header-section-number">4.1</span> Regresja logistyczna</h2>
-<ul>
-<li>Regresja logistyczna to algorytm klasyfikacji binarnej wykorzystujacy funkcje sigmoidalna do estymacji prawdopodobienstwa przynaleznosci do klasy.</li>
-<li>Jest to metoda nadzorowana, w ktorej logit jest funkcja liniowa predyktorow.</li>
-<li>Zalozenia: niezaleznosc obserwacji, dwumianowa zmienna zalezna, liniowa relacja predyktorow z log-ilorazem szans, brak silnych odstepstw i dostatecznie duza proba.</li>
-<li>Interpretacja wspolczynnikow, ocena jakosci (funkcja kosztu, AUC), ograniczenia przy duzej nakladce klas lub wielu cechach.</li>
-</ul>
+<section id="modele-liniowe-w-uczeniu-nadzorowanym" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="modele-liniowe-w-uczeniu-nadzorowanym"><span class="header-section-number">4.1</span> Modele liniowe w uczeniu nadzorowanym</h2>
+<p>Modele liniowe stanowią fundament klasycznego uczenia maszynowego dla danych tablicowych. Ich atrakcyjność wynika z połączenia trzech cech: prostoty konstrukcji, relatywnie łatwej interpretacji oraz stabilnych własności matematycznych. W ujęciu uczenia nadzorowanego model liniowy opisuje zależność pomiędzy wektorem cech <span class="math inline">\(x \in \mathbb{R}^p\)</span> a zmienną docelową <span class="math inline">\(y\)</span>, ucząc się parametrów na podstawie par <span class="math inline">\((x_i, y_i)\)</span>. W praktyce modele liniowe służą zarówno do regresji (gdy <span class="math inline">\(y\)</span> jest zmienną ciągłą), jak i do klasyfikacji (gdy <span class="math inline">\(y\)</span> jest zmienną dyskretną). W tym kursie modele liniowe są szczególnie ważne, ponieważ stanowią punkt odniesienia dla późniejszych metod (drzew, zespołów, SVM), a także umożliwiają wprowadzenie pojęć takich jak funkcja straty, estymacja parametrów, kompromis <em>bias–variance</em> oraz interpretacja współczynników.</p>
+<p>W najprostszym ujęciu model liniowy zakłada, że predykcja jest liniową kombinacją cech. Dla obserwacji <span class="math inline">\(i\)</span> zapisujemy:</p>
+<p><span class="math display">\[
+\eta_i = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip}
+= \beta_0 + x_i^\top \beta,
+\]</span></p>
+<p>gdzie <span class="math inline">\(\beta_0\)</span> to wyraz wolny, a <span class="math inline">\(\beta \in \mathbb{R}^p\)</span> to wektor parametrów. Różne modele liniowe różnią się tym, jak <span class="math inline">\(\eta_i\)</span> jest powiązane z <span class="math inline">\(y_i\)</span> (funkcja łącząca) oraz jak definiowana jest funkcja straty, którą minimalizujemy w procesie uczenia.</p>
 </section>
-<section id="dyskryminacja-liniowa-i-kwadratowa" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="dyskryminacja-liniowa-i-kwadratowa"><span class="header-section-number">4.2</span> Dyskryminacja liniowa i kwadratowa</h2>
+<section id="regresja-wieloraka" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="regresja-wieloraka"><span class="header-section-number">4.2</span> Regresja wieloraka</h2>
+<section id="definicja-modelu" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="definicja-modelu"><span class="header-section-number">4.2.1</span> Definicja modelu</h3>
+<p>Regresja wieloraka (regresja liniowa) jest modelem nadzorowanym, w którym zmienna docelowa <span class="math inline">\(y\)</span> jest ciągła. Zakładamy:</p>
+<p><span class="math display">\[
+y_i = \beta_0 + x_i^\top \beta + \varepsilon_i,
+\]</span></p>
+<p>gdzie <span class="math inline">\(\varepsilon_i\)</span> to składnik losowy (szum). W ML nie musimy eksponować interpretacji probabilistycznej, natomiast kluczowe jest to, że parametry <span class="math inline">\(\beta_0, \beta\)</span> uczymy tak, aby predykcje <span class="math inline">\(\hat{y}_i\)</span> były możliwie bliskie <span class="math inline">\(y_i\)</span>.</p>
+</section>
+<section id="estymacja-jako-problem-uczenia-nadzorowanego" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="estymacja-jako-problem-uczenia-nadzorowanego"><span class="header-section-number">4.2.2</span> Estymacja jako problem uczenia nadzorowanego</h3>
+<p>Najczęściej stosuje się minimalizację sumy kwadratów błędów (<em>least squares</em>):</p>
+<p><span class="math display">\[
+\min_{\beta_0, \beta} \sum_{i=1}^n \left(y_i - (\beta_0 + x_i^\top \beta)\right)^2.
+\]</span></p>
+<p>Jest to klasyczny przykład uczenia nadzorowanego: posiadamy etykiety <span class="math inline">\(y_i\)</span>, a algorytm uczy parametry minimalizujące zadaną funkcję straty.</p>
+<div id="exm-1" class="theorem example">
+<p><span class="theorem-title"><strong>Przykład 4.1</strong></span> Poniżej jest przykład regresji na rzeczywistych danych z Kaggle (dataset, nie konkurs): <strong>Boston House Prices</strong>. Plik danych to <code>boston.csv</code>, a kolumna zmiennej wyjściowej to <code>MEDV</code> (wartość domu).</p>
+<p>Uwaga: Kaggle zwykle wymaga konta i tokenu API (<code>~/.kaggle/kaggle.json</code>).</p>
+<p>Jeśli używasz Kaggle CLI, pobierz i rozpakuj dane:</p>
+<pre class="{bash}"><code>#| eval: false
+kaggle datasets download -d fedesoriano/the-boston-houseprice-data -p chapters/kaggle_boston
+
+ls -la chapters/kaggle_boston
+unzip -o chapters/kaggle_boston/*.zip -d chapters/kaggle_boston || true</code></pre>
+<p>Następnie przejdziemy do budowy modelu</p>
+<div id="908d9565" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> Path(<span class="st">"kaggle_boston/boston.csv"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(data_path)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Target jest znany z opisu danych</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">"MEDV"</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> target <span class="kw">not</span> <span class="kw">in</span> df.columns:</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"Brakuje kolumny `</span><span class="sc">{</span>target<span class="sc">}</span><span class="ss">` w danych. Dostępne kolumny: "</span> <span class="op">+</span> <span class="st">", "</span>.join(df.columns)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Bierzemy wszystkie cechy liczbowe</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>df_num <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>[<span class="st">"number"</span>]).copy()</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>tmp <span class="op">=</span> df_num.dropna(subset<span class="op">=</span>[target]).copy()</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> tmp.drop(columns<span class="op">=</span>[target]).dropna()</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> tmp.loc[X.index, target]</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>reg <span class="op">=</span> LinearRegression()</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>reg.fit(X_train, y_train)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co"># predykcje</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>y_pred_train <span class="op">=</span> reg.predict(X_train)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> reg.predict(X_test)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co"># R^2</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>r2_train <span class="op">=</span> reg.score(X_train, y_train)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>r2_test <span class="op">=</span> reg.score(X_test, y_test)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co"># „klasyczne” podsumowanie regresji (liczone na zbiorze treningowym)</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> X_train.shape[<span class="dv">0</span>]</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> X_train.shape[<span class="dv">1</span>]</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>dof <span class="op">=</span> n <span class="op">-</span> p <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>resid <span class="op">=</span> y_train.values <span class="op">-</span> y_pred_train</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>sse <span class="op">=</span> np.<span class="bu">sum</span>(resid<span class="op">**</span><span class="dv">2</span>)  <span class="co"># sum of squared errors</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>tss <span class="op">=</span> np.<span class="bu">sum</span>((y_train.values <span class="op">-</span> y_train.mean())<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>ssr <span class="op">=</span> tss <span class="op">-</span> sse         <span class="co"># sum of squares regression</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> np.sqrt(sse <span class="op">/</span> dof)          <span class="co"># residual std. error (RSE)</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>F <span class="op">=</span> (ssr <span class="op">/</span> p) <span class="op">/</span> (sse <span class="op">/</span> dof)         <span class="co"># F-statistic dla H0: beta_1=...=beta_p=0</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="st">"metric"</span>: [<span class="st">"R2_train"</span>, <span class="st">"R2_test"</span>, <span class="st">"sigma(RSE)_train"</span>, <span class="st">"F_train"</span>, <span class="st">"n_train"</span>, <span class="st">"p"</span>, <span class="st">"dof"</span>],</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="st">"value"</span>:  [r2_train, r2_test, sigma, F, n, p, dof],</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(summary.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="co"># wykres: y_true vs y_pred (zbiór testowy)</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>plt.scatter(y_test, y_pred_test, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>mn <span class="op">=</span> <span class="bu">min</span>(y_test.<span class="bu">min</span>(), y_pred_test.<span class="bu">min</span>())</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>mx <span class="op">=</span> <span class="bu">max</span>(y_test.<span class="bu">max</span>(), y_pred_test.<span class="bu">max</span>())</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>plt.plot([mn, mx], [mn, mx], linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="ss">f"y_true (</span><span class="sc">{</span>target<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y_pred"</span>)</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Boston Housing (Kaggle): y_pred vs y_true (test)"</span>)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>          metric      value
+        R2_train   0.750886
+         R2_test   0.668759
+sigma(RSE)_train   4.734795
+         F_train  90.426617
+         n_train 404.000000
+               p  13.000000
+             dof 390.000000</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-2-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-2-output-2.png" width="565" height="564" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
 <ul>
-<li>LDA szuka liniowych kombinacji predyktorow maksymalizujacych separacje klas; zaklada normalny rozklad cech i identyczne macierze kowariancji.</li>
-<li>QDA dopuszcza rozne macierze kowariancji, przez co jest bardziej elastyczna.</li>
-<li>Warianty:
-<ul>
-<li>RDA: regularyzacja (skurcz) estymacji macierzy kowariancji.</li>
-<li>MDA: kazda klasa jako mieszanka kilku gaussowskich podklas.</li>
-<li>FDA: nieliniowe kombinacje predyktorow, np. funkcje sklejane.</li>
-</ul></li>
-<li>Dyskryminacja bywa korzystniejsza od regresji logistycznej dla problemow wieloklasowych i roznych rozkladow cech.</li>
+<li><code>R2_train</code> = 0.751, <code>R2_test</code> = 0.669 - model liniowy wyjaśnia ok. 75% wariancji zmiennej docelowej na treningu i ok. 67% na teście. Spadek jest znaczny, co może sugerować przeuczenie modelu.</li>
+<li><code>sigma (RSE)_train</code> = 4.735 - to oszacowanie odchylenia standardowego reszt (typowy błąd predykcji) na treningu. Interpretacja jednostek zależy od tego, czym jest target: jeśli target to klasyczny <code>MEDV</code> w tysiącach USD, to przeciętny błąd rzędu ~4.7 tys. USD na treningu. To jest „typowa” skala odchyłki predykcji od wartości rzeczywistej w modelu liniowym.</li>
+<li><code>F_train</code> = 90.43 przy <code>p</code> = 13 i dof = 390 - statystyka <span class="math inline">\(F\)</span> testuje hipotezę zerową: wszystkie współczynniki nachyleń są równe 0 (model nie wnosi nic ponad średnią). Tak wysoka wartość <span class="math inline">\(F\)</span> oznacza, że model jako całość jest istotny statystycznie (praktycznie na pewno p-value <span class="math inline">\(\ll 0.001\)</span>) — czyli przynajmniej część cech ma realny związek z targetem.</li>
 </ul>
+<p>Ponieważ model wykazuje delikatne znamiona przeuczenia zastosujemy do niego regularyzacje.</p>
+</div>
+</section>
+</section>
+<section id="regularyzacja-modeli-liniowych" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="regularyzacja-modeli-liniowych"><span class="header-section-number">4.3</span> Regularyzacja modeli liniowych</h2>
+<section id="cel-stosowania" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="cel-stosowania"><span class="header-section-number">4.3.1</span> Cel stosowania</h3>
+<p>W praktyce modele liniowe mogą cierpieć na przeuczenie, niestabilność estymacji (zwłaszcza przy silnej współliniowości cech) oraz zbyt dużą wariancję współczynników. Regularyzacja dodaje do funkcji straty karę za zbyt duże wartości parametrów, co stabilizuje estymację i poprawia uogólnianie.</p>
+<p>Ogólny zapis problemu z regularyzacją:</p>
+<p><span class="math display">\[
+\min_{\beta_0, \beta} \mathcal{L}(y, X; \beta_0, \beta) + \lambda \, \mathcal{P}(\beta),
+\]</span></p>
+<p>gdzie <span class="math inline">\(\mathcal{L}\)</span> to funkcja straty (np. MSE w regresji lub log-loss w regresji logistycznej), <span class="math inline">\(\mathcal{P}(\beta)\)</span> to kara, a <span class="math inline">\(\lambda \ge 0\)</span> kontroluje siłę regularyzacji. Zwykle nie karzemy wyrazu wolnego <span class="math inline">\(\beta_0\)</span>.</p>
+</section>
+<section id="ridge-regression-kara-l_2" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="ridge-regression-kara-l_2"><span class="header-section-number">4.3.2</span> Ridge regression (kara <span class="math inline">\(L_2\)</span>)</h3>
+<p><em>Ridge regression</em> (Tikhonov) stosuje karę <span class="math inline">\(L_2\)</span>:</p>
+<p><span class="math display">\[
+\min_{\beta_0, \beta} \mathcal{L}(y, X; \beta_0, \beta) + \lambda \|\beta\|_2^2.
+\]</span></p>
+<p>Współczynniki są „kurczone” w stronę zera, ale zwykle nie stają się dokładnie równe zeru. Ridge jest szczególnie użyteczny przy współliniowości cech, bo stabilizuje estymacje i obniża wariancję.</p>
+</section>
+<section id="lasso-kara-l_1" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="lasso-kara-l_1"><span class="header-section-number">4.3.3</span> LASSO (kara <span class="math inline">\(L_1\)</span>)</h3>
+<p>LASSO (ang. <em>Least Absolute Shrinkage and Selection Operator</em>) używa kary <span class="math inline">\(L_1\)</span>:</p>
+<p><span class="math display">\[
+\min_{\beta_0, \beta} \mathcal{L}(y, X; \beta_0, \beta) + \lambda \|\beta\|_1.
+\]</span></p>
+<p>Kara L1 sprzyja rozwiązaniom rzadkim — część współczynników staje się dokładnie zerowa. Dzięki temu LASSO pełni jednocześnie rolę selekcji cech.</p>
+</section>
+<section id="elastic-net-kara-mieszana" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="elastic-net-kara-mieszana"><span class="header-section-number">4.3.4</span> Elastic Net (kara mieszana)</h3>
+<p>Elastic Net łączy zalety Ridge i LASSO:</p>
+<p><span class="math display">\[
+\min_{\beta_0, \beta}  \mathcal{L}(y, X; \beta_0, \beta) + \lambda \left(\alpha \|\beta\|_1 + (1-\alpha)\|\beta\|_2^2\right),
+\]</span></p>
+<p>gdzie <span class="math inline">\(\alpha \in [0,1]\)</span> steruje proporcją kary <span class="math inline">\(L_1\)</span> do <span class="math inline">\(L_2\)</span>. Elastic Net jest szczególnie przydatny, gdy mamy wiele skorelowanych cech: LASSO wybiera pojedyncze zmienne z grupy, a Elastic Net częściej zachowuje całe grupy w postaci „współdzielonego” kurczenia.</p>
+</section>
+<section id="interpretacja-i-praktyka" class="level3" data-number="4.3.5">
+<h3 data-number="4.3.5" class="anchored" data-anchor-id="interpretacja-i-praktyka"><span class="header-section-number">4.3.5</span> Interpretacja i praktyka</h3>
+<p>Regularyzacja polega na tym, że do klasycznej funkcji straty dodajemy karę za „zbyt duże” współczynniki. W modelach liniowych i logistycznych najczęściej spotkasz kary typu (<span class="math inline">\(L_2\)</span>) (ridge) albo (<span class="math inline">\(L_1\)</span>) (lasso). W ujęciu matematycznym dla regresji liniowej jest to odpowiednio:</p>
+<p><span class="math display">\[
+\min_{\beta_0,\beta} \sum_{i=1}^n (y_i - \beta_0 - x_i^\top \beta)^2 + \lambda |\beta|_2^2
+\quad\text{(ridge)}
+\]</span></p>
+<p>albo</p>
+<p><span class="math display">\[
+\min_{\beta_0,\beta} \sum_{i=1}^n (y_i - \beta_0 - x_i^\top \beta)^2 + \lambda |\beta|_1
+\quad\text{(lasso)}
+\]</span></p>
+<p>Analogicznie w regresji logistycznej zamiast sumy kwadratów masz stratę logarytmiczną, ale idea kary jest identyczna. Parametr <span class="math inline">\(\lambda \ge 0\)</span> steruje „siłą” regularyzacji: im większy, tym mocniej model preferuje małe współczynniki.</p>
+<p>W modelu bez regularyzacji współczynniki <span class="math inline">\(\hat\beta\)</span> są dobierane tak, aby możliwie najlepiej dopasować dane uczące (minimalizować samą stratę). W przypadku danych z szumem, współliniowością cech lub dużą liczbą predyktorów, takie dopasowanie może prowadzić do tego, że współczynniki stają się „niestabilne”: niewielka zmiana danych (inna próba, inny podział train/test) daje wyraźnie inne <span class="math inline">\(\hat\beta\)</span>. Regularyzacja celowo ogranicza swobodę modelu, „ściągając” współczynniki w stronę zera. To powoduje, że estymator staje się obciążony (<em>biased</em>) – współczynniki nie są już czystym odzwierciedleniem relacji w danych, bo zostały sztucznie zmniejszone przez karę. Jednocześnie znacząco spada wariancja estymatora: współczynniki są bardziej stabilne, a predykcje częściej lepiej generalizują na dane testowe. To klasyczny kompromis <em>bias–variance</em>: akceptujemy pewną stronniczość w zamian za mniejszą wrażliwość na szum.</p>
+<p>W praktyce interpretacja jest taka: w modelu regularyzowanym nie traktujesz wartości <span class="math inline">\(\beta_j\)</span> jako „czystego” oszacowania wpływu cechy <span class="math inline">\(x_j\)</span> (w sensie klasycznej regresji), tylko jako wynik kompromisu pomiędzy dopasowaniem i prostotą modelu. Szczególnie przy silnej regularyzacji współczynniki należy interpretować ostrożnie: „to jest kierunek i względna siła sygnału po uwzględnieniu kary”, a nie „dokładna zmiana oczekiwanej wartości <span class="math inline">\(y\)</span> na jednostkę <span class="math inline">\(x_j\)</span>”.</p>
+<p>Gdy <span class="math inline">\(\lambda \to 0\)</span>, kara zanika i wracamy do klasycznego uczenia bez regularyzacji: w regresji liniowej do OLS, w logistycznej do MLE bez kary. Wtedy współczynniki są „najmniej ściągnięte”, ale mogą być niestabilne (szczególnie przy współliniowości i dużym <span class="math inline">\(p\)</span>). Gdy <span class="math inline">\(\lambda\)</span> rośnie, kara zaczyna dominować i wymusza zmniejszanie współczynników. Dla ridge (<span class="math inline">\(L_2\)</span>) współczynniki są płynnie „kurczone” w kierunku zera, ale zwykle nie są równe zero. Dla lasso (<span class="math inline">\(L_1\)</span>) część współczynników może stać się dokładnie równa zero, co prowadzi do selekcji zmiennych. Przy bardzo dużym <span class="math inline">\(\lambda\)</span> model może w praktyce „zrezygnować” z większości sygnału i zbliżyć się do modelu prawie stałego (predykcja głównie przez <span class="math inline">\(\beta_0\)</span>).</p>
+<p>Regularyzacja karze współczynniki, a nie bezpośrednio cechy. Ponieważ współczynnik <span class="math inline">\(\beta_j\)</span> jest ściśle powiązany ze skalą <span class="math inline">\(x_j\)</span>, brak standaryzacji powoduje, że kara działa niesprawiedliwie względem zmiennych o różnych jednostkach.</p>
+<p>Załóżmy dwie cechy niosące podobną informację, ale w różnych skalach:</p>
+<ul>
+<li><span class="math inline">\(x_1\)</span> - „dochód” rzędu dziesiątek tysięcy,</li>
+<li><span class="math inline">\(x_2\)</span> - „udział zwrotów” w zakresie 0–1.</li>
+</ul>
+<p>Aby obie cechy miały podobny wpływ na <span class="math inline">\(\eta\)</span>, model bez regularyzacji może dopasować:</p>
+<ul>
+<li>mały współczynnik przy dochodzie (bo sama cecha ma duże liczby),</li>
+<li>duży współczynnik przy zmiennej 0–1 (bo cecha jest mała).</li>
+</ul>
+<p>Jeżeli dodamy karę typu ridge <span class="math inline">\(\lambda \sum_j \beta_j^2\)</span>, to duży współczynnik przy <span class="math inline">\(x_2\)</span> zostanie ukarany dużo silniej niż mały współczynnik przy <span class="math inline">\(x_1\)</span>, mimo że obie cechy mogą być równie istotne. W efekcie model może preferować cechy o dużej skali nie dlatego, że są lepsze, tylko dlatego, że wymagają mniejszych <span class="math inline">\(|\beta_j|\)</span>, a więc „taniej” przechodzą przez karę. To jest artefakt skali, a nie właściwość danych.</p>
+<p>Standardyzacja usuwa ten problem, sprowadzając każdą cechę do porównywalnej skali, najczęściej:</p>
+<p><span class="math display">\[
+z_{ij} = \frac{x_{ij}-\mu_j}{\sigma_j}.
+\]</span></p>
+<p>Po standaryzacji „jednostka” każdej cechy jest porównywalna (1 odchylenie standardowe), więc kara na współczynnikach działa symetrycznie. Dlatego w praktyce dla regresji logistycznej, ridge/lasso oraz większości modeli liniowych z regularyzacją standaryzacja jest traktowana jako element obowiązkowy.</p>
+<p>W ujęciu uczenia maszynowego regularyzacja jest narzędziem kontrolowania złożoności modelu. <span class="math inline">\(\lambda\)</span> staje się hiperparametrem, który dobiera się na podstawie jakości generalizacji (np. przez walidację). Wraz ze wzrostem <span class="math inline">\(\lambda\)</span> model staje się prostszy i stabilniejszy, ale może gorzej dopasowywać dane treningowe. Standaryzacja jest integralną częścią tego procesu, bo zapewnia, że dobór <span class="math inline">\(\lambda\)</span> i sama kara mają sens niezależnie od jednostek i skali cech.</p>
+<div id="42ec458e" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split, GridSearchCV</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> ElasticNet</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> r2_score, mean_squared_error</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Pipeline: standaryzacja + ElasticNet</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"scaler"</span>, StandardScaler()),</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"model"</span>, ElasticNet(max_iter<span class="op">=</span><span class="dv">50_000</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Kalibracja (GridSearch): lambda i alpha</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#    - lambda -&gt; model__alpha</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#    - alpha  -&gt; model__l1_ratio</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Sensowna siatka: logarytmiczna dla lambda</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>lambda_grid <span class="op">=</span> np.logspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">25</span>)      <span class="co"># 1e-4 ... 1e2</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>alpha_grid <span class="op">=</span> np.linspace(<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="dv">11</span>)    <span class="co"># 0, 0.1, ..., 1.0</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"model__alpha"</span>: lambda_grid,          <span class="co"># lambda (siła kary)</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"model__l1_ratio"</span>: alpha_grid         <span class="co"># alpha (mieszanka L1/L2)</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># CV: w regresji klasycznie KFold; domyślnie GridSearchCV użyje KFold</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Skoring: R^2, bo tak raportujesz w przykładzie</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>search <span class="op">=</span> GridSearchCV(</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    estimator<span class="op">=</span>pipe,</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">"r2"</span>,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>search.fit(X_train, y_train)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>best_model <span class="op">=</span> search.best_estimator_</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>best_params <span class="op">=</span> search.best_params_</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>best_cv_r2 <span class="op">=</span> search.best_score_</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Najlepsze hiperparametry (CV):"</span>)</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  lambda (model__alpha)   = </span><span class="sc">{</span>best_params[<span class="st">'model__alpha'</span>]<span class="sc">:.6g}</span><span class="ss">"</span>)</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  alpha  (model__l1_ratio)= </span><span class="sc">{</span>best_params[<span class="st">'model__l1_ratio'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  CV R^2 (mean)           = </span><span class="sc">{</span>best_cv_r2<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Ocena na train/test + metryki jak w Twoim stylu</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>y_pred_train <span class="op">=</span> best_model.predict(X_train)</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="op">=</span> best_model.predict(X_test)</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>r2_train <span class="op">=</span> r2_score(y_train, y_pred_train)</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>r2_test <span class="op">=</span> r2_score(y_test, y_pred_test)</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Dodatkowo RMSE (często użyteczne w regresji)</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>rmse_train <span class="op">=</span> np.sqrt(mean_squared_error(y_train, y_pred_train))</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>rmse_test <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_pred_test))</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>    <span class="st">"metric"</span>: [<span class="st">"R2_train"</span>, <span class="st">"R2_test"</span>, <span class="st">"RMSE_train"</span>, <span class="st">"RMSE_test"</span>, <span class="st">"best_lambda"</span>, <span class="st">"best_alpha(l1_ratio)"</span>],</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    <span class="st">"value"</span>:  [r2_train, r2_test, rmse_train, rmse_test, best_params[<span class="st">"model__alpha"</span>], best_params[<span class="st">"model__l1_ratio"</span>]],</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Podsumowanie ElasticNet:"</span>)</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(summary.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="co"># 4) Współczynniki po regularyzacji (już po standaryzacji)</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Uwaga: współczynniki dotyczą cech po standaryzacji (porównywalne między sobą).</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>coefs <span class="op">=</span> best_model.named_steps[<span class="st">"model"</span>].coef_</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>coef_table <span class="op">=</span> pd.DataFrame({<span class="st">"feature"</span>: X.columns, <span class="st">"coef"</span>: coefs}).sort_values(<span class="st">"coef"</span>, key<span class="op">=</span>np.<span class="bu">abs</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Największe (bezwzględnie) współczynniki ElasticNet:"</span>)</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(coef_table.head(<span class="dv">10</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="co"># 5) Wykres: y_true vs y_pred (test)</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>plt.scatter(y_test, y_pred_test, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>mn <span class="op">=</span> <span class="bu">min</span>(y_test.<span class="bu">min</span>(), y_pred_test.<span class="bu">min</span>())</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>mx <span class="op">=</span> <span class="bu">max</span>(y_test.<span class="bu">max</span>(), y_pred_test.<span class="bu">max</span>())</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>plt.plot([mn, mx], [mn, mx], linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="ss">f"y_true (</span><span class="sc">{</span>target<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y_pred"</span>)</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Boston Housing (Kaggle): ElasticNet y_pred vs y_true (test)"</span>)</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) (Opcjonalnie) mapa wyników: R^2 w funkcji (lambda, alpha)</span></span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="co"># To jest przydatne dydaktycznie: pokazuje krajobraz hiperparametrów.</span></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> pd.DataFrame(search.cv_results_)</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>pivot <span class="op">=</span> results.pivot_table(</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">"param_model__l1_ratio"</span>,</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span><span class="st">"param_model__alpha"</span>,</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span><span class="st">"mean_test_score"</span></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>).sort_index()</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>plt.imshow(pivot.values, aspect<span class="op">=</span><span class="st">"auto"</span>)</span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>plt.colorbar(label<span class="op">=</span><span class="st">"mean CV R^2"</span>)</span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>plt.yticks(<span class="bu">range</span>(pivot.shape[<span class="dv">0</span>]), [<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.1f}</span><span class="ss">"</span> <span class="cf">for</span> v <span class="kw">in</span> pivot.index])</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(pivot.shape[<span class="dv">1</span>]), [<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.0e}</span><span class="ss">"</span> <span class="cf">for</span> v <span class="kw">in</span> pivot.columns], rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">"right"</span>)</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"alpha (l1_ratio)"</span>)</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"lambda (model__alpha)"</span>)</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"ElasticNet: średnie CV R^2 dla (lambda, alpha)"</span>)</span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Najlepsze hiperparametry (CV):
+  lambda (model__alpha)   = 0.01
+  alpha  (model__l1_ratio)= 0.000
+  CV R^2 (mean)           = 0.7245
+
+Podsumowanie ElasticNet:
+              metric    value
+            R2_train 0.750670
+             R2_test 0.667571
+          RMSE_train 4.654048
+           RMSE_test 4.937440
+         best_lambda 0.010000
+best_alpha(l1_ratio) 0.000000
+
+Największe (bezwzględnie) współczynniki ElasticNet:
+feature      coef
+  LSTAT -3.562197
+     RM  3.167423
+    DIS -2.939338
+PTRATIO -1.999596
+    RAD  1.966321
+    NOX -1.901429
+    TAX -1.510458
+      B  1.120095
+   CRIM -0.964915
+   CHAS  0.732337</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-3-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-3-output-2.png" width="565" height="564" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-3-output-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-3-output-3.png" width="879" height="373" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Widać wyraźnie, że kalibaracja parametrów <span class="math inline">\(\lambda\)</span> i <span class="math inline">\(\alpha\)</span> sprowadziła praktycznie model do regresji grzbietowej (<em>ridge</em>) z parametrem <span class="math inline">\(\lambda=0.01\)</span>. Wyniki porównania <span class="math inline">\(R^2\)</span> pomiędzy zbiorem treningowym i testowym po regularyzacji się nie zmieniły. Dalej występuje różnica <span class="math inline">\(\approx 0.08\)</span>. To pokazuje, że sama regularyzacja nie wystarczy do usunięcia tego przeuczenia (swoją drogą nie jest ono bardzo duże). Na koniec aby przekonać się jak modele (<em>raw</em> i <em>ridge</em>) są wrażliwe na podział zbioru dokonamy ich porównania z wykorzystaniem walidacji krzyżowej.</p>
+<div id="f3fc2eb4" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> RepeatedKFold, cross_val_score</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression, Ridge</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) RepeatedKFold (powtarzana walidacja krzyżowa)</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> RepeatedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, n_repeats<span class="op">=</span><span class="dv">20</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Modele do porównania</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#    - OLS: LinearRegression (bez regularyzacji)</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">#    - Ridge: regularyzacja L2; skalowanie w pipeline (ważne)</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>ols <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"scaler"</span>, StandardScaler()),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"model"</span>, LinearRegression())</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>ridge <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"scaler"</span>, StandardScaler()),</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"model"</span>, Ridge(alpha<span class="op">=</span><span class="fl">0.01</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) R^2 w RepeatedKFold</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>scores_ols <span class="op">=</span> cross_val_score(ols, X, y, cv<span class="op">=</span>cv, scoring<span class="op">=</span><span class="st">"r2"</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>scores_ridge <span class="op">=</span> cross_val_score(ridge, X, y, cv<span class="op">=</span>cv, scoring<span class="op">=</span><span class="st">"r2"</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Podsumowanie liczbowe: średnia, odchylenie, kwartyle</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"model"</span>: [<span class="st">"LinearRegression (OLS)"</span>, <span class="st">"Ridge (alpha=0.01)"</span>],</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mean_R2"</span>: [scores_ols.mean(), scores_ridge.mean()],</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"std_R2"</span>: [scores_ols.std(ddof<span class="op">=</span><span class="dv">1</span>), scores_ridge.std(ddof<span class="op">=</span><span class="dv">1</span>)],</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"q25"</span>: [np.quantile(scores_ols, <span class="fl">0.25</span>), np.quantile(scores_ridge, <span class="fl">0.25</span>)],</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"median"</span>: [np.quantile(scores_ols, <span class="fl">0.50</span>), np.quantile(scores_ridge, <span class="fl">0.50</span>)],</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"q75"</span>: [np.quantile(scores_ols, <span class="fl">0.75</span>), np.quantile(scores_ridge, <span class="fl">0.75</span>)],</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(summary.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 4) Boxplot wyników</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">4</span>))</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>plt.boxplot([scores_ols, scores_ridge], labels<span class="op">=</span>[<span class="st">"OLS"</span>, <span class="st">"Ridge"</span>], showfliers<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"R^2 (CV)"</span>)</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"RepeatedKFold: rozkład R^2 dla OLS vs Ridge"</span>)</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="co"># 5) „Stabilizacja” wprost: porównanie wariancji wyników</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Stabilizacja (mniejsza zmienność wyników CV jest korzystna):"</span>)</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Std(R^2) OLS  : </span><span class="sc">{</span>scores_ols<span class="sc">.</span>std(ddof<span class="op">=</span><span class="dv">1</span>)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Std(R^2) Ridge: </span><span class="sc">{</span>scores_ridge<span class="sc">.</span>std(ddof<span class="op">=</span><span class="dv">1</span>)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 model  mean_R2   std_R2      q25   median      q75
+LinearRegression (OLS) 0.712943 0.059862 0.671914 0.719919 0.762099
+    Ridge (alpha=0.01) 0.712945 0.059863 0.671911 0.719929 0.762106</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-4-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-4-output-2.png" width="661" height="373" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Stabilizacja (mniejsza zmienność wyników CV jest korzystna):
+Std(R^2) OLS  : 0.0599
+Std(R^2) Ridge: 0.0599</code></pre>
+</div>
+</div>
+<p>Wyniki są niemal identyczne, co pokazuje, że regularyzacja modelu nie pomaga wyeliminować delikatnego przeuczenia.</p>
+<p>Pierwszy powód to <strong>naturalna różnica między błędem treningowym a błędem generalizacji</strong>. Model jest dopasowywany tak, aby minimalizować stratę na treningu, więc na treningu prawie zawsze będzie lepiej niż na danych niewidzianych. Nawet gdy model nie jest „przeuczony” w sensie patologicznym, pojawi się luka generalizacyjna, bo test jest inną próbą z tej samej populacji i zawiera inny układ szumu losowego.</p>
+<p>Drugi powód to <strong>ograniczona zgodność modelu z rzeczywistą zależnością</strong>. Regresja liniowa zakłada liniowość i addytywność wpływów cech (bez nieliniowości i bez interakcji, jeśli ich nie dodasz). Jeśli prawdziwa relacja jest częściowo nieliniowa (co w danych nieruchomości jest częste), to model „radzi sobie” na treningu, ale na teście spada, bo dopasowanie do przypadkowego układu obserwacji w treningu nie przenosi się idealnie na inną próbę. To jest bardziej kwestia <strong>bias/misspecification</strong> niż „overfittingu z powodu zbyt dużej złożoności”, ale objaw w metrykach jest podobny.</p>
+<p>Trzeci powód to <strong>wariancja pojedynczego podziału train/test</strong>. Ta różnica (około 0.08 w <span class="math inline">\(R^2\)</span>) może w dużej mierze wynikać z tego, że akurat wylosowany test jest „trudniejszy” (np. zawiera więcej obserwacji z krańców rozkładu). Właśnie dlatego <code>RepeatedKFold</code> jest lepszym narzędziem diagnostycznym: u nas średnie CV (<span class="math inline">\(R^2 \approx 0.713\)</span>) wskazuje, że wynik testowy 0.668 nie jest już tak odległy, tylko może być po prostu mniej korzystnym splitem.</p>
+<p>Czwarty potencjalny powód to <strong>współliniowość i niestabilność współczynników</strong>, która nie zawsze przekłada się na wyraźną zmianę <span class="math inline">\(R^2\)</span>, ale może zwiększać wrażliwość na konkretny podział danych. Ridge z bardzo małym <span class="math inline">\(\lambda\)</span> nie zmienia u nas jakości ani wariancji metryki, więc to sugeruje, że w tym konkretnym ustawieniu współliniowość nie jest dominującym źródłem luki — ale nadal może wpływać na interpretację <span class="math inline">\(\beta\)</span> i na zachowanie w innych splitach.</p>
+</section>
+</section>
+<section id="regresja-logistyczna" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="regresja-logistyczna"><span class="header-section-number">4.4</span> Regresja logistyczna</h2>
+<section id="definicja-modelu-1" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="definicja-modelu-1"><span class="header-section-number">4.4.1</span> Definicja modelu</h3>
+<p>Regresja logistyczna jest modelem liniowym przeznaczonym do klasyfikacji binarnej. Zakładamy, że zmienna docelowa <span class="math inline">\(y \in {0,1}\)</span>, a model opisuje prawdopodobieństwo klasy wyróżnionej (1). Najpierw definiujemy predyktor liniowy:</p>
+<p><span class="math display">\[
+\eta_i = \beta_0 + x_i^\top \beta,
+\]</span></p>
+<p>a następnie mapujemy go do <span class="math inline">\([0,1]\)</span> funkcją logistyczną:</p>
+<p><span class="math display">\[
+p_i = \mathbb{P}(y_i = 1 \mid x_i) = \sigma(\eta_i) = \frac{1}{1 + e^{-\eta_i}}.
+\]</span></p>
+<p>Decyzję klasyfikacyjną podejmujemy przez ustawienie progu <span class="math inline">\(t\)</span> (zwykle 0.5):</p>
+<p><span class="math display">\[
+\hat{y}_i​=
+\begin{cases}
+1,\; p_i\geq t,\\
+0,\; p_i&lt;t.
+\end{cases}
+\]</span></p>
+<p>Ponieważ <span class="math inline">\(y_i \in {0,1}\)</span>, naturalnym modelem probabilistycznym dla <span class="math inline">\(y_i\)</span> przy danym <span class="math inline">\(x_i\)</span> jest rozkład Bernoulliego:</p>
+<p><span class="math display">\[
+y_i \mid x_i \sim \text{Bernoulli}(p_i),
+\quad\text{czyli}\quad
+\mathbb{P}(y_i\mid x_i) = p_i^{y_i}(1-p_i)^{1-y_i}.
+\]</span></p>
+<p>To prowadzi do funkcji wiarygodności dla całej próby (przy założeniu niezależności obserwacji):</p>
+<p><span class="math display">\[
+L(\beta_0,\beta) = \prod_{i=1}^n p_i^{y_i}(1-p_i)^{1-y_i}.
+\]</span></p>
+<p>W ujęciu statystycznym „uczenie” parametrów polega na maksymalizacji wiarygodności <span class="math inline">\(L\)</span>. Ponieważ iloczyny są niewygodne obliczeniowo, przechodzi się na logartym wiarygodności:</p>
+<p><span class="math display">\[
+\ell(\beta_0,\beta) = \log L(\beta_0,\beta)
+= \sum_{i=1}^n \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right].
+\]</span></p>
+<p>Maksymalizacja <span class="math inline">\(\ell\)</span> jest równoważna minimalizacji jej negacji, co w ML nazywamy <strong>stratą logarytmiczną</strong> (<em>log loss</em>) albo <strong>entropią krzyżową</strong> (<em>binary cross-entropy</em>):</p>
+<p><span class="math display">\[
+\min_{\beta_0,\beta} -\sum_{i=1}^n \left[y_i \log(p_i) + (1-y_i)\log(1-p_i)\right].
+\]</span></p>
+<p>Intuicyjnie ta strata „nagradza” model, gdy przypisuje wysokie prawdopodobieństwo klasie, która rzeczywiście wystąpiła, i „karze” go mocno, gdy model jest bardzo pewny, ale myli się. Na przykład, jeśli <span class="math inline">\(y_i=1\)</span> i model daje <span class="math inline">\(p_i=0.99\)</span>, składnik straty jest mały; jeśli natomiast <span class="math inline">\(y_i=1\)</span> i model daje <span class="math inline">\(p_i=0.01\)</span>, to <span class="math inline">\(-\log(0.01)\)</span> jest duże, więc kara jest silna. Dzięki temu log loss nie jest tylko miarą „trafione/nie trafione”, lecz ocenia jakość probabilistyczną predykcji, co jest szczególnie ważne w klasyfikacji.</p>
+<p>W praktyce nie istnieje prosty wzór zamknięty na <span class="math inline">\((\beta_0,\beta)\)</span> analogiczny do regresji liniowej OLS. Dlatego optymalizację wykonuje się numerycznie. Najczęściej stosuje się metody oparte o gradient (i często pochodne drugiego rzędu). Kluczowym faktem jest, że funkcja straty w regresji logistycznej jest wypukła względem <span class="math inline">\((\beta_0,\beta)\)</span>, więc metody gradientowe mają dobre własności: przy poprawnej implementacji dążą do globalnego minimum. Dla kompletności warto zapisać postać gradientu względem <span class="math inline">\(\beta\)</span> (pomijając wyraz wolny dla czytelności). Jeśli <span class="math inline">\(X\)</span> to macierz cech, a <span class="math inline">\(p\)</span> wektor <span class="math inline">\(p_i\)</span>, to gradient ma postać:</p>
+<p><span class="math display">\[
+\nabla_{\beta}  \Big(-\ell(\beta)\Big) = X^\top (p - y),
+\]</span></p>
+<p>czyli różnica między prognozowanymi prawdopodobieństwami a rzeczywistymi etykietami, „zebrana” przez cechy. To dobrze podkreśla charakter uczenia: gdy model przeszacowuje prawdopodobieństwo klasy 1 (duże <span class="math inline">\(p_i\)</span> przy <span class="math inline">\(y_i=0\)</span>), gradient pcha parametry w kierunku zmniejszenia <span class="math inline">\(\eta_i\)</span> dla tych obserwacji, i odwrotnie.</p>
+<p>Wreszcie, jest to model nadzorowany w sensie ML, ponieważ parametry <span class="math inline">\((\beta_0,\beta)\)</span> uczymy na oznakowanych parach <span class="math inline">\((x_i,y_i)\)</span> poprzez minimalizację funkcji straty. W odróżnieniu od metod nienadzorowanych, tutaj etykieta <span class="math inline">\(y_i\)</span> jest bezpośrednio składnikiem funkcji celu, a „uczenie” polega na takim doborze parametrów, aby model możliwie dobrze odtwarzał zależność między cechami a klasą docelową, nie tylko na danych uczących, ale przede wszystkim na danych niewidzianych.</p>
+<div id="exm-2" class="theorem example">
+<p><span class="theorem-title"><strong>Przykład 4.2</strong></span> &nbsp;</p>
+<div id="f1e903eb" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> load_dataset</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> StratifiedKFold, cross_val_predict</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    confusion_matrix,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    accuracy_score, precision_score, recall_score, f1_score,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    roc_auc_score, roc_curve</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Wczytanie danych z Hugging Face</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Dataset ma jeden split "train" (683 obserwacje) i target "is_cancer"</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_dataset(<span class="st">"mstz/breast"</span>, <span class="st">"cancer"</span>)[<span class="st">"train"</span>]  <span class="co"># :contentReference[oaicite:1]{index=1}</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> ds.to_pandas()</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">"is_cancer"</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[target].astype(<span class="bu">int</span>)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.drop(columns<span class="op">=</span>[target])</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Minimalnie: imputacja (gdyby były braki) + standaryzacja + logreg</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"imputer"</span>, SimpleImputer(strategy<span class="op">=</span><span class="st">"median"</span>)),</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"scaler"</span>, StandardScaler()),</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"model"</span>, LogisticRegression(max_iter<span class="op">=</span><span class="dv">2000</span>, solver<span class="op">=</span><span class="st">"lbfgs"</span>))</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Walidacja krzyżowa i out-of-fold predykcje prawdopodobieństw</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co"># out-of-fold: każda obserwacja ma proba z modelu, który jej "nie widział" w treningu</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>proba_oof <span class="op">=</span> cross_val_predict(</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>    pipe, X, y,</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span>cv,</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">"predict_proba"</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>)[:, <span class="dv">1</span>]</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Predykcja klasy przy standardowym progu 0.5</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>thr_default <span class="op">=</span> <span class="fl">0.50</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>y_pred_default <span class="op">=</span> (proba_oof <span class="op">&gt;=</span> thr_default).astype(<span class="bu">int</span>)</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Metryki + confusion matrix (PRZED kalibracją progu)</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_metrics(y_true, y_pred, proba):</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">"accuracy"</span>:  accuracy_score(y_true, y_pred),</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">"precision"</span>: precision_score(y_true, y_pred, zero_division<span class="op">=</span><span class="dv">0</span>),</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="st">"recall"</span>:    recall_score(y_true, y_pred, zero_division<span class="op">=</span><span class="dv">0</span>),</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">"f1"</span>:        f1_score(y_true, y_pred, zero_division<span class="op">=</span><span class="dv">0</span>),</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">"roc_auc"</span>:   roc_auc_score(y_true, proba),</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>metrics_default <span class="op">=</span> compute_metrics(y, y_pred_default, proba_oof)</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>cm_default <span class="op">=</span> confusion_matrix(y, y_pred_default)</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"PRZED kalibracją progu (threshold=0.50) – metryki OOF:"</span>)</span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, v <span class="kw">in</span> metrics_default.items():</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>k<span class="sc">:9s}</span><span class="ss">: </span><span class="sc">{</span>v<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Macierz pomyłek (rows=true, cols=pred):</span><span class="ch">\n</span><span class="st">"</span>, cm_default)</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="co"># 4) ROC curve (z OOF proba)</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>fpr, tpr, thresholds <span class="op">=</span> roc_curve(y, proba_oof)</span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>auc <span class="op">=</span> roc_auc_score(y, proba_oof)</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>plt.plot(fpr, tpr, label<span class="op">=</span><span class="ss">f"ROC (AUC=</span><span class="sc">{</span>auc<span class="sc">:.3f}</span><span class="ss">)"</span>)</span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>], linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"False Positive Rate (1 - specificity)"</span>)</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"True Positive Rate (recall / sensitivity)"</span>)</span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"ROC curve – Logistic Regression (OOF)"</span>)</span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="co"># 5) Kalibracja progu (Youden’s J)</span></span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a><span class="co">#    J = TPR - FPR = sensitivity + specificity - 1</span></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a>J <span class="op">=</span> tpr <span class="op">-</span> fpr</span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> np.argmax(J)</span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a>thr_calibrated <span class="op">=</span> thresholds[idx]</span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Skalibrowany próg (Youden J): </span><span class="sc">{</span>thr_calibrated<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a>y_pred_cal <span class="op">=</span> (proba_oof <span class="op">&gt;=</span> thr_calibrated).astype(<span class="bu">int</span>)</span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a>metrics_cal <span class="op">=</span> compute_metrics(y, y_pred_cal, proba_oof)</span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a>cm_cal <span class="op">=</span> confusion_matrix(y, y_pred_cal)</span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">PO kalibracji progu (Youden J) – metryki OOF:"</span>)</span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, v <span class="kw">in</span> metrics_cal.items():</span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>k<span class="sc">:9s}</span><span class="ss">: </span><span class="sc">{</span>v<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Macierz pomyłek (rows=true, cols=pred):</span><span class="ch">\n</span><span class="st">"</span>, cm_cal)</span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) Porównanie confusion matrices: wizualizacja</span></span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_cm(cm, title):</span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="fl">4.5</span>, <span class="dv">4</span>))</span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a>    plt.imshow(cm, aspect<span class="op">=</span><span class="st">"auto"</span>)</span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a>    plt.title(title)</span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a>    plt.colorbar()</span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a>    plt.xticks([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="st">"pred 0"</span>, <span class="st">"pred 1"</span>])</span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a>    plt.yticks([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="st">"true 0"</span>, <span class="st">"true 1"</span>])</span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a>            plt.text(j, i, cm[i, j], ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>)</span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a>plot_cm(cm_default, <span class="st">"Confusion matrix – threshold=0.50 (OOF)"</span>)</span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a>plot_cm(cm_cal, <span class="ss">f"Confusion matrix – threshold=</span><span class="sc">{</span>thr_calibrated<span class="sc">:.3f}</span><span class="ss"> (OOF)"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>PRZED kalibracją progu (threshold=0.50) – metryki OOF:
+  accuracy : 0.9693
+  precision: 0.9580
+  recall   : 0.9540
+  f1       : 0.9560
+  roc_auc  : 0.9951
+
+Macierz pomyłek (rows=true, cols=pred):
+ [[434  10]
+ [ 11 228]]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-5-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-5-output-2.png" width="565" height="468" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Skalibrowany próg (Youden J): 0.1299
+
+PO kalibracji progu (Youden J) – metryki OOF:
+  accuracy : 0.9751
+  precision: 0.9370
+  recall   : 0.9958
+  f1       : 0.9655
+  roc_auc  : 0.9951
+
+Macierz pomyłek (rows=true, cols=pred):
+ [[428  16]
+ [  1 238]]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-5-output-4.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-5-output-4.png" width="420" height="373" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-5-output-5.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-5-output-5.png" width="420" height="373" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="modele-dyskryminacyjne" class="level2 page-columns page-full" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="modele-dyskryminacyjne"><span class="header-section-number">4.5</span> Modele dyskryminacyjne</h2>
+<p>Analiza dyskryminacyjna to klasa klasycznych metod klasyfikacji, które bardzo naturalnie wpisują się w logikę uczenia nadzorowanego: mając etykiety klas <span class="math inline">\(y \in \{1,\dots,K\}\)</span>, uczymy parametry rozkładów cech w każdej klasie (część „generatywna”), a następnie stosujemy regułę Bayesa do przypisania nowej obserwacji do najbardziej prawdopodobnej klasy. W odróżnieniu od regresji logistycznej, która modeluje bezpośrednio <span class="math inline">\(\mathbb{P}(y\mid x)\)</span>, LDA/QDA modelują <span class="math inline">\(\mathbb{P}(x\mid y)\)</span> oraz priory <span class="math inline">\(\mathbb{P}(y)\)</span>, po czym wyznaczają <span class="math inline">\(\mathbb{P}(y\mid x)\)</span> pośrednio.</p>
+<p>Historycznie do analizy dyskryminacyjnej dochodzono co najmniej dwiema drogami. Pierwsza (zwykle kojarzona z Fisherem) wynikała z problemu znalezienia kierunku projekcji, na którym klasy są najlepiej rozdzielone w sensie stosunku wariancji „między klasami” do wariancji „wewnątrz klas” <span class="citation" data-cites="fisher1936">(<a href="#ref-fisher1936" role="doc-biblioref">Fisher 1936</a>)</span>. Druga droga <span class="citation" data-cites="wardjr1963">(<a href="#ref-wardjr1963" role="doc-biblioref">WardJR i Hook 1963</a>)</span>ma charakter „decyzyjno-probabilistyczny”: zaczynamy od założeń o rozkładach klas (najczęściej normalnych) i z reguły Bayesa wyprowadzamy regułę klasyfikacji w postaci porównania pewnych funkcji punktacji dla klas. Ten drugi sposób jest bardzo bliski temu, jak dziś prezentuje się LDA/QDA w uczeniu maszynowym (jako klasyfikatory generatywne) <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Fisher (1936) pokazał ideę rozdzielania klas przez znalezienie projekcji maksymalizującej separację (stosunek wariancji między klasami do wariancji wewnątrz klas) i zastosował ją do danych irysów. Ward (1963) jest często przywoływany w kontekście rozwoju metod grupowania i analiz wielowymiarowych; w praktyce dydaktycznej warto podkreślić, że równolegle do „drogi Fishera” (kryterium separacji/projekcji) rozwijała się droga „proceduralna” w analizie wielowymiarowej: najpierw grupowanie/definicja grup, potem konstrukcja funkcji dyskryminacyjnych do klasyfikacji i rozumienia różnic między grupami.</p></div></div><section id="założenia-modelu-normalność-wielowymiarowa-i-rozkłady-apriori-klas" class="level3" data-number="4.5.1">
+<h3 data-number="4.5.1" class="anchored" data-anchor-id="założenia-modelu-normalność-wielowymiarowa-i-rozkłady-apriori-klas"><span class="header-section-number">4.5.1</span> Założenia modelu: normalność wielowymiarowa i rozkłady apriori klas</h3>
+<p>W klasycznym wariancie zakładamy, że dla każdej klasy <span class="math inline">\(k\)</span> wektor cech ma rozkład normalny:</p>
+<p><span class="math display">\[
+x \mid (y=k) \sim \mathcal{N}(\mu_k, \Sigma_k),
+\qquad \pi_k = \mathbb{P}(y=k).
+\]</span></p>
+<p>Parametry <span class="math inline">\(\mu_k\)</span>, <span class="math inline">\(\Sigma_k\)</span> oraz <span class="math inline">\(\pi_k\)</span> są nieznane i są uczone na danych treningowych z wykorzystaniem etykiet klas (czyli w pełni nadzorowanie). W praktyce: <span class="math inline">\(\pi_k\)</span> estymujemy jako częstość klasy w treningu, <span class="math inline">\(\mu_k\)</span> jako średnią wektora cech w klasie, a <span class="math inline">\(\Sigma\)</span> lub <span class="math inline">\(\Sigma_k\)</span> jako macierze kowariancji (wspólne lub klasowe, zależnie od wariantu).</p>
+</section>
+<section id="funkcje-dyskryminacyjne-po-co-są-i-co-robią" class="level3" data-number="4.5.2">
+<h3 data-number="4.5.2" class="anchored" data-anchor-id="funkcje-dyskryminacyjne-po-co-są-i-co-robią"><span class="header-section-number">4.5.2</span> Funkcje dyskryminacyjne: po co są i co robią?</h3>
+<p>Reguła Bayesa mówi, że przy równych kosztach błędu optymalnie klasyfikujemy do klasy o największym prawdopodobieństwie a posteriori:</p>
+<p><span class="math display">\[
+\hat{y}(x) = \arg\max_k \mathbb{P}(y=k\mid x).
+\]</span></p>
+<p>Ponieważ</p>
+<p><span class="math display">\[
+\mathbb{P}(y=k\mid x) \propto \pi_k \, f_k(x),
+\]</span></p>
+<p>gdzie <span class="math inline">\(f_k(x)\)</span> to gęstość <span class="math inline">\(\mathcal{N}(\mu_k,\Sigma_k)\)</span>, wygodniej porównywać logarytmy (rosną monotonicznie), definiując funkcję dyskryminacyjną:</p>
+<p><span class="math display">\[
+\delta_k(x) \;=\; \log \pi_k + \log f_k(x) \;+\; \text{(stała niezależna od }k\text{)}.
+\]</span></p>
+<p>Funkcja dyskryminacyjna jest więc „punktacją” klasy: im większa <span class="math inline">\(\delta_k(x)\)</span>, tym bardziej model preferuje klasę <span class="math inline">\(k\)</span> dla obserwacji <span class="math inline">\(x\)</span>. Klasyfikacja sprowadza się do:</p>
+<p><span class="math display">\[
+\hat{y}(x) = \arg\max_k \delta_k(x).
+\]</span></p>
+</section>
+<section id="lda-vs-qda" class="level3" data-number="4.5.3">
+<h3 data-number="4.5.3" class="anchored" data-anchor-id="lda-vs-qda"><span class="header-section-number">4.5.3</span> LDA vs QDA</h3>
+<p>QDA - zakładamy osobną macierz kowariancji dla każdej klasy: <span class="math inline">\(\Sigma_k\)</span> jest w pełni dowolna (symetryczna dodatnio określona) i estymowana osobno. Wtedy</p>
+<p><span class="math display">\[
+\delta_k(x)
+=
+-\frac{1}{2}\log|\Sigma_k|
+-\frac{1}{2}(x-\mu_k)^\top \Sigma_k^{-1}(x-\mu_k)
++\log\pi_k.
+\]</span></p>
+<p>Ponieważ składnik <span class="math inline">\((x-\mu_k)^\top \Sigma_k^{-1}(x-\mu_k)\)</span> jest formą kwadratową, granice decyzyjne między klasami są kwadratowe (nieliniowe w <span class="math inline">\(x\)</span>). QDA jest bardziej elastyczna (potrafi modelować klasy o różnych „kształtach” i orientacjach w przestrzeni cech), ale płaci za to większą liczbą parametrów, co wymaga większej próbki treningowej dla stabilnej estymacji.</p>
+<p>W LDA zakładamy wspólną kowariancję dla klas:</p>
+<p><span class="math display">\[
+\Sigma_k = \Sigma \quad \text{dla każdego }k.
+\]</span></p>
+<p>Wtedy człony kwadratowe w <span class="math inline">\(x\)</span> „redukują się” w porównaniu między klasami i funkcja dyskryminacyjna upraszcza się do postaci liniowej:</p>
+<p><span class="math display">\[
+\delta_k(x) = x^\top \Sigma^{-1}\mu_k - \frac{1}{2}\mu_k^\top \Sigma^{-1}\mu_k + \log\pi_k.
+\]</span></p>
+<p>Granice decyzyjne są liniowe (hiperpłaszczyzny), bo <span class="math inline">\(\delta_k(x)\)</span> jest liniowa ze względu na <span class="math inline">\(x\)</span>. LDA ma zwykle mniejszą wariancję estymacji (mniej parametrów niż QDA), dlatego często jest konkurencyjna nawet wtedy, gdy prawdziwa zależność nie jest idealnie zgodna z założeniami.</p>
+</section>
+<section id="sigmai-sigma_ksigma-sigma_k-dowolne" class="level3" data-number="4.5.4">
+<h3 data-number="4.5.4" class="anchored" data-anchor-id="sigmai-sigma_ksigma-sigma_k-dowolne"><span class="header-section-number">4.5.4</span> <span class="math inline">\(\Sigma=I\)</span>, <span class="math inline">\(\Sigma_k=\Sigma\)</span>, <span class="math inline">\(\Sigma_k\)</span> dowolne</h3>
+<p>W praktyce warto widzieć analizę dyskryminacyjną jako rodzinę modeli wynikającą z tego, jak restrykcyjnie opisujemy kowariancję.</p>
+<ol type="1">
+<li><span class="math inline">\(\Sigma = I\)</span>. To najbardziej restrykcyjny wariant. Oznacza, że w każdej klasie cechy są „niezależne” i mają tę samą wariancję (w odpowiedniej skali). Wtedy odległość Mahalanobisa redukuje się do euklidesowej i reguła klasyfikacji staje się bardzo bliska <em>nearest centroid</em> (najbliższe centrum klasy). Jest to model prosty i często zaskakująco skuteczny po standaryzacji, ale może być niedopasowany, gdy cechy są skorelowane.</li>
+<li><span class="math inline">\(\Sigma_k = \Sigma\)</span> (LDA: wspólna, ale dowolna macierz kowariancji). To kompromis: dopuszczamy korelacje i różne wariancje cech, ale zakładamy, że „kształt rozkładu” w przestrzeni cech jest taki sam dla wszystkich klas, tylko przesunięty o różne <span class="math inline">\(\mu_k\)</span>. Wtedy granice są liniowe.</li>
+<li><span class="math inline">\(\Sigma_k\)</span> dowolne (QDA). Najbardziej elastyczne: każda klasa ma własny „kształt” i orientację elipsoidy kowariancji. Granice są kwadratowe. Ten wariant jest najbardziej wrażliwy na małe próby (estymacja <span class="math inline">\(\Sigma_k^{-1}\)</span> bywa niestabilna), dlatego często wymaga albo większej liczby obserwacji, albo regularizacji (np. RDA – regularized discriminant analysis; klasycznie opisane przez Friedmana). ￼</li>
+</ol>
+<p>Uwaga praktyczna: spotyka się też wariant pośredni <span class="math inline">\(\Sigma\)</span> diagonalna (brak korelacji, ale różne wariancje cech). Jest to bliskie „gaussowskiemu naiwnemu Bayesowi” w wersji z normalnymi rozkładami cech.</p>
+</section>
+<section id="jak-estymuje-się-parametry-w-uczeniu-nadzorowanym" class="level3" data-number="4.5.5">
+<h3 data-number="4.5.5" class="anchored" data-anchor-id="jak-estymuje-się-parametry-w-uczeniu-nadzorowanym"><span class="header-section-number">4.5.5</span> Jak estymuje się parametry w uczeniu nadzorowanym?</h3>
+<p>Dla danych treningowych <span class="math inline">\(\{(x_i,y_i)\}_{i=1}^n\)</span>, gdzie <span class="math inline">\(n_k\)</span> to liczba obserwacji w klasie <span class="math inline">\(k\)</span>, standardowe estymatory (MLE) mają postać:</p>
+<p><span class="math display">\[
+\hat{\pi}_k = \frac{n_k}{n},
+\qquad
+\hat{\mu}_k = \frac{1}{n_k}\sum_{i:\,y_i=k} x_i.
+\]</span></p>
+<p>Dla LDA estymujemy wspólną kowariancję jako kowariancję „wewnątrzklasową” (<em>pooled covariance</em>):</p>
+<p><span class="math display">\[
+\hat{\Sigma}
+=
+\frac{1}{n-K}
+\sum_{k=1}^K
+\sum_{i:\,y_i=k}
+(x_i-\hat{\mu}_k)(x_i-\hat{\mu}_k)^\top.
+\]</span></p>
+<p>Dla QDA estymujemy <span class="math inline">\(\hat{\Sigma}_k\)</span> osobno w każdej klasie:</p>
+<p><span class="math display">\[
+\hat{\Sigma}_k
+=
+\frac{1}{n_k-1}
+\sum_{i:\,y_i=k}
+(x_i-\hat{\mu}_k)(x_i-\hat{\mu}_k)^\top.
+\]</span></p>
+<p>Następnie do klasyfikacji używamy <span class="math inline">\(\delta_k(x)\)</span> z odpowiedniego wariantu (LDA/QDA). W praktyce w <code>scikit-learn</code> jest to realizowane wprost (fit → estymuje <span class="math inline">\(\pi_k\)</span>, <span class="math inline">\(\mu_k\)</span>, <span class="math inline">\(\Sigma\)</span> lub <span class="math inline">\(\Sigma_k\)</span>; <code>predict</code>/<code>predict_proba</code> → liczy <span class="math inline">\(\delta_k\)</span> i normalizuje do prawdopodobieństw).</p>
+<div id="exm-3" class="theorem example">
+<p><span class="theorem-title"><strong>Przykład 4.3</strong></span> Poniżej przykład LDA i QDA na klasycznym zbiorze Iris dostępny na Hugging Face (<code>scikit-learn/iris</code>). Zbiór zawiera 150 obserwacji trzech gatunków irysów, opisanych czterema cechami liczbowymi. ￼</p>
+<p>W przykładzie:</p>
+<ul>
+<li>robimy podział train/test,</li>
+<li>uczymy LDA i QDA,</li>
+<li>raportujemy accuracy i macierz pomyłek,</li>
+<li>pokazujemy log-loss jako miarę jakości probabilistycznej,</li>
+<li>narysujemy brzegi decyzyjne obu metod.</li>
+</ul>
+<div id="814f17df" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> load_dataset</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.discriminant_analysis <span class="im">import</span> LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score, confusion_matrix, log_loss</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Wczytanie Iris z Hugging Face</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_dataset(<span class="st">"scikit-learn/iris"</span>)[<span class="st">"train"</span>]</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> ds.to_pandas()</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.iloc[:, <span class="dv">1</span>:]  <span class="co"># Usunięcie pierwszej kolumny (Id)</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">"Species"</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>[<span class="st">"number"</span>]).drop(columns<span class="op">=</span>[target], errors<span class="op">=</span><span class="st">"ignore"</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Kodujemy klasy do liczb (wymagane m.in. do rysowania brzegów decyzyjnych przez contourf)</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>y_cat <span class="op">=</span> df[target].astype(<span class="st">"category"</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>class_names <span class="op">=</span> <span class="bu">list</span>(y_cat.cat.categories)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> y_cat.cat.codes</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Podział train/test (stratyfikacja dla klas)</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.25</span>, random_state<span class="op">=</span><span class="dv">42</span>, stratify<span class="op">=</span>y</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="co"># 2b) Standaryzacja (fit TYLKO na train) – cały przykład działa na danych standaryzowanych</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>X_train_std <span class="op">=</span> scaler.fit_transform(X_train)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>X_test_std <span class="op">=</span> scaler.transform(X_test)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>X_train_std_df <span class="op">=</span> pd.DataFrame(X_train_std, columns<span class="op">=</span>X.columns, index<span class="op">=</span>X_train.index)</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>X_test_std_df <span class="op">=</span> pd.DataFrame(X_test_std, columns<span class="op">=</span>X.columns, index<span class="op">=</span>X_test.index)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) LDA</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>lda <span class="op">=</span> LinearDiscriminantAnalysis()</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>lda.fit(X_train_std_df, y_train)</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>pred_lda <span class="op">=</span> lda.predict(X_test_std_df)</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>proba_lda <span class="op">=</span> lda.predict_proba(X_test_std_df)</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="co"># 4) QDA</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>qda <span class="op">=</span> QuadraticDiscriminantAnalysis()</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>qda.fit(X_train_std_df, y_train)</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>pred_qda <span class="op">=</span> qda.predict(X_test_std_df)</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>proba_qda <span class="op">=</span> qda.predict_proba(X_test_std_df)</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 5) Metryki i macierze pomyłek</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>acc_lda <span class="op">=</span> accuracy_score(y_test, pred_lda)</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>acc_qda <span class="op">=</span> accuracy_score(y_test, pred_qda)</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>cm_lda <span class="op">=</span> confusion_matrix(y_test, pred_lda)</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>cm_qda <span class="op">=</span> confusion_matrix(y_test, pred_qda)</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"LDA  accuracy: </span><span class="sc">{</span>acc_lda<span class="sc">:.3f}</span><span class="ss">, log_loss: </span><span class="sc">{</span>log_loss(y_test, proba_lda)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"LDA confusion matrix:</span><span class="ch">\n</span><span class="st">"</span>, pd.DataFrame(cm_lda, index<span class="op">=</span>class_names, columns<span class="op">=</span>class_names))</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">QDA  accuracy: </span><span class="sc">{</span>acc_qda<span class="sc">:.3f}</span><span class="ss">, log_loss: </span><span class="sc">{</span>log_loss(y_test, proba_qda)<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"QDA confusion matrix:</span><span class="ch">\n</span><span class="st">"</span>, pd.DataFrame(cm_qda, index<span class="op">=</span>class_names, columns<span class="op">=</span>class_names))</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) Brzegi decyzyjne (wizualizacja 2D)</span></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Uwaga: Iris ma 4 cechy, a wykres 2D wymaga wyboru 2 osi.</span></span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>feat_cols <span class="op">=</span> <span class="bu">list</span>(X.columns[[<span class="dv">0</span>,<span class="dv">2</span>]])</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>all_feat_cols <span class="op">=</span> <span class="bu">list</span>(X.columns)</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_decision_boundary_fullmodel_on_2features(</span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>    ax,</span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>    model,</span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a>    X_std_df,</span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a>    y_vis,</span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a>    all_feature_names,</span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>    vary_feature_names,</span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>    title,</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>    n_classes,</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Decision boundary jako przekrój przestrzeni cech:</span></span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>    <span class="co"># zmieniamy tylko 2 wybrane cechy, pozostałe ustawiamy na 0 (średnia po standaryzacji).</span></span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>    x0 <span class="op">=</span> X_std_df[vary_feature_names[<span class="dv">0</span>]].to_numpy()</span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>    x1 <span class="op">=</span> X_std_df[vary_feature_names[<span class="dv">1</span>]].to_numpy()</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>    x0_min, x0_max <span class="op">=</span> x0.<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.5</span>, x0.<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.5</span></span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>    x1_min, x1_max <span class="op">=</span> x1.<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.5</span>, x1.<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.5</span></span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>    xx0, xx1 <span class="op">=</span> np.meshgrid(</span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>        np.linspace(x0_min, x0_max, <span class="dv">300</span>),</span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a>        np.linspace(x1_min, x1_max, <span class="dv">300</span>),</span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>    base <span class="op">=</span> np.zeros((xx0.size, <span class="bu">len</span>(all_feature_names)), dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>    idx0 <span class="op">=</span> all_feature_names.index(vary_feature_names[<span class="dv">0</span>])</span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>    idx1 <span class="op">=</span> all_feature_names.index(vary_feature_names[<span class="dv">1</span>])</span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>    base[:, idx0] <span class="op">=</span> xx0.ravel()</span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a>    base[:, idx1] <span class="op">=</span> xx1.ravel()</span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a>    grid_df <span class="op">=</span> pd.DataFrame(base, columns<span class="op">=</span>all_feature_names)</span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a>    zz <span class="op">=</span> model.predict(grid_df).reshape(xx0.shape)</span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a>    levels <span class="op">=</span> np.arange(n_classes <span class="op">+</span> <span class="dv">1</span>) <span class="op">-</span> <span class="fl">0.5</span></span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>    cmap <span class="op">=</span> plt.get_cmap(<span class="st">"tab10"</span>, n_classes)</span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>    ax.contourf(xx0, xx1, zz, levels<span class="op">=</span>levels, alpha<span class="op">=</span><span class="fl">0.25</span>, cmap<span class="op">=</span>cmap)</span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>    ax.scatter(x0, x1, c<span class="op">=</span>y_vis, cmap<span class="op">=</span>cmap, edgecolor<span class="op">=</span><span class="st">"k"</span>, s<span class="op">=</span><span class="dv">35</span>)</span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(vary_feature_names[<span class="dv">0</span>])</span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(vary_feature_names[<span class="dv">1</span>])</span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title)</span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>n_classes <span class="op">=</span> <span class="bu">int</span>(np.unique(y).size)</span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a>plot_decision_boundary_fullmodel_on_2features(</span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>],</span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>    lda,</span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a>    X_test_std_df,</span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>    y_test,</span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>    all_feature_names<span class="op">=</span>all_feat_cols,</span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>    vary_feature_names<span class="op">=</span>feat_cols,</span>
+<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"LDA – brzeg decyzyjny (przekrój po 2 cechach; model pełny)"</span>,</span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a>    n_classes<span class="op">=</span>n_classes,</span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a>plot_decision_boundary_fullmodel_on_2features(</span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>],</span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>    qda,</span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a>    X_test_std_df,</span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>    y_test,</span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a>    all_feature_names<span class="op">=</span>all_feat_cols,</span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a>    vary_feature_names<span class="op">=</span>feat_cols,</span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"QDA – brzeg decyzyjny (przekrój po 2 cechach; model pełny)"</span>,</span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a>    n_classes<span class="op">=</span>n_classes,</span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a><span class="co"># 7) Brzegi decyzyjne w przestrzeni PCA(2)</span></span>
+<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA robimy po standaryzacji.</span></span>
+<span id="cb12-136"><a href="#cb12-136" aria-hidden="true" tabindex="-1"></a><span class="co"># Brzeg decyzyjny liczymy w przestrzeni PC1/PC2, ale predykcje robi model uczony</span></span>
+<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a><span class="co"># na pełnych cechach: PC-grid -&gt; inverse_transform -&gt; predykcja.</span></span>
+<span id="cb12-138"><a href="#cb12-138" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a>X_train_pca <span class="op">=</span> pca.fit_transform(X_train_std)</span>
+<span id="cb12-140"><a href="#cb12-140" aria-hidden="true" tabindex="-1"></a>X_test_pca <span class="op">=</span> pca.transform(X_test_std)</span>
+<span id="cb12-141"><a href="#cb12-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-142"><a href="#cb12-142" aria-hidden="true" tabindex="-1"></a>pc_cols <span class="op">=</span> [<span class="st">"PC1"</span>, <span class="st">"PC2"</span>]</span>
+<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a>X_train_pca_df <span class="op">=</span> pd.DataFrame(X_train_pca, columns<span class="op">=</span>pc_cols, index<span class="op">=</span>X_train.index)</span>
+<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a>X_test_pca_df <span class="op">=</span> pd.DataFrame(X_test_pca, columns<span class="op">=</span>pc_cols, index<span class="op">=</span>X_test.index)</span>
+<span id="cb12-145"><a href="#cb12-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-146"><a href="#cb12-146" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_decision_boundary_fullmodel_in_pca2(</span>
+<span id="cb12-147"><a href="#cb12-147" aria-hidden="true" tabindex="-1"></a>    ax,</span>
+<span id="cb12-148"><a href="#cb12-148" aria-hidden="true" tabindex="-1"></a>    model,</span>
+<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a>    pca,</span>
+<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a>    X_pca_df,</span>
+<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a>    y_vis,</span>
+<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a>    orig_feature_names,</span>
+<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a>    title,</span>
+<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a>    n_classes,</span>
+<span id="cb12-155"><a href="#cb12-155" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a>    x0 <span class="op">=</span> X_pca_df[<span class="st">"PC1"</span>].to_numpy()</span>
+<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a>    x1 <span class="op">=</span> X_pca_df[<span class="st">"PC2"</span>].to_numpy()</span>
+<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a>    x0_min, x0_max <span class="op">=</span> x0.<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.5</span>, x0.<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.5</span></span>
+<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a>    x1_min, x1_max <span class="op">=</span> x1.<span class="bu">min</span>() <span class="op">-</span> <span class="fl">0.5</span>, x1.<span class="bu">max</span>() <span class="op">+</span> <span class="fl">0.5</span></span>
+<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a>    xx0, xx1 <span class="op">=</span> np.meshgrid(</span>
+<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a>        np.linspace(x0_min, x0_max, <span class="dv">300</span>),</span>
+<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a>        np.linspace(x1_min, x1_max, <span class="dv">300</span>),</span>
+<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a>    pc_grid <span class="op">=</span> np.c_[xx0.ravel(), xx1.ravel()]</span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a>    grid_std <span class="op">=</span> pca.inverse_transform(pc_grid)</span>
+<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a>    grid_std_df <span class="op">=</span> pd.DataFrame(grid_std, columns<span class="op">=</span>orig_feature_names)</span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a>    zz <span class="op">=</span> model.predict(grid_std_df).reshape(xx0.shape)</span>
+<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>    levels <span class="op">=</span> np.arange(n_classes <span class="op">+</span> <span class="dv">1</span>) <span class="op">-</span> <span class="fl">0.5</span></span>
+<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a>    cmap <span class="op">=</span> plt.get_cmap(<span class="st">"tab10"</span>, n_classes)</span>
+<span id="cb12-174"><a href="#cb12-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-175"><a href="#cb12-175" aria-hidden="true" tabindex="-1"></a>    ax.contourf(xx0, xx1, zz, levels<span class="op">=</span>levels, alpha<span class="op">=</span><span class="fl">0.25</span>, cmap<span class="op">=</span>cmap)</span>
+<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a>    ax.scatter(x0, x1, c<span class="op">=</span>y_vis, cmap<span class="op">=</span>cmap, edgecolor<span class="op">=</span><span class="st">"k"</span>, s<span class="op">=</span><span class="dv">35</span>)</span>
+<span id="cb12-177"><a href="#cb12-177" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"PC1"</span>)</span>
+<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"PC2"</span>)</span>
+<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title)</span>
+<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a>plot_decision_boundary_fullmodel_in_pca2(</span>
+<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>],</span>
+<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a>    lda,</span>
+<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a>    pca,</span>
+<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a>    X_test_pca_df,</span>
+<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a>    y_test,</span>
+<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a>    orig_feature_names<span class="op">=</span>all_feat_cols,</span>
+<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"LDA – brzeg decyzyjny (PCA2; model pełny)"</span>,</span>
+<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a>    n_classes<span class="op">=</span>n_classes,</span>
+<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a>plot_decision_boundary_fullmodel_in_pca2(</span>
+<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>],</span>
+<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a>    qda,</span>
+<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a>    pca,</span>
+<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a>    X_test_pca_df,</span>
+<span id="cb12-197"><a href="#cb12-197" aria-hidden="true" tabindex="-1"></a>    y_test,</span>
+<span id="cb12-198"><a href="#cb12-198" aria-hidden="true" tabindex="-1"></a>    orig_feature_names<span class="op">=</span>all_feat_cols,</span>
+<span id="cb12-199"><a href="#cb12-199" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"QDA – brzeg decyzyjny (PCA2; model pełny)"</span>,</span>
+<span id="cb12-200"><a href="#cb12-200" aria-hidden="true" tabindex="-1"></a>    n_classes<span class="op">=</span>n_classes,</span>
+<span id="cb12-201"><a href="#cb12-201" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-202"><a href="#cb12-202" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-203"><a href="#cb12-203" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>LDA  accuracy: 1.000, log_loss: 0.024
+LDA confusion matrix:
+                  Iris-setosa  Iris-versicolor  Iris-virginica
+Iris-setosa               12                0               0
+Iris-versicolor            0               13               0
+Iris-virginica             0                0              13
+
+QDA  accuracy: 1.000, log_loss: 0.017
+QDA confusion matrix:
+                  Iris-setosa  Iris-versicolor  Iris-virginica
+Iris-setosa               12                0               0
+Iris-versicolor            0               13               0
+Iris-virginica             0                0              13</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-6-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-6-output-2.png" width="1066" height="372" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="03-klasyfikacja-liniowa_files/figure-html/cell-6-output-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="03-klasyfikacja-liniowa_files/figure-html/cell-6-output-3.png" width="1045" height="372" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="literatura" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="literatura">Literatura</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-fisher1936" class="csl-entry" role="listitem">
+Fisher, R. A. 1936. <span>„The Use of Multiple Measurements in Taxonomic Problems”</span>. <em>Annals of Eugenics</em> 7 (2): 179–88. <a href="https://doi.org/10.1111/j.1469-1809.1936.tb02137.x">https://doi.org/10.1111/j.1469-1809.1936.tb02137.x</a>.
+</div>
+<div id="ref-wardjr1963" class="csl-entry" role="listitem">
+WardJR, Joe H., i Marion E. Hook. 1963. <span>„Application of an Hierarchical Grouping Procedure to a Problem of Grouping Profiles”</span>. <em>Educational and Psychological Measurement</em> 23 (1): 69–81. <a href="https://doi.org/10.1177/001316446302300107">https://doi.org/10.1177/001316446302300107</a>.
+</div>
+</div>
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -859,6 +1997,38 @@ ul.task-list li input[type="checkbox"] {
 </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
