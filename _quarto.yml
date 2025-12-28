@@ -63,3 +63,5 @@ format:
 
 execute: 
   warning: false
+
+jupyter: ml-and-dm-uv

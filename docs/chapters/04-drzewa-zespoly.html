@@ -483,9 +483,10 @@ window.Quarto = {
   <li><a href="#adaboost---boosting-przez-wagi-obserwacji" id="toc-adaboost---boosting-przez-wagi-obserwacji" class="nav-link" data-scroll-target="#adaboost---boosting-przez-wagi-obserwacji"><span class="header-section-number">5.3.3</span> AdaBoost - boosting przez wagi obserwacji</a></li>
   <li><a href="#gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji" id="toc-gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji" class="nav-link" data-scroll-target="#gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji"><span class="header-section-number">5.3.4</span> Gradient Boosting - minimalizacja straty w przestrzeni funkcji</a></li>
   <li><a href="#xgboost" id="toc-xgboost" class="nav-link" data-scroll-target="#xgboost"><span class="header-section-number">5.3.5</span> XGBoost</a></li>
-  <li><a href="#catboost" id="toc-catboost" class="nav-link" data-scroll-target="#catboost"><span class="header-section-number">5.3.6</span> CatBoost</a></li>
-  <li><a href="#boosting-vs-bagging" id="toc-boosting-vs-bagging" class="nav-link" data-scroll-target="#boosting-vs-bagging"><span class="header-section-number">5.3.7</span> Boosting vs bagging</a></li>
-  <li><a href="#porównanie-modeli-z-przykładów" id="toc-porównanie-modeli-z-przykładów" class="nav-link" data-scroll-target="#porównanie-modeli-z-przykładów"><span class="header-section-number">5.3.8</span> Porównanie modeli z przykładów</a></li>
+  <li><a href="#lightgbm" id="toc-lightgbm" class="nav-link" data-scroll-target="#lightgbm"><span class="header-section-number">5.3.6</span> LightGBM</a></li>
+  <li><a href="#catboost" id="toc-catboost" class="nav-link" data-scroll-target="#catboost"><span class="header-section-number">5.3.7</span> CatBoost</a></li>
+  <li><a href="#boosting-vs-bagging" id="toc-boosting-vs-bagging" class="nav-link" data-scroll-target="#boosting-vs-bagging"><span class="header-section-number">5.3.8</span> Boosting vs bagging</a></li>
+  <li><a href="#porównanie-modeli-z-przykładów" id="toc-porównanie-modeli-z-przykładów" class="nav-link" data-scroll-target="#porównanie-modeli-z-przykładów"><span class="header-section-number">5.3.9</span> Porównanie modeli z przykładów</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
@@ -681,7 +682,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <p><span class="theorem-title"><strong>Przykład 5.1 (Przykład: drzewo klasyfikacyjne dla gatunku muzycznego (Spotify))</strong></span> Poniżej budujemy proste drzewo klasyfikacyjne przewidujące <strong>gatunek muzyczny</strong> na podstawie numerycznych cech akustycznych utworów (np. <em>danceability, energy, loudness, tempo</em>). Jest to typowy przypadek danych tablicowych, gdzie drzewa decyzyjne są dobrym modelem bazowym.</p>
 <p>W tym przykładzie <strong>nie wykonujemy klasycznego preprocessingu typu standaryzacja/normalizacja</strong>. Wynika to z faktu, że reguły w drzewach mają postać progów porównujących wartości cech (np. <span class="math inline">\(x_j \le t\)</span>), więc skala zmiennych nie wpływa na sens podziału w taki sposób jak w metodach opartych o iloczyny skalarne (np. regresja logistyczna, SVM). Innymi słowy: drzewo nie korzysta z odległości euklidesowej ani z norm współczynników, tylko z porównań i wyboru progów, dlatego <strong>skalowanie cech nie jest wymagane</strong>. W praktyce pozostają jedynie „minimalne” kroki porządkowe: wybór cech liczbowych i ewentualne uzupełnienie braków (jeśli występują).</p>
 <p>Uwaga dydaktyczna: zbiór Spotify zawiera wiele klas (gatunków). Aby uzyskać czytelny przykład (i sensowną macierz pomyłek), ograniczamy się do <span class="math inline">\(K=10\)</span> najczęstszych gatunków.</p>
-<div id="670dc88d" class="cell" data-execution_count="1">
+<div id="6c4660cd" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -733,7 +734,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <pre><code>Braki danych (łącznie): 0</code></pre>
 </div>
 </div>
-<div id="27ea2f7c" class="cell" data-execution_count="2">
+<div id="83bd93c8" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) Cechy: bierzemy tylko numeryczne (+ bool jako 0/1), bo DecisionTreeClassifier nie przyjmuje stringów</span></span>
@@ -763,7 +764,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># print(export_text(tree, feature_names=feature_names))</span></span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="275012da" class="cell" data-execution_count="3">
+<div id="8c233664" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 10) Predykcja i metryki</span></span>
@@ -825,7 +826,7 @@ progressive-house       0.63      0.61      0.62       200
 </div>
 </div>
 </div>
-<div id="1595dc57" class="cell" data-execution_count="4">
+<div id="2292b84c" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 12) Wizualizacja drzewa (okrojona)</span></span>
@@ -853,7 +854,7 @@ progressive-house       0.63      0.61      0.62       200
 </div>
 </div>
 <p>Spróbujemy teraz przyciąć drzewo w celu poprawy jego zdolności generalizacyjnych.</p>
-<div id="6d4d1f91" class="cell" data-execution_count="5">
+<div id="8b28900a" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1064,7 +1065,7 @@ Metryki (test) po przycinaniu:
 </ul>
 <div id="exm-2" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 5.2</strong></span> Dla tych samych danych co w <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> przeprowadzimy trening modeli bagging i lasu losowego.</p>
-<div id="f8ad2521" class="cell" data-execution_count="6">
+<div id="e2c2e511" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> BaggingClassifier, RandomForestClassifier</span>
@@ -1150,14 +1151,11 @@ Drzewo (przycięte)    0.6930             0.6930    0.6936
 <h3 data-number="5.3.1" class="anchored" data-anchor-id="rys-historyczny"><span class="header-section-number">5.3.1</span> Rys historyczny</h3>
 <p>Rozwój boostingu można przedstawić jako przejście od idei teoretycznej do bardzo wydajnych implementacji:</p>
 <ul>
-<li><strong>Idea „wzmacniania” słabych klasyfikatorów</strong> <span class="citation" data-cites="schapire1990">(<a href="reference.html#ref-schapire1990" role="doc-biblioref">Schapire 1990</a>)</span>- pokazano, że jeśli istnieje algorytm osiągający wynik minimalnie lepszy niż losowy (<em>weak learner</em>), to można go „wzmocnić” do klasyfikatora o dowolnie małym błędzie treningowym przez odpowiednią procedurę zespołową.<br>
-</li>
-<li><strong>AdaBoost</strong> <span class="citation" data-cites="freund1997">(<a href="reference.html#ref-freund1997" role="doc-biblioref">Freund i Schapire 1997</a>)</span>- praktyczny algorytm boostingu, w którym kolejne klasyfikatory uczą się na danych z wagami, skupiając się na obserwacjach trudnych (wcześniej błędnie klasyfikowanych).<br>
-</li>
-<li><strong>Gradient Boosting / Multiple Additive Regression Trees</strong> <span class="citation" data-cites="friedman2001">(<a href="reference.html#ref-friedman2001" role="doc-biblioref">Friedman 2001</a>)</span>- uogólnienie boostingu do postaci optymalizacji funkcji straty w przestrzeni funkcji, interpretowane jako „zejście gradientowe” w modelu addytywnym.<br>
-</li>
-<li><strong>XGBoost</strong> <span class="citation" data-cites="chen2016">(<a href="reference.html#ref-chen2016" role="doc-biblioref">Chen i Guestrin 2016</a>)</span>- bardzo wydajna implementacja gradientowego boostingu drzew z regularizacją, obsługą braków i szeregiem optymalizacji obliczeniowych (m.in. przyspieszone wyznaczanie podziałów, równoległość, przycinanie przez ograniczenia).<br>
-</li>
+<li><strong>Idea „wzmacniania” słabych klasyfikatorów</strong> <span class="citation" data-cites="schapire1990">(<a href="reference.html#ref-schapire1990" role="doc-biblioref">Schapire 1990</a>)</span>- pokazano, że jeśli istnieje algorytm osiągający wynik minimalnie lepszy niż losowy (<em>weak learner</em>), to można go „wzmocnić” do klasyfikatora o dowolnie małym błędzie treningowym przez odpowiednią procedurę zespołową.</li>
+<li><strong>AdaBoost</strong> <span class="citation" data-cites="freund1997">(<a href="reference.html#ref-freund1997" role="doc-biblioref">Freund i Schapire 1997</a>)</span>- praktyczny algorytm boostingu, w którym kolejne klasyfikatory uczą się na danych z wagami, skupiając się na obserwacjach trudnych (wcześniej błędnie klasyfikowanych).</li>
+<li><strong>Gradient Boosting / Multiple Additive Regression Trees</strong> <span class="citation" data-cites="friedman2001">(<a href="reference.html#ref-friedman2001" role="doc-biblioref">Friedman 2001</a>)</span>- uogólnienie boostingu do postaci optymalizacji funkcji straty w przestrzeni funkcji, interpretowane jako „zejście gradientowe” w modelu addytywnym.</li>
+<li><strong>XGBoost</strong> <span class="citation" data-cites="chen2016">(<a href="reference.html#ref-chen2016" role="doc-biblioref">Chen i Guestrin 2016</a>)</span>- bardzo wydajna implementacja gradientowego boostingu drzew z regularizacją, obsługą braków i szeregiem optymalizacji obliczeniowych (m.in. przyspieszone wyznaczanie podziałów, równoległość, przycinanie przez ograniczenia).</li>
+<li><strong>LightGMB</strong> <span class="citation" data-cites="ke2017">(<a href="reference.html#ref-ke2017" role="doc-biblioref">Ke i in. 2017</a>)</span>- to wysoce wydajna i skalowalna implementacja gradientowego boostingu drzew (GBDT), wykorzystująca m.in. histogramowe wyznaczanie podziałów oraz strategię wzrostu <em>leaf-wise</em> (<em>best-first</em>) w celu przyspieszenia uczenia przy zachowaniu wysokiej jakości predykcji</li>
 <li><strong>CatBoost</strong> <span class="citation" data-cites="singh2025">(<a href="reference.html#ref-singh2025" role="doc-biblioref">Singh i Susan 2025</a>)</span> - boosting drzew z natywną obsługą zmiennych kategorycznych oraz mechanizmami ograniczającymi <em>target leakage</em> i przeuczenie (m.in. uporządkowane statystyki docelowe, <em>ordered boosting</em>).</li>
 </ul>
 </section>
@@ -1230,18 +1228,156 @@ r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right
 </section>
 <section id="xgboost" class="level3" data-number="5.3.5">
 <h3 data-number="5.3.5" class="anchored" data-anchor-id="xgboost"><span class="header-section-number">5.3.5</span> XGBoost</h3>
-<p>XGBoost jest implementacją <em>gradient boosting</em> drzew, która dodaje silną <strong>regularizację</strong> oraz usprawnienia obliczeniowe. W typowej postaci minimalizuje się funkcję celu:</p>
+<p>XGBoost <span class="citation" data-cites="chen2016">(<a href="reference.html#ref-chen2016" role="doc-biblioref">Chen i Guestrin 2016</a>)</span> (<em>eXtreme Gradient Boosting</em>) jest szczególnie ważną implementacją gradientowego boostingu drzew, zaprojektowaną tak, aby łączyć wysoką jakość predykcji z dobrą kontrolą przeuczenia i wydajnością obliczeniową. Koncepcyjnie jest to model addytywny, w którym kolejne drzewa (najczęściej płytkie) są dokładane sekwencyjnie w celu minimalizacji funkcji straty. W odróżnieniu od „klasycznego” gradient boostingu, XGBoost kładzie duży nacisk na <strong>regularizację struktury drzew</strong> i <strong>optymalizacje obliczeń</strong> (w tym obsługę danych rzadkich i braków).</p>
+<section id="model-addytywny-i-funkcja-celu" class="level4" data-number="5.3.5.1">
+<h4 data-number="5.3.5.1" class="anchored" data-anchor-id="model-addytywny-i-funkcja-celu"><span class="header-section-number">5.3.5.1</span> Model addytywny i funkcja celu</h4>
+<p>Model ma postać sumy drzew:</p>
 <p><span class="math display">\[
-\sum_{i=1}^n \mathcal{L}(y_i, \hat y_i) + \sum_{m=1}^M \Omega(f_m),
+F_M(x)=\sum_{m=1}^{M} f_m(x),
 \]</span></p>
-<p>gdzie <span class="math inline">\(\Omega\)</span> karze złożoność drzew, np. przez liczbę liści i normę wag w liściach (w praktyce: <code>reg_alpha</code>, <code>reg_lambda</code>, <code>gamma</code>, itp.). Implementacyjnie istotne są m.in. efektywne wyznaczanie podziałów, obsługa braków (domyślny kierunek dla <code>missing</code> w węzłach), <code>subsample</code> i <code>colsample_*</code> (losowanie wierszy i cech) oraz możliwość wczesnego zatrzymania (<em>early stopping</em>) na zbiorze walidacyjnym.</p>
+<p>gdzie <span class="math inline">\(f_m\)</span> jest drzewem regresyjnym (wartości w liściach), a w klasyfikacji <span class="math inline">\(F_M\)</span> jest następnie mapowane na prawdopodobieństwa (np. przez logistyczny link lub softmax). Uczenie polega na minimalizacji funkcji celu z wyraźną karą za złożoność drzew:</p>
+<p><span class="math display">\[
+\min_{f_1,\ldots,f_M}\ \sum_{i=1}^n \mathcal{L}\big(y_i, \hat y_i\big) + \sum_{m=1}^M \Omega(f_m),
+\]</span></p>
+<p>gdzie <span class="math inline">\(\hat y_i = F_M(x_i)\)</span>, a regularizacja w XGBoost jest zwykle zapisywana jako:</p>
+<p><span class="math display">\[
+\Omega(f)=\gamma T + \frac{1}{2}\lambda\sum_{j=1}^{T} w_j^2 + \alpha\sum_{j=1}^{T} |w_j|.
+\]</span></p>
+<p>Tutaj <span class="math inline">\(T\)</span> oznacza liczbę liści w drzewie, <span class="math inline">\(w_j\)</span> to wartość predykcji w <span class="math inline">\(j\)</span>-tym liściu, <span class="math inline">\(\gamma\)</span> karze tworzenie nowych liści (czyli „rozrost” drzewa), a <span class="math inline">\(\lambda\)</span> i <span class="math inline">\(\alpha\)</span> odpowiadają odpowiednio karze <span class="math inline">\(L_2\)</span> i <span class="math inline">\(L_1\)</span> na wartości w liściach (w implementacji: <code>reg_lambda</code>, <code>reg_alpha</code>, oraz <code>gamma</code>). Z punktu widzenia ML jest to klasyczna idea: lepsze dopasowanie treningowe jest dopuszczalne tylko wtedy, gdy „opłaci się” względem wzrostu złożoności.</p>
 </section>
-<section id="catboost" class="level3" data-number="5.3.6">
-<h3 data-number="5.3.6" class="anchored" data-anchor-id="catboost"><span class="header-section-number">5.3.6</span> CatBoost</h3>
+<section id="uczenie-kolejnego-drzewa-przybliżenie-ii-rzędu-newton-boosting" class="level4" data-number="5.3.5.2">
+<h4 data-number="5.3.5.2" class="anchored" data-anchor-id="uczenie-kolejnego-drzewa-przybliżenie-ii-rzędu-newton-boosting"><span class="header-section-number">5.3.5.2</span> Uczenie kolejnego drzewa: przybliżenie II rzędu (Newton boosting)</h4>
+<p>Kluczową cechą XGBoost jest wykorzystanie rozwinięcia Taylora do drugiego rzędu dla straty w bieżącym kroku. Dla iteracji <span class="math inline">\(m\)</span> definiuje się:</p>
+<p><span class="math display">\[
+g_i = \left.\frac{\partial\,\mathcal{L}(y_i, \hat y)}{\partial \hat y}\right|_{\hat y=\hat y_i^{(m-1)}},\qquad
+h_i = \left.\frac{\partial^2\,\mathcal{L}(y_i, \hat y)}{\partial \hat y^2}\right|_{\hat y=\hat y_i^{(m-1)}},
+\]</span></p>
+<p>czyli gradient i „krzywiznę” straty względem predykcji. Następnie dopasowuje się drzewo <span class="math inline">\(f_m\)</span> tak, aby minimalizowało przybliżoną funkcję celu opartą o sumy <span class="math inline">\(g_i\)</span> i <span class="math inline">\(h_i\)</span> w liściach. Jeżeli liść zawiera zbiór obserwacji <span class="math inline">\(S\)</span>, to oznaczamy:</p>
+<p><span class="math display">\[
+G_S=\sum_{i\in S} g_i,\qquad H_S=\sum_{i\in S} h_i.
+\]</span></p>
+<p>Wtedy optymalna wartość liścia ma postać:</p>
+<p><span class="math display">\[
+w_S^* = -\frac{G_S}{H_S+\lambda},
+\]</span></p>
+<p>a wkład tego liścia do poprawy funkcji celu jest proporcjonalny do:</p>
+<p><span class="math display">\[
+-\frac{1}{2}\,\frac{G_S^2}{H_S+\lambda}.
+\]</span></p>
+<p>To prowadzi do praktycznej reguły wyboru podziału: split jest korzystny, jeśli zwiększa „zysk” (gain).</p>
+</section>
+<section id="kryterium-splitu-gain-i-rola-parametrów-gamma-oraz-min_child_weight" class="level4" data-number="5.3.5.3">
+<h4 data-number="5.3.5.3" class="anchored" data-anchor-id="kryterium-splitu-gain-i-rola-parametrów-gamma-oraz-min_child_weight"><span class="header-section-number">5.3.5.3</span> Kryterium splitu (gain) i rola parametrów <code>gamma</code> oraz <code>min_child_weight</code></h4>
+<p>Dla kandydata podziału liścia <span class="math inline">\(S\)</span> na <span class="math inline">\(S_L\)</span> i <span class="math inline">\(S_R\)</span> typowy <em>gain</em> ma postać:</p>
+<p><span class="math display">\[
+\mathrm{Gain} = \frac{1}{2}\left(\frac{G_{S_L}^2}{H_{S_L}+\lambda}+\frac{G_{S_R}^2}{H_{S_R}+\lambda}-\frac{G_S^2}{H_S+\lambda}\right)-\gamma.
+\]</span></p>
+<p>Parametr <code>gamma</code> wprost wprowadza próg opłacalności: jeśli najlepszy możliwy podział nie daje gainu większego od zera (po odjęciu <span class="math inline">\(\gamma\)</span>), węzeł nie jest dzielony. Z kolei <code>min_child_weight</code> ogranicza tworzenie liści o zbyt małej „wadze” (w praktyce: zbyt małym <span class="math inline">\(H_S\)</span>), co stabilizuje model i jest istotne zwłaszcza przy danych zaszumionych.</p>
+</section>
+<section id="obsługa-braków-i-danych-rzadkich-sparsity-aware" class="level4" data-number="5.3.5.4">
+<h4 data-number="5.3.5.4" class="anchored" data-anchor-id="obsługa-braków-i-danych-rzadkich-sparsity-aware"><span class="header-section-number">5.3.5.4</span> Obsługa braków i danych rzadkich (sparsity-aware)</h4>
+<p>XGBoost ma wbudowaną obsługę braków: dla każdego splitu uczy się <strong>domyślnego kierunku</strong> dla obserwacji z <code>missing</code> (np. brak trafia do lewej albo prawej gałęzi — wybierane tak, aby maksymalizować gain). Jest to podejście odmienne od klasycznych <em>surrogate splits</em> w CART, ale w praktyce równie skuteczne w modelach boostingowych.</p>
+<p>Dodatkowo XGBoost jest projektowany z myślą o danych rzadkich (np. po one-hot encoding). Mechanizm <em>sparsity-aware</em> pozwala efektywnie liczyć statystyki splitu bez „przechodzenia” po zerach, a wartości domyślne (dla braku/zera) są włączone w logikę splitowania.</p>
+</section>
+<section id="optymalizacje-obliczeniowe" class="level4" data-number="5.3.5.5">
+<h4 data-number="5.3.5.5" class="anchored" data-anchor-id="optymalizacje-obliczeniowe"><span class="header-section-number">5.3.5.5</span> Optymalizacje obliczeniowe</h4>
+<p>W praktycznych zastosowaniach ważne są trzy klasy usprawnień:</p>
+<ul>
+<li><strong>Efektywne wyznaczanie splitów</strong> - zamiast rozważać wszystkie progi w sposób naiwny, XGBoost używa algorytmów przybliżonych i/lub histogramowych (<code>tree_method</code>), co istotnie przyspiesza uczenie na dużych danych.</li>
+<li><strong>Równoległość</strong> - wiele obliczeń wewnątrz kroku (szukanie najlepszych splitów dla cech) można równoleglić, co daje duży zysk na CPU.</li>
+<li><strong>Kompresja/kwantyzacja danych</strong> - w wariantach histogramowych wartości cech są bucketowane, co redukuje koszt skanowania progów.</li>
+</ul>
+</section>
+<section id="regularizacja-losowanie-i-kontrola-przeuczenia" class="level4" data-number="5.3.5.6">
+<h4 data-number="5.3.5.6" class="anchored" data-anchor-id="regularizacja-losowanie-i-kontrola-przeuczenia"><span class="header-section-number">5.3.5.6</span> Regularizacja, losowanie i kontrola przeuczenia</h4>
+<p>W praktyce XGBoost kontroluje przeuczenie kombinacją kilku mechanizmów:</p>
+<ul>
+<li><code>learning_rate</code> (<span class="math inline">\(\nu\)</span>) – <em>shrinkage</em>: mniejsze <span class="math inline">\(\nu\)</span> zwykle poprawia uogólnianie, ale wymaga większej liczby drzew.</li>
+<li><code>max_depth</code> / <code>max_leaves</code> – złożoność pojedynczego drzewa (zwykle trzyma się drzewa płytkie).</li>
+<li><code>subsample</code> – losowanie obserwacji (stochastic gradient boosting) ogranicza wariancję.</li>
+<li><code>colsample_bytree</code>, <code>colsample_bylevel</code>, <code>colsample_bynode</code> – losowanie cech na różnych poziomach budowy drzewa, zmniejsza korelację między drzewami i działa jak regularizacja.</li>
+<li><code>reg_lambda</code>, <code>reg_alpha</code>, <code>gamma</code>, <code>min_child_weight</code> – parametry regularizacji wartości liści i struktury drzewa (jak wyżej).</li>
+</ul>
+<p>Kluczowe jest, że wiele z tych mechanizmów działa komplementarnie: np. mały <code>learning_rate</code> + umiarkowana głębokość + subsampling często daje stabilny model, natomiast zbyt głębokie drzewa i duży <span class="math inline">\(\nu\)</span> szybko prowadzą do nadmiernego dopasowania.</p>
+</section>
+<section id="early-stopping-i-dobór-liczby-iteracji" class="level4" data-number="5.3.5.7">
+<h4 data-number="5.3.5.7" class="anchored" data-anchor-id="early-stopping-i-dobór-liczby-iteracji"><span class="header-section-number">5.3.5.7</span> Early stopping i dobór liczby iteracji</h4>
+<p>W praktycznym pipeline XGBoost bardzo często trenuje się z walidacją i mechanizmem <em>early stopping</em>: monitoruje się stratę lub miarę jakości na zbiorze walidacyjnym i przerywa uczenie, jeśli brak poprawy przez ustaloną liczbę iteracji. To jedna z najskuteczniejszych technik doboru efektywnej liczby drzew <span class="math inline">\(M\)</span> i ograniczenia przeuczenia — szczególnie gdy <span class="math inline">\(M\)</span> jest duże, a <code>learning_rate</code> małe.</p>
+</section>
+</section>
+<section id="lightgbm" class="level3" data-number="5.3.6">
+<h3 data-number="5.3.6" class="anchored" data-anchor-id="lightgbm"><span class="header-section-number">5.3.6</span> LightGBM</h3>
+<p>LightGBM (<em>Light Gradient Boosting Machine</em>) jest nowoczesną biblioteką implementującą gradient boosting drzew decyzyjnych, zaprojektowaną z naciskiem na wydajność obliczeniową i skalowalność dla dużych zbiorów danych tablicowych. Koncepcyjnie należy do tej samej rodziny co klasyczny Gradient Boosting (Friedman) oraz XGBoost, ale wyróżnia się przede wszystkim sposobem budowy drzew i optymalizacjami obliczeniowymi (histogramy, selekcja obserwacji/cech). W praktyce LightGBM często stanowi „domyślny” wybór w zadaniach tablicowych o dużej liczbie obserwacji i/lub cech.</p>
+<section id="model-addytywny-i-funkcja-celu-1" class="level4" data-number="5.3.6.1">
+<h4 data-number="5.3.6.1" class="anchored" data-anchor-id="model-addytywny-i-funkcja-celu-1"><span class="header-section-number">5.3.6.1</span> Model addytywny i funkcja celu</h4>
+<p>LightGBM buduje model w postaci addytywnej (ensemble drzew):</p>
+<p><span class="math display">\[
+F_M(x)=\sum_{m=1}^{M} f_m(x),
+\]</span></p>
+<p>gdzie <span class="math inline">\(f_m\)</span> to kolejne drzewa (najczęściej regresyjne drzewa o wartościach w liściach). Uczenie polega na minimalizacji zregularizowanej funkcji celu:</p>
+<p><span class="math display">\[
+\min_{f_1,\dots,f_M}\ \sum_{i=1}^{n}\mathcal{L}\big(y_i, F_M(x_i)\big) + \sum_{m=1}^{M}\Omega(f_m),
+\]</span></p>
+<p>gdzie <span class="math inline">\(\mathcal{L}\)</span> jest stratą (np. log loss dla klasyfikacji, MSE dla regresji), a <span class="math inline">\(\Omega\)</span> karze złożoność drzewa (np. liczba liści, normy wag w liściach). Z punktu widzenia ML jest to model nadzorowany - parametry (struktury drzew i wartości w liściach) są uczone na parach <span class="math inline">\((x_i,y_i)\)</span>. Podobnie jak XGBoost, LightGBM wykorzystuje przybliżenie drugiego rzędu (w sensie rozwinięcia Taylora) straty wokół bieżącego predyktora <span class="math inline">\(F_{m-1}\)</span>. Definiuje się dla każdej obserwacji pochodne pierwszego i drugiego rzędu:</p>
+<p><span class="math display">\[
+g_i=\frac{\partial \mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}, \qquad
+h_i=\frac{\partial^2 \mathcal{L}(y_i, F(x_i))}{\partial F(x_i)^2},
+\]</span></p>
+<p>obliczane w <span class="math inline">\(F=F_{m-1}\)</span>. Następnie drzewo wybiera podziały maksymalizujące przyrost jakości (tzw. <em>gain</em>) na podstawie sum gradientów i hessianów w węzłach. Dla kandydata splitu dzielącego zbiór <span class="math inline">\(S\)</span> na <span class="math inline">\(S_L\)</span>, <span class="math inline">\(S_R\)</span> (z regularyzacją <span class="math inline">\(\lambda\)</span>) typowy przyrost ma postać:</p>
+<p><span class="math display">\[
+\mathrm{Gain}=
+\frac{1}{2}\left(
+\frac{\big(\sum_{i\in S_L} g_i\big)^2}{\sum_{i\in S_L} h_i+\lambda}+
+\frac{\big(\sum_{i\in S_R} g_i\big)^2}{\sum_{i\in S_R} h_i+\lambda}-
+\frac{\big(\sum_{i\in S} g_i\big)^2}{\sum_{i\in S} h_i+\lambda}
+\right)-\gamma,
+\]</span></p>
+<p>gdzie <span class="math inline">\(\gamma\)</span> jest kosztem utworzenia dodatkowego liścia (regularizacja struktury). Wartości w liściach wynikają wprost z optymalizacji przybliżonego problemu i są proporcjonalne do <span class="math inline">\(-G/H\)</span> (suma gradientów / suma hessianów w liściu).</p>
+</section>
+<section id="co-wyróżnia-lightgbm-na-tle-innych-boostingów-drzew" class="level4" data-number="5.3.6.2">
+<h4 data-number="5.3.6.2" class="anchored" data-anchor-id="co-wyróżnia-lightgbm-na-tle-innych-boostingów-drzew"><span class="header-section-number">5.3.6.2</span> Co wyróżnia LightGBM na tle innych boostingów drzew</h4>
+<ol type="1">
+<li>Wzrost <em>leaf-wise</em> zamiast <em>level-wise</em> - klasyczne implementacje często budują drzewo poziomami (<em>level-wise</em>): rozdzielają wszystkie liście (tymczasowe) na danym poziomie. LightGBM stosuje strategię <em>leaf-wise</em> (<em>best-first</em>): w każdym kroku rozdziela ten liść, który daje największy przyrost <span class="math inline">\(\mathrm{Gain}\)</span>. To zwykle daje lepszą jakość przy tej samej liczbie liści, ale zwiększa ryzyko przeuczenia, jeśli nie ograniczysz złożoności. Dlatego w LightGBM parametry kontrolujące złożoność, takie jak <code>num_leaves</code> i <code>max_depth</code>, są krytyczne.</li>
+<li><em>Histogram-based splitting</em> (przyspieszenie selekcji splitów) - dla cech ciągłych LightGBM nie analizuje wszystkich możliwych progów (jak w prostym CART), tylko bucketuje wartości do ograniczonej liczby koszyków (<em>binów</em>). Dzięki temu liczenie gainów jest szybsze i bardziej pamięciooszczędne, a jakość zwykle pozostaje bardzo dobra. Konieczne jest zatem ustawienie odpowiedniego <code>max_bin</code> (liczba binów).</li>
+<li>GOSS (<em>Gradient-based One-Side Sampling</em>) - w dużych zbiorach LightGBM może przyspieszać uczenie przez selekcję obserwacji na podstawie gradientów: zachowuje większość obserwacji o dużych <span class="math inline">\(|g_i|\)</span> (trudne przypadki), a próbuje losowo zredukować te o małych <span class="math inline">\(|g_i|\)</span>, korygując wagi tak, aby estymacja gainów pozostała sensowna.</li>
+<li>EFB (<em>Exclusive Feature Bundling</em>) - dla danych wysokowymiarowych LightGBM może łączyć cechy, które rzadko są jednocześnie niezerowe (cechy „ekskluzywne”), ograniczając koszt obliczeń bez dużej straty jakości. To ma znaczenie np. w problemach z wieloma rzadkimi zmiennymi.</li>
+</ol>
+</section>
+<section id="braki-danych-i-kategorie" class="level4" data-number="5.3.6.3">
+<h4 data-number="5.3.6.3" class="anchored" data-anchor-id="braki-danych-i-kategorie"><span class="header-section-number">5.3.6.3</span> Braki danych i kategorie</h4>
+<ul>
+<li>Braki (<code>NaN</code>) - LightGBM potrafi obsługiwać braki natywnie, ucząc „domyślny kierunek” dla braku w splitach (podobnie jak XGBoost). W praktyce często nie trzeba imputacji dla samych drzew boostingowych, choć bywa ona przydatna w spójnych pipeline’ach.</li>
+<li>Zmienne kategoryczne - LightGBM potrafi traktować kategorie bez pełnego <em>one-hot encoding</em> (zależy od interfejsu i ustawień), zwykle przez wyznaczanie korzystnych podziałów kategorii na grupy. W wielu zadaniach daje to przewagę nad prostym <em>one-hot encoding</em>, ale wymaga świadomej kontroli nad typami danych i parametrami (np. <code>categorical_feature</code> w natywnym API). Podział zmiennych jakościowych jest wówczas oparty o <span class="math inline">\(\tfrac{G_A}{H_A+\lambda}\)</span>, gdzie <span class="math inline">\(G_A\)</span>, <span class="math inline">\(H_A\)</span> są odpowiednio sumami pierwszych i drugich pochodnych dla podziału na zbiory <span class="math inline">\(A\)</span> i <span class="math inline">\(A^c\)</span>. Następnie wszystkie podziały są sortowane ze względu na te wartości co pozwala uzyskać optymalny podział.</li>
+</ul>
+</section>
+<section id="najważniejsze-hiperparametry" class="level4" data-number="5.3.6.4">
+<h4 data-number="5.3.6.4" class="anchored" data-anchor-id="najważniejsze-hiperparametry"><span class="header-section-number">5.3.6.4</span> Najważniejsze hiperparametry</h4>
+<ol type="1">
+<li><p>Liczba iteracji i shrinkage</p>
+<p>• n_estimators (<span class="math inline">\(M\)</span>) - liczba drzew. • learning_rate (<span class="math inline">\(\nu\)</span>) - im mniejsza, tym zwykle lepsza generalizacja, ale potrzeba większego <span class="math inline">\(M\)</span>.</p></li>
+<li><p>Złożoność drzew</p>
+<p>• <code>num_leaves</code> - maksymalna liczba liści; kluczowy regulator złożoności dla wzrostu <em>leaf-wise</em>. • <code>max_depth</code> - ogranicza głębokość. • <code>min_data_in_leaf</code> (lub <code>min_child_samples</code>) - minimalna liczność liścia (stabilizacja, mniej przeuczenia). • <code>min_gain_to_split</code> - minimalny gain wymagany do wykonania splitu.</p></li>
+<li><p>Losowość i regularizacja</p>
+<p>• <code>subsample</code> i <code>subsample_freq</code> - losowanie obserwacji per iteracja (regularizacja). • <code>colsample_bytree</code> / <code>feature_fraction</code> - losowanie cech (regularizacja). • <code>lambda_l2</code>, <code>lambda_l1</code> - kary <span class="math inline">\(L_2\)</span>/<span class="math inline">\(L_1\)</span> dla wag w liściach.</p></li>
+<li><p><code>max_bin</code> - liczba binów; wpływa na szybkość i (czasem) precyzję splitów.</p></li>
+</ol>
+<p>W praktyce tuning LightGBM zaczyna się zwykle od sensownej kontroli złożoności (<code>num_leaves</code>, <code>min_data_in_leaf</code>, <code>max_depth</code>) i dopiero potem optymalizuje się resztę.</p>
+</section>
+<section id="szkic-algorytmu" class="level4" data-number="5.3.6.5">
+<h4 data-number="5.3.6.5" class="anchored" data-anchor-id="szkic-algorytmu"><span class="header-section-number">5.3.6.5</span> Szkic algorytmu</h4>
+<ol type="1">
+<li>Ustal <span class="math inline">\(F_0(x)\)</span> (np. stała minimalizująca stratę).</li>
+<li>Dla <span class="math inline">\(m=1,\dots,M\)</span>: • oblicz <span class="math inline">\(g_i\)</span>, <span class="math inline">\(h_i\)</span> dla każdej obserwacji, • (opcjonalnie) zastosuj GOSS / subsampling, • buduj drzewo, wybierając split maksymalizujący gain (histogramowo), • rozwiń drzewo leaf-wise do limitu <code>num_leaves</code>/<code>max_depth</code>, • zaktualizuj <span class="math inline">\(F_m(x)=F_{m-1}(x)+\nu f_m(x)\)</span>.</li>
+<li>Predykcja - suma wkładów drzew (w klasyfikacji zwykle z linkiem logistycznym/softmax).</li>
+</ol>
+</section>
+</section>
+<section id="catboost" class="level3" data-number="5.3.7">
+<h3 data-number="5.3.7" class="anchored" data-anchor-id="catboost"><span class="header-section-number">5.3.7</span> CatBoost</h3>
 <p>CatBoost jest odmianą gradientowego boostingu drzew, zaprojektowaną specjalnie z myślą o danych tablicowych, w których występuje wiele zmiennych kategorycznych (często o wysokiej krotności). W klasycznych pipeline’ach takie zmienne koduje się np. przez <em>one-hot encoding</em> lub przez różne warianty <em>target encoding</em>. Problem polega na tym, że (i) <em>one-hot</em> może gwałtownie zwiększać wymiarowość, a (ii) naiwne <em>target encoding</em> łatwo prowadzi do <strong>wycieku informacji (target leakage)</strong>: wartość cechy tworzonej z wykorzystaniem etykiety może pośrednio „zdradzać” modelowi prawdziwy target także dla obserwacji, na której później uczymy.</p>
 <p>W praktyce siła CatBoost wynika z dwóch ściśle powiązanych mechanizmów:</p>
-<section id="ordered-target-statistics" class="level4" data-number="5.3.6.1">
-<h4 data-number="5.3.6.1" class="anchored" data-anchor-id="ordered-target-statistics"><span class="header-section-number">5.3.6.1</span> Ordered target statistics</h4>
+<section id="ordered-target-statistics" class="level4" data-number="5.3.7.1">
+<h4 data-number="5.3.7.1" class="anchored" data-anchor-id="ordered-target-statistics"><span class="header-section-number">5.3.7.1</span> Ordered target statistics</h4>
 <p>Załóżmy klasyfikację binarną <span class="math inline">\(Y\in\{0,1\}\)</span> oraz zmienną kategoryczną <span class="math inline">\(X\)</span> o poziomach <span class="math inline">\(c\)</span>. Klasyczna (naiwna) statystyka docelowa miałaby postać:</p>
 <p><span class="math display">\[
 \text{TE}(c)=\mathbb{E}[Y\mid X=c]\approx \frac{\sum_{i: X_i=c} y_i}{\#\{i: X_i=c\}}.
@@ -1266,8 +1402,8 @@ r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right
 <p><strong>Wiele permutacji i stabilizacja.</strong> W praktyce CatBoost wykorzystuje wiele permutacji oraz (w zależności od ustawień) uśrednianie/kompozycję statystyk, aby zmniejszyć wariancję kodowania dla rzadkich kategorii (szczególnie na początku permutacji, gdy <span class="math inline">\(N_t(c)\)</span> jest małe).</p>
 <p><strong>Interakcje kategorii.</strong> Dodatkowo CatBoost może tworzyć statystyki docelowe nie tylko dla pojedynczych zmiennych kategorycznych, ale również dla ich kombinacji (np. <span class="math inline">\(\text{city}\times\text{device}\)</span>), co pozwala uchwycić istotne interakcje bez eksplozji wymiaru typowej dla pełnego one-hot.</p>
 </section>
-<section id="ordered-boosting" class="level4" data-number="5.3.6.2">
-<h4 data-number="5.3.6.2" class="anchored" data-anchor-id="ordered-boosting"><span class="header-section-number">5.3.6.2</span> Ordered boosting</h4>
+<section id="ordered-boosting" class="level4" data-number="5.3.7.2">
+<h4 data-number="5.3.7.2" class="anchored" data-anchor-id="ordered-boosting"><span class="header-section-number">5.3.7.2</span> Ordered boosting</h4>
 <p>W klasycznym gradient boosting w kroku <span class="math inline">\(m\)</span> oblicza się pseudo-reszty jako ujemny gradient straty względem bieżących predykcji:</p>
 <p><span class="math display">\[
 r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right|_{F=F_{m-1}}.
@@ -1279,8 +1415,8 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 \]</span></p>
 <p>W implementacji CatBoost nie trenuje dosłownie <span class="math inline">\(n\)</span> pełnych modeli prefiksowych (to byłoby zbyt kosztowne), ale algorytmicznie to właśnie ta idea – „gradienty z przeszłości” – stoi za ograniczeniem wycieku i poprawą uogólniania.</p>
 </section>
-<section id="catboost-pseudokod" class="level4" data-number="5.3.6.3">
-<h4 data-number="5.3.6.3" class="anchored" data-anchor-id="catboost-pseudokod"><span class="header-section-number">5.3.6.3</span> CatBoost (pseudokod)</h4>
+<section id="catboost-pseudokod" class="level4" data-number="5.3.7.3">
+<h4 data-number="5.3.7.3" class="anchored" data-anchor-id="catboost-pseudokod"><span class="header-section-number">5.3.7.3</span> CatBoost (pseudokod)</h4>
 <p>Dla uproszczenia rozważmy dane <span class="math inline">\((X,Y)\)</span> z cechami numerycznymi i kategorycznymi.</p>
 <ol type="1">
 <li><strong>Permutacje</strong> - wybierz <span class="math inline">\(P\)</span> losowych permutacji danych <span class="math inline">\(\pi^{(1)},\ldots,\pi^{(P)}\)</span>.</li>
@@ -1298,8 +1434,8 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 </ol>
 <p>Wynik: model boostingowy, który korzysta z informacyjnych statystyk dla kategorii, ale minimalizuje ryzyko <em>leakage</em> oraz ogranicza przeuczenie dzięki uporządkowanemu uczeniu.</p>
 </section>
-<section id="dlaczego-to-jest-istotne-w-praktyce" class="level4" data-number="5.3.6.4">
-<h4 data-number="5.3.6.4" class="anchored" data-anchor-id="dlaczego-to-jest-istotne-w-praktyce"><span class="header-section-number">5.3.6.4</span> Dlaczego to jest istotne w praktyce?</h4>
+<section id="dlaczego-to-jest-istotne-w-praktyce" class="level4" data-number="5.3.7.4">
+<h4 data-number="5.3.7.4" class="anchored" data-anchor-id="dlaczego-to-jest-istotne-w-praktyce"><span class="header-section-number">5.3.7.4</span> Dlaczego to jest istotne w praktyce?</h4>
 <ul>
 <li><strong>Mniej preprocessingu</strong> - w wielu przypadkach nie trzeba ręcznie wykonywać <em>one-hot encoding</em> ani skomplikowanego <em>target-encoding</em>.</li>
 <li><strong>Lepsze uogólnianie dla kategorii o dużej krotności</strong> - rzadkie poziomy są stabilizowane przez prior i permutacje.</li>
@@ -1307,8 +1443,8 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 <li><strong>Dobre wyniki na danych mieszanych</strong> - CatBoost jest często silnym modelem bazowym dla problemów, gdzie współistnieją cechy liczbowe i kategoryczne.</li>
 </ul>
 </section>
-<section id="najważniejsze-hiperparametry-i-ryzyko-przeuczenia" class="level4" data-number="5.3.6.5">
-<h4 data-number="5.3.6.5" class="anchored" data-anchor-id="najważniejsze-hiperparametry-i-ryzyko-przeuczenia"><span class="header-section-number">5.3.6.5</span> Najważniejsze hiperparametry i ryzyko przeuczenia</h4>
+<section id="najważniejsze-hiperparametry-i-ryzyko-przeuczenia" class="level4" data-number="5.3.7.5">
+<h4 data-number="5.3.7.5" class="anchored" data-anchor-id="najważniejsze-hiperparametry-i-ryzyko-przeuczenia"><span class="header-section-number">5.3.7.5</span> Najważniejsze hiperparametry i ryzyko przeuczenia</h4>
 <p>Boosting ma wiele hiperparametrów ale najważniejsze to:</p>
 <ul>
 <li><strong><code>n_estimators</code> (</strong><span class="math inline">\(M\)</span>) – liczba iteracji/drzew. Większa liczba zwiększa potencjał dopasowania; bez kontroli może prowadzić do przeuczenia.</li>
@@ -1320,8 +1456,8 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 </ul>
 </section>
 </section>
-<section id="boosting-vs-bagging" class="level3" data-number="5.3.7">
-<h3 data-number="5.3.7" class="anchored" data-anchor-id="boosting-vs-bagging"><span class="header-section-number">5.3.7</span> Boosting vs bagging</h3>
+<section id="boosting-vs-bagging" class="level3" data-number="5.3.8">
+<h3 data-number="5.3.8" class="anchored" data-anchor-id="boosting-vs-bagging"><span class="header-section-number">5.3.8</span> Boosting vs bagging</h3>
 <ul>
 <li><strong>Cel -</strong> bagging redukuje wariancję (średnia wielu modeli), boosting redukuje bias (sekwencyjna korekta błędów).</li>
 <li><strong>Zrównoleglanie obliczeń -</strong> bagging łatwo zrównoleglić (drzewa niezależne); boosting jest z natury sekwencyjny (istnieją implementację zrównoleglające obliczenia pojedynczych drzew).</li>
@@ -1330,13 +1466,13 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 </ul>
 <div id="exm-3" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 5.3</strong></span> Teraz dokonamy porównania dotychczasowych modeli (z <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> i <a href="#exm-2" class="quarto-xref">Przykład&nbsp;<span>5.2</span></a>) z modelami AdaBoost, XGBoost, CatBoost.</p>
-<div id="b4cb3f1c" class="cell" data-execution_count="7">
+<div id="ad3d6c03" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> AdaBoostClassifier</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> [</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    eval_model(tree, <span class="st">"Drzewo (surowe)"</span>), <span class="co"># eval_model było już zdefiniowane</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    eval_model(tree, <span class="st">"Drzewo (surowe)"</span>),  <span class="co"># eval_model było już zdefiniowane</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    eval_model(tree_pruned, <span class="st">"Drzewo (przycięte)"</span>),</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>]</span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
@@ -1402,7 +1538,7 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 <span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) CatBoost </span></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) CatBoost</span></span>
 <span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> catboost <span class="im">import</span> CatBoostClassifier</span>
 <span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>cat <span class="op">=</span> CatBoostClassifier(</span>
@@ -1416,30 +1552,60 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 <span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>cat.fit(X_train, y_train)</span>
 <span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>results.append(eval_model(cat, <span class="st">"CatBoost"</span>))</span>
 <span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> pd.DataFrame(results).sort_values(<span class="st">"balanced_accuracy"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a><span class="co"># 4) LightGBM</span></span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lightgbm <span class="im">import</span> LGBMClassifier</span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a>lgbm <span class="op">=</span> LGBMClassifier(</span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">800</span>,</span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span><span class="fl">0.05</span>,</span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>    num_leaves<span class="op">=</span><span class="dv">63</span>,</span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>    subsample<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>    colsample_bytree<span class="op">=</span><span class="fl">0.8</span>,</span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a>    objective<span class="op">=</span><span class="st">"multiclass"</span>,</span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a>    num_class<span class="op">=</span><span class="bu">len</span>(le.classes_),</span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a>    verbosity<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>lgbm.fit(X_train, y_train_enc)</span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>yhat_lgbm <span class="op">=</span> le.inverse_transform(lgbm.predict(X_test).astype(<span class="bu">int</span>))</span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>results.append(</span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a>        <span class="st">"model"</span>: <span class="st">"LightGBM"</span>,</span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a>        <span class="st">"accuracy"</span>: accuracy_score(y_test, yhat_lgbm),</span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>        <span class="st">"balanced_accuracy"</span>: balanced_accuracy_score(y_test, yhat_lgbm),</span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>        <span class="st">"f1_macro"</span>: f1_score(y_test, yhat_lgbm, average<span class="op">=</span><span class="st">"macro"</span>),</span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> pd.DataFrame(results).sort_values(<span class="st">"balanced_accuracy"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>             model  accuracy  balanced_accuracy  f1_macro
-           XGBoost    0.7950             0.7950    0.7958
+          LightGBM    0.7920             0.7920    0.7930
+           XGBoost    0.7890             0.7890    0.7901
           CatBoost    0.7805             0.7805    0.7809
      Random Forest    0.7705             0.7705    0.7697
            Bagging    0.7310             0.7310    0.7314
 Drzewo (przycięte)    0.6930             0.6930    0.6936
    Drzewo (surowe)    0.6910             0.6910    0.6913
-          AdaBoost    0.5425             0.5425    0.5118</code></pre>
+          AdaBoost    0.6560             0.6560    0.6513</code></pre>
 </div>
 </div>
 </div>
 </section>
-<section id="porównanie-modeli-z-przykładów" class="level3" data-number="5.3.8">
-<h3 data-number="5.3.8" class="anchored" data-anchor-id="porównanie-modeli-z-przykładów"><span class="header-section-number">5.3.8</span> Porównanie modeli z przykładów</h3>
-<p>Wyniki porównania wskazują wyraźną hierarchię jakości w tym zadaniu wieloklasowym (klasy gatunków): <strong>XGBoost</strong> osiąga najlepsze dopasowanie (accuracy = 0.7950, balanced_accuracy = 0.7950, F1_macro = 0.7958), następnie <strong>CatBoost</strong> (0.7805 / 0.7805 / 0.7809) i <strong>Random Forest</strong> (0.7705 / 0.7705 / 0.7697). Dalej plasują się <strong>Bagging</strong> (0.7310 / 0.7310 / 0.7314) oraz pojedyncze drzewa (<strong>przycięte</strong>: 0.6930 / 0.6930 / 0.6936, <strong>surowe</strong>: 0.6910 / 0.6910 / 0.6913). Najsłabiej wypadł <strong>AdaBoost</strong> (0.5425 / 0.5425 / 0.5118), co w tym kontekście jest istotną informacją diagnostyczną.</p>
-<p>Po pierwsze, w tym konkretnym zbiorze (po wcześniejszej selekcji cech numerycznych) przewagę mają metody oparte o <strong>gradient boosting drzew</strong>. XGBoost wygrywa zwykle wtedy, gdy relacje między cechami a klasami są nieliniowe i wymagają kolejnych korekt na resztach/gradientach, a jednocześnie potrzebna jest skuteczna regularizacja (<em>shrinkage</em>, <em>subsampling</em>, kary złożoności). W praktyce XGBoost łączy wysoką elastyczność z wieloma mechanizmami kontroli przeuczenia, co często daje najlepszy kompromis <em>bias–variance</em>.</p>
-<p>CatBoost uzyskał wynik nieco słabszy od XGBoost. Jest to spójne z intuicją: główna przewaga CatBoost ujawnia się w danych z licznymi zmiennymi kategorycznymi (<em>ordered target statistics</em>, <em>ordered boosting</em>), natomiast w naszym pipeline’ie korzystamy niemal wyłącznie z cech liczbowych. CatBoost pozostaje jednak bardzo konkurencyjny, bo jest silnym wariantem boostingu drzew również dla danych numerycznych, a różnica jakości może wynikać zarówno z doboru hiperparametrów, jak i z tego, że XGBoost w tej konfiguracji lepiej dopasował kompromis między głębokością drzew a regularizacją.</p>
-<p>Random Forest jest najlepszą metodą „baggingową” w zestawieniu. Wynik lepszy niż Bagging jest typowy: losowanie cech w węzłach (<code>max_features</code>) dodatkowo <strong>dekoruluje drzewa</strong>, co mocniej redukuje wariancję zespołu. Jednocześnie RF z reguły nie „dopycha” biasu tak skutecznie jak boosting, dlatego – przy porównywalnym nakładzie obliczeń – bywa minimalnie słabszy od dobrze nastrojonego gradient boostingu.</p>
-<p>Bagging poprawia pojedyncze drzewo głównie przez redukcję wariancji (uśrednianie wielu modeli uczonych na próbkach bootstrapowych). Jest to widoczne w przeskoku z okolic 0.69 (pojedyncze drzewo) do okolic 0.73 (bagging). Różnica między drzewem surowym a przyciętym jest natomiast mała, co sugeruje, że w tej konfiguracji przycinanie redukuje złożoność, ale nie zmienia istotnie granic decyzyjnych w obszarach, które dominują w teście. Z dydaktycznego punktu widzenia to dobry przykład faktu, że <strong>upraszczanie drzewa</strong> często poprawia interpretowalność i stabilność, ale nie gwarantuje zauważalnego wzrostu metryk – szczególnie, gdy problem jest złożony, a pojedyncze drzewo ma ograniczoną moc aproksymacyjną.</p>
-<p>Słaby wynik AdaBoost jest w tym zadaniu szczególnie pouczający. W wersji wieloklasowej (oraz przy płytkich <em>weak learners</em>) AdaBoost może gorzej radzić sobie, gdy granice klas są złożone, klasy są do siebie podobne w przestrzeni cech, a „trudne” obserwacje (które dostają większe wagi) zawierają szum lub są niejednoznaczne. Wówczas algorytm może nadmiernie koncentrować się na przykładach trudnych do rozdzielenia i tracić jakość globalną (spadek macro-F1 jest tu wyraźny). W praktyce AdaBoost bywa dobry jako prosty baseline, ale w zadaniach tablicowych częściej ustępuje nowocześniejszym wariantom gradient boostingu.</p>
+<section id="porównanie-modeli-z-przykładów" class="level3" data-number="5.3.9">
+<h3 data-number="5.3.9" class="anchored" data-anchor-id="porównanie-modeli-z-przykładów"><span class="header-section-number">5.3.9</span> Porównanie modeli z przykładów</h3>
+<p>Wyniki porównania wskazują wyraźną hierarchię jakości w tym zadaniu wieloklasowym (klasy gatunków), przy czym w zaktualizowanej konfiguracji najlepszy okazał się <strong>LightGBM</strong> (accuracy = 0.7920, balanced_accuracy = 0.7920, F1_macro = 0.7930), bardzo blisko za nim plasuje się <strong>XGBoost</strong> (0.7890 / 0.7890 / 0.7901), a następnie <strong>CatBoost</strong> (0.7805 / 0.7805 / 0.7809) i <strong>Random Forest</strong> (0.7705 / 0.7705 / 0.7697). Dalej znajdują się <strong>Bagging</strong> (0.7310 / 0.7310 / 0.7314) oraz pojedyncze drzewa (<strong>przycięte</strong>: 0.6930 / 0.6930 / 0.6936, <strong>surowe</strong>: 0.6910 / 0.6910 / 0.6913). <strong>AdaBoost</strong> osiąga wynik wyraźnie lepszy niż w poprzednim zestawieniu (0.6560 / 0.6560 / 0.6513), ale nadal pozostaje istotnie słabszy od metod opartych o gradient boosting drzew.</p>
+<p>Po pierwsze, w tym konkretnym zbiorze (po selekcji cech numerycznych) przewagę mają metody z rodziny <strong>gradient boosting drzew</strong>. Zwycięstwo LightGBM jest spójne z jego charakterystyką: histogramowe wyznaczanie podziałów i strategia wzrostu <em>leaf-wise</em> często pozwalają uzyskać bardzo dobrą jakość przy tej samej (lub mniejszej) liczbie iteracji, zwłaszcza gdy relacje między cechami a klasami są nieliniowe, a jednocześnie model korzysta z regularizacji (np. <code>num_leaves</code>, <code>min_data_in_leaf</code>, <code>feature_fraction</code>, <code>subsample</code>). Różnica względem XGBoost jest niewielka, co w praktyce oznacza, że oba algorytmy uchwyciły podobną strukturę danych; przy tak małym odstępie jakości o kolejności mogą decydować szczegóły strojenia hiperparametrów oraz sposób budowy drzew (leaf-wise vs bardziej „klasyczne” strategie, histogramy, ustawienia regularizacji).</p>
+<p>XGBoost pozostaje bardzo mocnym punktem odniesienia: oferuje bogaty zestaw mechanizmów regularizacyjnych (m.in. <code>gamma</code>, <code>min_child_weight</code>, <code>reg_alpha</code>, <code>reg_lambda</code>, <code>subsample</code>, <code>colsample_*</code>) i często jest konkurencyjny nawet przy prostych ustawieniach. W tym porównaniu różnica na korzyść LightGBM jest jednak na tyle mała, że z dydaktycznego punktu widzenia warto ją interpretować jako przykład: w nowoczesnym boostingu drzew <strong>wybór implementacji</strong> (LightGBM vs XGBoost) bywa mniej istotny niż <strong>świadome strojenie</strong> i kontrola złożoności.</p>
+<p>CatBoost uzyskał wynik nieco słabszy od dwóch powyższych metod. Jest to zgodne z intuicją: jego największa przewaga ujawnia się w danych z licznymi zmiennymi kategorycznymi (mechanizmy <em>ordered target statistics</em> i <em>ordered boosting</em>), natomiast w naszym pipeline’ie dominują cechy liczbowe. Mimo to CatBoost pozostaje bardzo konkurencyjny, a różnica jakości może wynikać zarówno z hiperparametrów, jak i z tego, że w tym zadaniu optymalne granice decyzyjne lepiej zostały uchwycone przez konfiguracje LightGBM/XGBoost.</p>
+<p>Random Forest jest najlepszą metodą „baggingową” w zestawieniu i (zgodnie z teorią) przewyższa Bagging dzięki dodatkowej randomizacji cech w węzłach, co <strong>dekoruluje drzewa</strong> i silniej redukuje wariancję. Jednocześnie RF zwykle nie redukuje biasu tak skutecznie jak boosting, dlatego w zadaniach o bardziej złożonej strukturze klas często ustępuje dobrze nastrojonym metodom gradient boosting.</p>
+<p>Bagging poprawia pojedyncze drzewo głównie przez redukcję wariancji (uśrednianie wielu modeli uczonych na próbkach bootstrapowych), co widać w przeskoku z okolic 0.69 (pojedyncze drzewo) do okolic 0.73 (bagging). Różnica między drzewem surowym a przyciętym jest mała, co sugeruje, że przycinanie zmniejsza złożoność i poprawia stabilność/interpretowalność, ale w tym problemie nie zmienia istotnie granic decyzyjnych w obszarach kluczowych dla wyniku testowego.</p>
+<p>Zaktualizowany wynik AdaBoost jest istotnie lepszy niż wcześniej, co może wynikać z innej konfiguracji (np. liczby estymatorów, głębokości <em>weak learner</em> lub domyślnego algorytmu wieloklasowego), jednak nadal widać typową cechę: w zadaniach tablicowych wieloklasowych nowocześniejsze warianty gradient boostingu drzew (XGBoost/LightGBM/CatBoost) zwykle zapewniają lepszy kompromis między bias i wariancją oraz lepszą kontrolę złożoności.</p>
 <p>Warto zauważyć, że w tym porównaniu <strong>accuracy</strong>, <strong>balanced_accuracy</strong> i <strong>F1_macro</strong> są bardzo zbliżone dla najlepszych modeli. To oznacza, że (po ograniczeniu do 10 najczęstszych gatunków) nie obserwujemy silnego problemu dominacji jednej klasy; w takich warunkach macro-F1 jest szczególnie użyteczne jako miara „sprawiedliwości” względem klas, bo każdej klasie przypisuje podobną wagę.</p>
 
 
@@ -1473,6 +1639,9 @@ Hothorn, Torsten, Kurt Hornik, i Achim Zeileis. 2006. <span>„Unbiased Recursiv
 </div>
 <div id="ref-kass1980" class="csl-entry" role="listitem">
 Kass, G. V. 1980. <span>„An Exploratory Technique for Investigating Large Quantities of Categorical Data”</span>. <em>Applied Statistics</em> 29 (2): 119. <a href="https://doi.org/10.2307/2986296">https://doi.org/10.2307/2986296</a>.
+</div>
+<div id="ref-ke2017" class="csl-entry" role="listitem">
+Ke, Guolin, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, i Tie-Yan Liu. 2017. <span>„LightGBM: A Highly Efficient Gradient Boosting Decision Tree”</span>. W. T. 30. Curran Associates, Inc. <a href="https://proceedings.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html">https://proceedings.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html</a>.
 </div>
 <div id="ref-kuhn2018" class="csl-entry" role="listitem">
 Kuhn, Max, i Ross Quinlan. 2018. <em>C50: C5.0 Decision Trees and Rule-Based Models</em>. <a href="https://CRAN.R-project.org/package=C50">https://CRAN.R-project.org/package=C50</a>.
