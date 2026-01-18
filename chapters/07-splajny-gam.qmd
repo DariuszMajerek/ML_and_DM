@@ -326,7 +326,7 @@ Możemy to ująć w języku bias–variance: małe $K$ daje większy *bias* (zby
 
 W FDA (*Flexible Discriminant Analysis*) splajny służą do budowy nieliniowych transformacji predyktorów, a następnie stosuje się ideę dyskryminacji na przekształconej przestrzeni cech. W GAM splajny są naturalnym „budulcem” nieliniowych składowych addytywnych. W obu przypadkach kluczowe jest to, że splajn zachowuje interpretowalność: nadal widzimy, jak zmienna wpływa na wynik, ale w sposób nieliniowy.
 
-### Generalized Additive Models (GAM)
+## Generalized Additive Models (GAM)
 
 Model addytywny zakłada, że wpływ predyktorów sumuje się, ale każda składowa może być funkcją nieliniową:
 
