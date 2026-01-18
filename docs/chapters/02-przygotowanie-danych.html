@@ -496,7 +496,7 @@ window.Quarto = {
 <h2 data-number="3.1" class="anchored" data-anchor-id="import-i-czyszczenie-danych"><span class="header-section-number">3.1</span> Import i czyszczenie danych</h2>
 <p>Import danych jest pierwszym momentem, w którym można świadomie zminimalizować późniejsze problemy jakościowe. W praktyce ważne jest nie tylko „wczytanie pliku”, ale kontrola takich elementów jak kodowanie znaków, separator, typy danych, format dat, niestandardowe znaczniki braków oraz interpretacja wartości logicznych. <code>pandas</code> daje w tym zakresie bardzo duże możliwości, a poprawna konfiguracja importu bywa istotniejsza niż późniejsze „naprawy” wykonywane ad hoc.</p>
 <p>Najczęściej spotykanym formatem jest CSV, który bywa myląco prosty: różne pliki mogą używać separatora <code>,</code> lub <code>;</code>, różnych separatorów dziesiętnych (kropka/przecinek), mogą zawierać znaki narodowe (tu: polskie nazwy miast), a braki mogą być kodowane jako puste pole, <code>NA</code>, <code>N/A</code>, <code>null</code>, <code>-999</code> itd. Dlatego przy imporcie CSV bardzo często warto jawnie ustawić: <code>sep</code>, <code>encoding</code>, <code>na_values</code>, <code>parse_dates</code>, a w razie potrzeby także <code>dtype</code>. Przykładowo<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Dane przypominają prosty wycinek danych klient–zakupy. Zawierają zmienne liczbowe (np. <code>income_eur</code>, <code>avg_basket_eur</code>, <code>visits_last30</code>), jakościowe (<code>city</code>, <code>segment</code>, <code>device_type</code>, <code>notes</code>), logiczne (<code>has_promo</code>), daty (<code>signup_date</code>, <code>last_purchase_date</code>) oraz zmienną docelową (<code>churned</code>). Celowo wprowadzono braki danych (w tym puste pola i znaczniki <code>NA</code>), wartości odstające (np. nienaturalnie wysokie dochody, koszyki zakupowe i liczby wizyt) oraz błędy jakościowe (np. wiek 5 i 120, ujemne zwroty, rozbieżności w kodowaniu kategorii: spacje i różne wielkości liter).</p></div></div><div id="c2ca2cf7" class="cell" data-execution_count="1">
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Dane przypominają prosty wycinek danych klient–zakupy. Zawierają zmienne liczbowe (np. <code>income_eur</code>, <code>avg_basket_eur</code>, <code>visits_last30</code>), jakościowe (<code>city</code>, <code>segment</code>, <code>device_type</code>, <code>notes</code>), logiczne (<code>has_promo</code>), daty (<code>signup_date</code>, <code>last_purchase_date</code>) oraz zmienną docelową (<code>churned</code>). Celowo wprowadzono braki danych (w tym puste pola i znaczniki <code>NA</code>), wartości odstające (np. nienaturalnie wysokie dochody, koszyki zakupowe i liczby wizyt) oraz błędy jakościowe (np. wiek 5 i 120, ujemne zwroty, rozbieżności w kodowaniu kategorii: spacje i różne wielkości liter).</p></div></div><div id="92a532f2" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -633,7 +633,7 @@ window.Quarto = {
 </div>
 <p>W tym przykładzie <code>na_values</code> powoduje, że zarówno puste pola, jak i tekstowe znaczniki braków zostaną zamienione na <code>NaN</code>, a <code>parse_dates</code> zadba o automatyczną konwersję wskazanych kolumn do typu daty. To jest szczególnie ważne, bo daty wczytane jako tekst utrudniają analizę sezonowości, czasu od rejestracji, czy prostych agregacji po miesiącach.</p>
 <p>W przypadku danych w Excelu (<code>.xlsx</code>) import odbywa się przez <code>read_excel</code>. W praktyce warto pamiętać, że Excel często zawiera dodatkowe arkusze, nagłówki „opisowe” nad tabelą, albo mieszane typy w kolumnach. Gdy dane są w konkretnym arkuszu i zaczynają się od konkretnego wiersza, przydają się parametry <code>sheet_name</code> oraz <code>skiprows</code>. Dla dołączonego pliku:</p>
-<div id="51c7c101" class="cell" data-execution_count="2">
+<div id="5901cfb0" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(</span>
@@ -769,7 +769,7 @@ window.Quarto = {
 </div>
 <p>Klasyczny format JSON (<code>.json</code>) przechowuje dane jako jedną spójną strukturę, najczęściej listę obiektów (rekordów). Taki zapis jest szczególnie często spotykany w interfejsach API, plikach konfiguracyjnych oraz w wymianie danych pomiędzy systemami informatycznymi. Z punktu widzenia analizy danych format ten jest bardziej „opisowy” i czytelny dla człowieka, ale jednocześnie wymaga załadowania całej struktury do pamięci.</p>
 <p>W przygotowanym pliku <code>data.json</code> dane zapisane są jako lista rekordów, gdzie każdy rekord odpowiada jednej obserwacji, a klucze obiektów odpowiadają nazwom zmiennych. Taki układ bardzo naturalnie mapuje się na strukturę ramki danych w <code>pandas</code>. Podstawowy import danych JSON do pandas odbywa się za pomocą funkcji <code>read_json</code>.</p>
-<div id="bc33c7e6" class="cell" data-execution_count="3">
+<div id="4f32c2db" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_json(<span class="st">"data.json"</span>)</span>
@@ -898,7 +898,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Po wczytaniu danych <code>pandas</code> automatycznie spróbuje rozpoznać typy zmiennych, jednak – podobnie jak w przypadku CSV – nie zawsze zrobi to zgodnie z oczekiwaniami analityka. W szczególności kolumny datowe są często wczytywane jako typ <code>object</code>, dlatego dobrą praktyką jest ich jawna konwersja:</p>
-<div id="33a0485f" class="cell" data-execution_count="4">
+<div id="9a4cd48d" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"signup_date"</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">"signup_date"</span>], errors<span class="op">=</span><span class="st">"coerce"</span>)</span>
@@ -1028,7 +1028,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Parametr <code>errors="coerce"</code> powoduje, że ewentualne niepoprawne formaty dat zostaną zamienione na <code>NaT</code>, co jest bezpieczniejsze niż przerwanie importu błędem. W kontekście eksploracji danych takie zachowanie pozwala szybko zidentyfikować problemy jakościowe bez utraty całego zbioru. Warto podkreślić, że format JSON nie posiada natywnego pojęcia braków danych w sensie znanym z analizy statystycznej. Braki mogą być reprezentowane jako <code>null</code>, brak klucza lub wartość tekstowa (np. <code>NA</code>). <code>pandas</code> zamienia <code>null</code> na <code>NaN</code>, ale nie rozpoznaje automatycznie tekstowych znaczników braków. Dlatego po imporcie zalecane jest jawne czyszczenie takich wartości:</p>
-<div id="3773ef7b" class="cell" data-execution_count="5">
+<div id="70aa9f2b" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.replace([<span class="st">"NA"</span>, <span class="st">"N/A"</span>, <span class="st">""</span>], pd.NA, inplace<span class="op">=</span><span class="va">True</span>)</span>
@@ -1159,7 +1159,7 @@ window.Quarto = {
 <p>W porównaniu do CSV, format JSON lepiej zachowuje strukturę danych (np. brak problemów z separatorami czy kodowaniem znaków), ale gorzej skaluje się dla bardzo dużych zbiorów. Z tego względu klasyczny JSON jest szczególnie przydatny w dydaktyce oraz w pracy z danymi średniej wielkości, gdzie czytelność i jednoznaczność struktury są ważniejsze niż wydajność. Z perspektywy dalszych etapów kursu istotne jest, aby rozumieć, że import danych nie jest neutralnym technicznie krokiem, lecz pierwszym momentem, w którym podejmowane są decyzje wpływające na całą analizę. Różnice pomiędzy CSV, JSONL i JSON przekładają się nie tylko na sposób wczytania danych, ale także na późniejsze możliwości ich walidacji, przetwarzania i skalowania.￼</p>
 <p>W praktyce import często wymaga kontroli typów. Jeśli np. identyfikator klienta ma wyglądać jak liczba, ale nie wolno dopuścić do utraty wiodących zer (częsty przypadek dla kodów), należy wymusić typ tekstowy przez <code>dtype={"customer_id": "string"}</code>. W tym konkretnym zbiorze <code>customer_id</code> jest liczbowy, ale w realnych danych biznesowych to częsty problem. Analogicznie, gdy w jednej kolumnie występują liczby i tekst (np. „brak”), <code>pandas</code> może ustawić typ object, a to utrudni obliczenia – lepiej wczytać z <code>na_values</code> i później rzutować typy jawnie.</p>
 <p>Istotne są też parametry wpływające na wydajność i kontrolę pamięci. Dla dużych plików CSV warto rozważyć <code>usecols</code> (czytać tylko potrzebne kolumny), <code>chunksize</code> (czytanie porcjami) oraz <code>low_memory=False</code> (mniej błędnych inferencji typów kosztem RAM). Przykład importu porcjami:</p>
-<div id="fce29223" class="cell" data-execution_count="6">
+<div id="f4913037" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>chunks <span class="op">=</span> pd.read_csv(<span class="st">"data.csv"</span>, chunksize<span class="op">=</span><span class="dv">50_000</span>)</span>
@@ -1171,7 +1171,7 @@ window.Quarto = {
 <p>Na końcu, dobrą praktyką po imporcie jest natychmiastowa „kontrola jakości importu”: <code>df.info()</code>, <code>df.isna().sum()</code>, sprawdzenie liczby unikatów w kategoriach oraz szybkie oględziny podejrzanych wartości (np. wiek 120). To pozwala wcześnie odróżnić problemy wynikające z danych od problemów wynikających z błędnego importu.</p>
 <p>W praktyce analizy danych bardzo często spotyka się zbiory danych, których nazwy kolumn są niewygodne lub wręcz problematyczne z punktu widzenia języka Python oraz bibliotek analitycznych. Dotyczy to w szczególności nazw zawierających spacje, znaki specjalne, polskie znaki diakrytyczne, rozpoczynających się od cyfr, a także nazw bardzo długich lub opisowych. Choć <code>pandas</code> technicznie dopuszcza niemal dowolne nazwy kolumn, ich nieprzemyślane użycie prowadzi do błędów, nieczytelnego kodu oraz problemów w dalszych etapach analizy i modelowania. Problem ten ujawnia się szczególnie wyraźnie wtedy, gdy użytkownik próbuje korzystać z notacji kropkowej (<code>df.column_name</code>), budować formuły modelowe, pisać potoki przetwarzania lub eksportować dane do innych narzędzi analitycznych. Nazwy kolumn zawierające spacje, znaki <code>-</code>, <code>%</code>, <code>()</code>, <code>#</code>, rozpoczynające się od cyfr lub zawierające znaki typowe dla języków innych niż angielski (np. ś, ć, ń) nie mogą być używane jako poprawne identyfikatory w Pythonie. W efekcie kod staje się mniej czytelny i bardziej podatny na błędy.</p>
 <p>Rozważmy przykładowy zbiór danych, w którym nazwy kolumn zostały nadane w sposób typowy dla arkuszy Excel lub raportów biznesowych:</p>
-<div id="428209dc" class="cell" data-execution_count="7">
+<div id="a24ad689" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({</span>
@@ -1230,7 +1230,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Z punktu widzenia <code>pandas</code> taki zbiór danych jest poprawny, jednak już próba użycia notacji kropkowej zakończy się błędem:</p>
-<div id="326644e1" class="cell" data-execution_count="8">
+<div id="97992fe1" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df2<span class="fl">.2023</span> Revenue (€) <span class="co"># błąd składni</span></span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1246,7 +1246,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Każdorazowo konieczne byłoby odwoływanie się do kolumn przez nawiasy i łańcuchy znaków, co znacząco obniża czytelność kodu:</p>
-<div id="3f1d86d3" class="cell" data-execution_count="9">
+<div id="5b16a5b3" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df2[<span class="st">"2023 Revenue (€)"</span>].mean()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1256,7 +1256,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Dlatego dobrą praktyką w analizie danych jest normalizacja nazw kolumn bezpośrednio po imporcie danych. Najczęściej stosowana konwencja obejmuje użycie wyłącznie małych liter, znaków ASCII, podkreśleń zamiast spacji oraz nazw rozpoczynających się literą. Taki styl jest zgodny z konwencją <code>snake_case</code> powszechnie stosowaną w Pythonie. Podstawowa korekta nazw kolumn może zostać wykonana w kilku krokach. Najpierw usuwa się nadmiarowe spacje, zamienia litery na małe, a spacje na podkreślenia:</p>
-<div id="1cdbc45a" class="cell" data-execution_count="10">
+<div id="b9abca0d" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df2.columns <span class="op">=</span> (</span>
@@ -1268,7 +1268,7 @@ window.Quarto = {
 </details>
 </div>
 <p>Jednak w praktyce to zwykle nie wystarcza, ponieważ w nazwach mogą występować znaki specjalne, symbole walut, procenty czy nawiasy. W takim przypadku warto usunąć wszystkie znaki niedozwolone i pozostawić jedynie litery, cyfry i podkreślenia:</p>
-<div id="8e2c752b" class="cell" data-execution_count="11">
+<div id="6e964941" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df2.columns <span class="op">=</span> df2.columns.<span class="bu">str</span>.replace(<span class="vs">r"</span><span class="pp">[^a-zA-Z0-9_]</span><span class="vs">"</span>, <span class="st">""</span>, regex<span class="op">=</span><span class="va">True</span>)</span>
@@ -1288,7 +1288,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Warto zauważyć, że po czyszczeniu może powstać nazwa będąca słowem kluczowym Pythona (np. <code>return</code>). Jeśli zależy nam na możliwości użycia notacji kropkowej, warto takie przypadki automatycznie zmienić, np. przez dodanie sufiksu:</p>
-<div id="a2727f7f" class="cell" data-execution_count="12">
+<div id="87ef5a1b" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keyword</span>
@@ -1300,7 +1300,7 @@ window.Quarto = {
 </details>
 </div>
 <p>Wciąż jednak pozostaje problem nazw rozpoczynających się od cyfr. W Pythonie identyfikator nie może zaczynać się od liczby, dlatego zaleca się automatyczne dodanie prefiksu, na przykład <code>x_</code>:</p>
-<div id="4a9d394d" class="cell" data-execution_count="13">
+<div id="cf22c5e4" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df2.columns <span class="op">=</span> [</span>
@@ -1316,7 +1316,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Kolejnym, często niedocenianym problemem są zbyt długie nazwy kolumn. Choć technicznie są poprawne, znacząco utrudniają pracę z kodem, zwłaszcza w dalszych etapach, takich jak budowa modeli, interpretacja współczynników czy wizualizacja wyników. W takich sytuacjach dobrą praktyką jest ręczne lub półautomatyczne skracanie nazw, przy zachowaniu ich semantyki:</p>
-<div id="bfaaea77" class="cell" data-execution_count="14">
+<div id="26de0ddd" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df2.rename(columns<span class="op">=</span>{</span>
@@ -1331,7 +1331,7 @@ window.Quarto = {
 </div>
 </div>
 <p>W projektach analitycznych o większej skali często stosuje się funkcję pomocniczą, która automatycznie „czyści” nazwy kolumn według ustalonej reguły:</p>
-<div id="fc4d34f3" class="cell" data-execution_count="15">
+<div id="25ea454d" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({</span>
@@ -1466,7 +1466,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 \]</span></p>
 <p>Współczynnik (1.4826 <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>) skaluje MAD do odpowiednika odchylenia standardowego przy rozkładzie normalnym.</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Liczba 1.4826 pochodzi ze „skalowania” miary MAD tak, aby była porównywalna z odchyleniem standardowym przy rozkładzie normalnym. Dla rozkładu normalnego <span class="math inline">\(X \sim \mathcal N(\mu,\sigma)\)</span> zachodzi zależność <span class="math inline">\(MAD = \Phi^{-1}(0.75)\,\sigma \approx 0.6745,\sigma\)</span> bo dla <span class="math inline">\(Z\sim\mathcal N(0,1)\)</span> wartość <span class="math inline">\(\mathrm{median}(|Z|)\)</span> to dokładnie 75. percentyl rozkładu normalnego: <span class="math inline">\(\Phi^{-1}(0.75)\)</span>. Żeby z MAD zrobić estymator „w skali <span class="math inline">\(\sigma\)</span>”, mnoży się przez odwrotność tej stałej <span class="math inline">\(\sigma \approx \frac{MAD}{0.6745} \approx 1.4826 \cdot MAD\)</span> i stąd bierze się 1.4826 (dokładniej <span class="math inline">\(1 / \Phi^{-1}(0.75)\)</span>).</p></div></div><p>W naszych danych sensownymi kandydatami do analizy odstających są: <code>income_eur</code>, <code>avg_basket_eur</code>, <code>visits_last30</code>, a także „błędy logiczne” w <code>age</code> i <code>returns_last90</code>.</p>
-<div id="836ce540" class="cell" data-execution_count="16">
+<div id="ed58137b" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1584,7 +1584,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 </section>
 <section id="reguła-iqr-dla-jednej-zmiennej" class="level4" data-number="3.2.1.2">
 <h4 data-number="3.2.1.2" class="anchored" data-anchor-id="reguła-iqr-dla-jednej-zmiennej"><span class="header-section-number">3.2.1.2</span> Reguła IQR dla jednej zmiennej</h4>
-<div id="88db717e" class="cell" data-execution_count="17">
+<div id="7bef61e2" class="cell" data-execution_count="17">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> iqr_outliers(s: pd.Series, k: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1.5</span>):</span>
@@ -1692,7 +1692,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 </section>
 <section id="odporny-z-score-mad" class="level4" data-number="3.2.1.3">
 <h4 data-number="3.2.1.3" class="anchored" data-anchor-id="odporny-z-score-mad"><span class="header-section-number">3.2.1.3</span> Odporny z-score (MAD)</h4>
-<div id="f933b2ad" class="cell" data-execution_count="18">
+<div id="bfaf4bbc" class="cell" data-execution_count="18">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> robust_zscore(s: pd.Series):</span>
@@ -1790,7 +1790,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <p>Część wartości odstających to nie „rzadkie przypadki”, tylko po prostu błędne dane. W <code>data.csv</code> celowo pojawiają się np. wiek 5 i 120 oraz ujemna liczba zwrotów (<code>returns_last90 == -1</code>). To nie są outliery w sensie rozkładu, tylko naruszenia dziedziny wartości.</p>
 <p>W EDA warto wprost zdefiniować reguły walidacji, np.: <span class="math inline">\(16 \leq \text{age} \leq 80,\)</span> <span class="math inline">\(\text{returns\_last90} \geq 0.\)</span></p>
 <p>W Pythonie:</p>
-<div id="b4e1bd92" class="cell" data-execution_count="19">
+<div id="28a0f18f" class="cell" data-execution_count="19">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>bad_age <span class="op">=</span> df[(df[<span class="st">"age"</span>] <span class="op">&lt;</span> <span class="dv">16</span>) <span class="op">|</span> (df[<span class="st">"age"</span>] <span class="op">&gt;</span> <span class="dv">80</span>)]</span>
@@ -1825,7 +1825,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <li><strong>usunięcie</strong> tylko wtedy, gdy jest to błąd lub obserwacja spoza domeny problemu.</li>
 </ul>
 <p>Przykład winsoryzacji (percentyle) dla <code>income_eur</code>:</p>
-<div id="698c8572" class="cell" data-execution_count="20">
+<div id="005cefb1" class="cell" data-execution_count="20">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>p01, p99 <span class="op">=</span> df[<span class="st">"income_eur"</span>].quantile([<span class="fl">0.01</span>, <span class="fl">0.99</span>])</span>
@@ -1838,7 +1838,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="braki-danych-i-imputacja"><span class="header-section-number">3.2.2</span> Braki danych i imputacja</h3>
 <p>Braki danych (<em>missing values</em>) mogą wynikać z problemów pomiaru, integracji źródeł, błędów ETL, ale także z „logiki procesu” (np. klient nie ma ocen satysfakcji, bo nie wypełnił ankiety). W EDA kluczowe jest rozpoznanie: (1) gdzie braki występują, (2) ile ich jest, (3) czy są zależne od innych zmiennych (braki „systematyczne”). W ML brak danych wymaga decyzji, ponieważ większość klasycznych modeli nie obsługuje <code>NaN</code> wprost.</p>
 <p>Na początek warto policzyć braki:</p>
-<div id="3fdc99aa" class="cell" data-execution_count="21">
+<div id="b2b8c607" class="cell" data-execution_count="21">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>na_counts <span class="op">=</span> df.isna().<span class="bu">sum</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -1960,7 +1960,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <li>Imputacja stałą lub modą (kategorie i zmienne dyskretne)</li>
 </ol>
 <p>Dla zmiennych kategorycznych często stosuje się modę lub specjalną kategorię ‘missing’. Dlaczego to bywa dobre? Ponieważ w wielu danych fakt, że czegoś brakuje, jest informacją samą w sobie. Na przykład: brak miasta może oznaczać, że klient nie podał danych adresowych, co może korelować z innymi cechami lub nawet z <code>churned</code>. Jeśli zamienimy brak na osobną kategorię “missing”, model może się tego „nauczyć”.</p>
-<div id="fee87d8e" class="cell" data-execution_count="22">
+<div id="586b6e07" class="cell" data-execution_count="22">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"city"</span>] <span class="op">=</span> df[<span class="st">"city"</span>].fillna(<span class="st">"missing"</span>)</span>
@@ -1971,7 +1971,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <li>Imputacja medianą/średnią (zmienne liczbowe)</li>
 </ol>
 <p>Jest to metoda szybka, ale ignoruje zależności między cechami:</p>
-<div id="965871de" class="cell" data-execution_count="23">
+<div id="eef5b5cc" class="cell" data-execution_count="23">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"income_eur"</span>] <span class="op">=</span> df[<span class="st">"income_eur"</span>].fillna(df[<span class="st">"income_eur"</span>].median())</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1981,7 +1981,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <li>Imputacja grupowa (warunkowa)</li>
 </ol>
 <p>Bardzo użyteczna, gdy rozkłady różnią się w segmentach, np. dochody w segmentach <code>VIP</code> vs <code>Student</code>:</p>
-<div id="de7bbbcb" class="cell" data-execution_count="24">
+<div id="e9481e23" class="cell" data-execution_count="24">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"income_eur"</span>] <span class="op">=</span> df[<span class="st">"income_eur"</span>].fillna(</span>
@@ -1993,7 +1993,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <li>k-NN Imputer (podobieństwo obserwacji)</li>
 </ol>
 <p>Wykorzystuje sąsiadów w przestrzeni cech do uzupełniania braków. Wymaga skalowania i pracy na liczbach.</p>
-<div id="2897fa63" class="cell" data-execution_count="25">
+<div id="20302596" class="cell" data-execution_count="25">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> KNNImputer</span>
@@ -2008,14 +2008,14 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <li><em>Iterative Imputer</em> (MICE – imputacja modelowa)</li>
 </ol>
 <p>Uzupełnia jedną zmienną na podstawie pozostałych (iteracyjnie), co lepiej zachowuje relacje w danych. Domyślną opcją <code>IterativeImputer</code> jest regresja liniowa z regularyzacją typu ridge w ujęciu bayesowskim (<code>sklearn.linear_model.BayesianRidge</code>). Można jednak wybrać inne techniki jako model uzupelniający</p>
-<div id="e3ac4b2f" class="cell" data-execution_count="26">
+<div id="26a66dc2" class="cell" data-execution_count="26">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>imp <span class="op">=</span> IterativeImputer(estimator<span class="op">=</span>RandomForestRegressor(n_estimators<span class="op">=</span><span class="dv">200</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="cf8a3a5f" class="cell" data-execution_count="27">
+<div id="e9bad1c0" class="cell" data-execution_count="27">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.experimental <span class="im">import</span> enable_iterative_imputer  <span class="co"># noqa: F401</span></span>
@@ -2029,7 +2029,7 @@ z_{\mathrm{rob}} = \frac{x-\mathrm{median}(x)}{1.4826\cdot MAD}.
 <li>Wskaźniki braków jako cechy</li>
 </ol>
 <p>Czasem sam fakt braku jest informacyjny (np. brak satysfakcji może korelować z churn). Można dodać flagi:</p>
-<div id="339c7a70" class="cell" data-execution_count="28">
+<div id="73285b36" class="cell" data-execution_count="28">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ponieważ wcześniej zmienna income_eur była zastępowana medianami to poniższy kod da same 0 dla income_missing. Podobnie dla zmiennej satisfaction_1_5</span></span>
@@ -2049,7 +2049,7 @@ Ostrzeżenie
 </div>
 <div class="callout-body-container callout-body">
 <p>W modelowaniu nie imputujemy „ręcznie na całym df”, tylko budujemy potok, który dopasowuje imputery na treningu, a potem stosuje na walidacji/teście:</p>
-<div id="83e43fab" class="cell" data-execution_count="29">
+<div id="9ee487eb" class="cell" data-execution_count="29">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
@@ -3627,7 +3627,7 @@ forceTheme('sk-container-id-1');</script>
 <section id="szybki-sanity-check-po-imporcie" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="szybki-sanity-check-po-imporcie"><span class="header-section-number">3.3.1</span> Szybki „sanity check” po imporcie</h3>
 <p>Po wczytaniu danych pierwszym krokiem jest szybka kontrola struktury: rozmiar zbioru, typy kolumn, podstawowe podsumowania i liczba braków. W tym momencie warto również ujednolicić nazwy kolumn (np. <em>snake_case</em>), aby dalszy kod był czytelny i odporny na błędy.</p>
-<div id="aeb15cc1" class="cell" data-execution_count="30">
+<div id="fb5d0129" class="cell" data-execution_count="30">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(</span>
@@ -3787,7 +3787,7 @@ memory usage: 38.8+ KB</code></pre>
 </div>
 </div>
 </div>
-<div id="ecadad62" class="cell" data-execution_count="31">
+<div id="4d09f79b" class="cell" data-execution_count="31">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># szybki przegląd braków</span></span>
@@ -3813,7 +3813,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Na tym etapie sprawdzamy też duplikaty oraz ewentualne naruszenia prostych reguł domenowych (np. ujemne wartości tam, gdzie nie powinny wystąpić). Jeśli widzimy ewidentne błędy, zazwyczaj oznaczamy je do późniejszej korekty, zamiast natychmiast usuwać dane „w ciemno”.</p>
-<div id="e28ba376" class="cell" data-execution_count="32">
+<div id="b6dfe534" class="cell" data-execution_count="32">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>df.duplicated().<span class="bu">sum</span>()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3826,7 +3826,7 @@ dtype: float64</code></pre>
 <section id="eda---rozkłady-i-struktura-zmiennych" class="level3" data-number="3.3.2">
 <h3 data-number="3.3.2" class="anchored" data-anchor-id="eda---rozkłady-i-struktura-zmiennych"><span class="header-section-number">3.3.2</span> EDA - rozkłady i struktura zmiennych</h3>
 <p>EDA zaczynamy od uporządkowania typów zmiennych: rozdzielenia zmiennych liczbowych i kategorycznych oraz rozpoznania, które kolumny są zmiennymi docelowymi, identyfikatorami lub metadanymi (np. daty). W naszym <code>data.csv</code> naturalnie wyróżniają się liczby (np. <code>income_eur</code>, <code>avg_basket_eur</code>), kategorie (np. <code>segment</code>, <code>city</code>) i daty.</p>
-<div id="ceb257cb" class="cell" data-execution_count="33">
+<div id="caca2f7c" class="cell" data-execution_count="33">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>num_cols <span class="op">=</span> df.select_dtypes(include<span class="op">=</span><span class="st">"number"</span>).columns.tolist()</span>
@@ -3847,7 +3847,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>W analizie rozkładów dla zmiennych liczbowych bardzo dobre są histogramy z nakładką gęstości oraz wykresy pudełkowe. Warto pamiętać, że część zmiennych może być skośna (np. dochody), więc czasem sensowne jest pokazanie wykresu w skali logarytmicznej.</p>
-<div id="a4479d53" class="cell" data-execution_count="34">
+<div id="0a994ad6" class="cell" data-execution_count="34">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -3889,7 +3889,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Dla zmiennych kategorycznych kluczowe jest porównanie częstości. Prosty wykres słupkowy umożliwia identyfikację rzadkich kategorii oraz niespójności kodowania (np. różne wielkości liter, dodatkowe spacje).</p>
-<div id="4b570603" class="cell" data-execution_count="35">
+<div id="1e2a1505" class="cell" data-execution_count="35">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> top_categories(series, title, top<span class="op">=</span><span class="dv">10</span>):</span>
@@ -3932,7 +3932,7 @@ dtype: float64</code></pre>
 <section id="eda---zależności-między-zmiennymi" class="level3" data-number="3.3.3">
 <h3 data-number="3.3.3" class="anchored" data-anchor-id="eda---zależności-między-zmiennymi"><span class="header-section-number">3.3.3</span> EDA - zależności między zmiennymi</h3>
 <p>W celu odkrycia zależności pomiędzy cechami wykreślamy macierz korelacji.</p>
-<div id="02e75602" class="cell" data-execution_count="36">
+<div id="43604c1d" class="cell" data-execution_count="36">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># macierz korelacji (numeryczne)</span></span>
@@ -3967,7 +3967,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>W kontekście klasyfikacji warto też zobaczyć, jak rozkłady cech różnią się między klasami (tu: <code>churned</code>). Bardzo czytelny jest wykres pudełkowy/wiolinowy „cecha vs klasa” albo porównanie histogramów. Poniżej przykład boxplotu cechy w podziale na <code>churned</code>.</p>
-<div id="8f36aa93" class="cell" data-execution_count="37">
+<div id="b015b401" class="cell" data-execution_count="37">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> box_by_target(df, feature, target<span class="op">=</span><span class="st">"churned"</span>):</span>
@@ -3998,7 +3998,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Dla zmiennych kategorycznych przydatne są wykresy udziałów klas w kategoriach (np. wskaźnik <em>churn</em> w segmentach). W prostym wariancie liczymy średnią <code>churned</code> w grupach (to jest odsetek „1” w danej kategorii) i wykreślamy słupki.</p>
-<div id="b924200f" class="cell" data-execution_count="38">
+<div id="26d9d756" class="cell" data-execution_count="38">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> df.groupby(<span class="st">"segment"</span>)[<span class="st">"churned"</span>].mean().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
@@ -4020,7 +4020,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>Jeżeli w danych występują daty, dobrze jest wykonać podstawowe przekroje czasowe: liczba rejestracji w czasie, średni koszyk w czasie, itp. Pozwala to zidentyfikować sezonowość, zmiany procesu zbierania danych, kampanie marketingowe.</p>
-<div id="018cd793" class="cell" data-execution_count="39">
+<div id="31268958" class="cell" data-execution_count="39">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>tmp <span class="op">=</span> df.copy()</span>
@@ -4058,7 +4058,7 @@ dtype: float64</code></pre>
 <section id="podział-na-zbiory-treningowy-i-testowy" class="level4" data-number="3.3.4.1">
 <h4 data-number="3.3.4.1" class="anchored" data-anchor-id="podział-na-zbiory-treningowy-i-testowy"><span class="header-section-number">3.3.4.1</span> Podział na zbiory treningowy i testowy</h4>
 <p>Podział na train/test wykonujemy przed dopasowaniem transformacji. Dla klasyfikacji zwykle stosujemy stratyfikację.</p>
-<div id="ea4b2863" class="cell" data-execution_count="40">
+<div id="6eed7fee" class="cell" data-execution_count="40">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">"churned"</span>])</span>
@@ -4082,7 +4082,7 @@ dtype: float64</code></pre>
 <section id="pipeline-preprocessingu" class="level4" data-number="3.3.4.4">
 <h4 data-number="3.3.4.4" class="anchored" data-anchor-id="pipeline-preprocessingu"><span class="header-section-number">3.3.4.4</span> Pipeline preprocessingu</h4>
 <p>Poniżej wzorcowa konstrukcja preprocessingu: dla liczb imputacja (tu jako placeholder) + skalowanie; dla kategorii imputacja (placeholder) + one-hot encoding. Strategię imputacji i obsługę outlierów możesz później łatwo podmienić.</p>
-<div id="a3bc1ace" class="cell" data-execution_count="41">
+<div id="080036d0" class="cell" data-execution_count="41">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -4110,7 +4110,7 @@ dtype: float64</code></pre>
 </details>
 </div>
 <p>Następnie łączymy preprocessing z modelem w jeden pipeline. Dzięki temu cały proces jest powtarzalny i bezpieczny względem testu:</p>
-<div id="4f61bb5d" class="cell" data-execution_count="42">
+<div id="3a5e86ee" class="cell" data-execution_count="42">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>clf <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
@@ -5697,7 +5697,7 @@ forceTheme('sk-container-id-2');</script>
 <section id="ujednolicanie-i-czyszczenie-kategorii-jako-element-inżynierii-cech" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="ujednolicanie-i-czyszczenie-kategorii-jako-element-inżynierii-cech"><span class="header-section-number">3.4.1</span> Ujednolicanie i czyszczenie kategorii jako element inżynierii cech</h3>
 <p>Zanim zakodujemy kategorie, warto je znormalizować, ponieważ w danych rzeczywistych często występują spacje, różne wielkości liter oraz warianty zapisu tej samej kategorii. To nie jest „czyszczenie kosmetyczne” – bez tego model będzie traktował np. <code>Mobile</code> i <code>mobile</code> jako różne wartości, co rozbije informację na wiele sztucznych kategorii.</p>
-<div id="b6fa501e" class="cell" data-execution_count="43">
+<div id="7e03d4c1" class="cell" data-execution_count="43">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ujednolicenie prostych kolumn kategorycznych</span></span>
@@ -5712,7 +5712,7 @@ forceTheme('sk-container-id-2');</script>
 </details>
 </div>
 <p>W wielu projektach opłaca się również „skleić” rzadkie kategorie do wspólnej kategorii <code>other</code>, aby ograniczyć wymiar po kodowaniu one-hot.</p>
-<div id="8e2e5f10" class="cell" data-execution_count="44">
+<div id="cc4b83b9" class="cell" data-execution_count="44">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>top_cities <span class="op">=</span> df[<span class="st">"city"</span>].value_counts().head(<span class="dv">6</span>).index</span>
@@ -5724,7 +5724,7 @@ forceTheme('sk-container-id-2');</script>
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="cechy-czasowe-z-dat"><span class="header-section-number">3.4.2</span> Cechy czasowe z dat</h3>
 <p>Daty rzadko trafiają do modelu w postaci surowej. Zwykle tworzy się z nich cechy o sensie behawioralnym: czas od zdarzenia, miesiąc, dzień tygodnia, czy wskaźniki sezonowe. Dla danych klient–zakupy naturalne są cechy typu <em>tenure</em> oraz <em>recency</em>.</p>
 <p>Niech „datą odniesienia” będzie np. maksymalna obserwowana data zakupu (w realnym projekcie byłby to moment <em>as-of</em>).</p>
-<div id="daa95545" class="cell" data-execution_count="45">
+<div id="000bf9f0" class="cell" data-execution_count="45">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -5748,7 +5748,7 @@ forceTheme('sk-container-id-2');</script>
 <p><span class="math display">\[
 x' = \log(1 + x).
 \]</span></p>
-<div id="1106788e" class="cell" data-execution_count="46">
+<div id="5dd7a075" class="cell" data-execution_count="46">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -5763,7 +5763,7 @@ x' = \log(1 + x).
 <section id="cechy-intensywności-i-normalizacja-przez-czas-rate-features" class="level3" data-number="3.4.4">
 <h3 data-number="3.4.4" class="anchored" data-anchor-id="cechy-intensywności-i-normalizacja-przez-czas-rate-features"><span class="header-section-number">3.4.4</span> Cechy intensywności i „normalizacja przez czas” (<em>rate features</em>)</h3>
 <p>Typowym zabiegiem jest tworzenie cech typu „na jednostkę czasu”. Jeśli klient jest w systemie krótko, jego liczby bezwzględne mogą być nieporównywalne do klienta z długim stażem. Stąd tworzy się wskaźniki intensywności:</p>
-<div id="f13035fa" class="cell" data-execution_count="47">
+<div id="6fced9a8" class="cell" data-execution_count="47">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># zabezpieczenie przed dzieleniem przez 0</span></span>
@@ -5779,7 +5779,7 @@ x' = \log(1 + x).
 <section id="interakcje-i-cechy-biznesowe-z-sensowną-interpretacją" class="level3" data-number="3.4.5">
 <h3 data-number="3.4.5" class="anchored" data-anchor-id="interakcje-i-cechy-biznesowe-z-sensowną-interpretacją"><span class="header-section-number">3.4.5</span> Interakcje i cechy „biznesowe” z sensowną interpretacją</h3>
 <p>Interakcje to bardzo ważna klasa cech w klasycznych modelach. Jeżeli nie używasz modeli, które „same” łatwo uczą się złożonych interakcji (np. boosting), to możesz jawnie dodać kilka logicznych interakcji. Przykładowo: wartość koszyka może działać inaczej dla segmentu VIP, a liczba wizyt może inaczej wpływać na churn, gdy satysfakcja jest niska.</p>
-<div id="fb6ad7fb" class="cell" data-execution_count="48">
+<div id="ffd154cc" class="cell" data-execution_count="48">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># przykładowe interakcje liczbowe</span></span>
@@ -5788,7 +5788,7 @@ x' = \log(1 + x).
 </details>
 </div>
 <p>Możemy również budować interakcje „warunkowe”, np. flaga „niska satysfakcja” i interakcja z wizytami:</p>
-<div id="697f39aa" class="cell" data-execution_count="49">
+<div id="a6d58082" class="cell" data-execution_count="49">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"low_satisfaction"</span>] <span class="op">=</span> (df[<span class="st">"satisfaction_1_5"</span>] <span class="op">&lt;=</span> <span class="dv">2</span>).astype(<span class="bu">int</span>)</span>
@@ -5800,7 +5800,7 @@ x' = \log(1 + x).
 <section id="grupowanie-zmiennych-ciągłych-do-przedziałów-binning" class="level3" data-number="3.4.6">
 <h3 data-number="3.4.6" class="anchored" data-anchor-id="grupowanie-zmiennych-ciągłych-do-przedziałów-binning"><span class="header-section-number">3.4.6</span> Grupowanie zmiennych ciągłych do przedziałów (<em>binning</em>)</h3>
 <p>Czasem warto przekształcić zmienną ciągłą do kategorii, zwłaszcza gdy zależność jest progowa. Przykładowo: <code>recency_days</code> może mieć silny efekt dopiero po przekroczeniu pewnego progu. Binning bywa użyteczny też w analizie dyskryminacyjnej i prostych modelach interpretowalnych.</p>
-<div id="92102d88" class="cell" data-execution_count="50">
+<div id="41e943da" class="cell" data-execution_count="50">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"recency_bin"</span>] <span class="op">=</span> pd.cut(</span>
@@ -5814,7 +5814,7 @@ x' = \log(1 + x).
 <section id="kodowanie-kategorii-pod-modele" class="level3" data-number="3.4.7">
 <h3 data-number="3.4.7" class="anchored" data-anchor-id="kodowanie-kategorii-pod-modele"><span class="header-section-number">3.4.7</span> Kodowanie kategorii pod modele</h3>
 <p>Najbardziej standardowym kodowaniem jest <em>one-hot encoding</em>. Możemy je zrobić w <code>pandas</code>, ale w modelowaniu lepszy jest pipeline w <code>sklearn</code>. Dla celów EDA i demonstracji:</p>
-<div id="a2ba0e31" class="cell" data-execution_count="51">
+<div id="1dcd1ca9" class="cell" data-execution_count="51">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>X_cat <span class="op">=</span> pd.get_dummies(df[[<span class="st">"segment"</span>, <span class="st">"device_type"</span>, <span class="st">"city_reduced"</span>]], dummy_na<span class="op">=</span><span class="va">True</span>)</span>
@@ -5958,7 +5958,7 @@ x' = \log(1 + x).
 <section id="składanie-cech-do-macierzy-modelowej" class="level3" data-number="3.4.8">
 <h3 data-number="3.4.8" class="anchored" data-anchor-id="składanie-cech-do-macierzy-modelowej"><span class="header-section-number">3.4.8</span> Składanie cech do macierzy modelowej</h3>
 <p>Po inżynierii cech zwykle wybieramy zestaw kolumn do modelu. Na potrzeby naszych klasycznych algorytmów rozsądne jest przygotowanie „bazowego” zestawu cech liczbowych oraz zakodowanych kategorii.</p>
-<div id="af1e65a4" class="cell" data-execution_count="52">
+<div id="17acf96f" class="cell" data-execution_count="52">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>feature_cols_num <span class="op">=</span> [</span>

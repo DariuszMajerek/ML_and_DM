@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -76,6 +111,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -371,9 +435,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Spis treści</h2>
    
   <ul>
-  <li><a href="#teoria-bayesa-i-dwa-podejscia-estymacji" id="toc-teoria-bayesa-i-dwa-podejscia-estymacji" class="nav-link active" data-scroll-target="#teoria-bayesa-i-dwa-podejscia-estymacji"><span class="header-section-number">6.1</span> Teoria Bayesa i dwa podejscia estymacji</a></li>
+  <li><a href="#teoria-bayesa-i-dwa-podejścia-estymacji" id="toc-teoria-bayesa-i-dwa-podejścia-estymacji" class="nav-link active" data-scroll-target="#teoria-bayesa-i-dwa-podejścia-estymacji"><span class="header-section-number">6.1</span> Teoria Bayesa i dwa podejścia estymacji</a></li>
   <li><a href="#klasyfikator-mapml" id="toc-klasyfikator-mapml" class="nav-link" data-scroll-target="#klasyfikator-mapml"><span class="header-section-number">6.2</span> Klasyfikator MAP/ML</a></li>
-  <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link" data-scroll-target="#naive-bayes"><span class="header-section-number">6.3</span> Naive Bayes</a></li>
+  <li><a href="#naiwny-bayes-w-wariancie-ml" id="toc-naiwny-bayes-w-wariancie-ml" class="nav-link" data-scroll-target="#naiwny-bayes-w-wariancie-ml"><span class="header-section-number">6.3</span> Naiwny Bayes w wariancie ML</a></li>
+  <li><a href="#naiwny-bayes-w-wariancie-map" id="toc-naiwny-bayes-w-wariancie-map" class="nav-link" data-scroll-target="#naiwny-bayes-w-wariancie-map"><span class="header-section-number">6.4</span> Naiwny Bayes w wariancie MAP</a></li>
+  <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link" data-scroll-target="#naive-bayes"><span class="header-section-number">6.5</span> Naive Bayes</a></li>
+  <li><a href="#przykłady" id="toc-przykłady" class="nav-link" data-scroll-target="#przykłady"><span class="header-section-number">6.6</span> Przykłady</a>
+  <ul class="collapse">
+  <li><a href="#przygotowanie-danych" id="toc-przygotowanie-danych" class="nav-link" data-scroll-target="#przygotowanie-danych"><span class="header-section-number">6.6.1</span> Przygotowanie danych</a></li>
+  <li><a href="#multinomialnb" id="toc-multinomialnb" class="nav-link" data-scroll-target="#multinomialnb"><span class="header-section-number">6.6.2</span> MultinomialNB</a></li>
+  <li><a href="#bernoullinb" id="toc-bernoullinb" class="nav-link" data-scroll-target="#bernoullinb"><span class="header-section-number">6.6.3</span> BernoulliNB</a></li>
+  <li><a href="#gaussiannb" id="toc-gaussiannb" class="nav-link" data-scroll-target="#gaussiannb"><span class="header-section-number">6.6.4</span> GaussianNB</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
     </div>
@@ -400,29 +473,317 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="teoria-bayesa-i-dwa-podejscia-estymacji" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="teoria-bayesa-i-dwa-podejscia-estymacji"><span class="header-section-number">6.1</span> Teoria Bayesa i dwa podejscia estymacji</h2>
+<section id="teoria-bayesa-i-dwa-podejścia-estymacji" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="teoria-bayesa-i-dwa-podejścia-estymacji"><span class="header-section-number">6.1</span> Teoria Bayesa i dwa podejścia estymacji</h2>
+<p>Punktem wyjścia dla metod bayesowskich jest rozumienie, że niepewność co do klasy <span class="math inline">\(y\)</span> (lub parametrów modelu) można opisywać probabilistycznie. W klasyfikacji interesuje nas zwykle rozkład a posteriori klas <span class="math inline">\(\mathbb{P}(y\mid x)\)</span>, czyli prawdopodobieństwo klasy po zaobserwowaniu cech <span class="math inline">\(x\)</span>. Kluczową rolę odgrywa twierdzenie Bayesa, które dla klasyfikacji przyjmuje postać:</p>
+<p><span class="math display">\[
+\mathbb{P}(y=k\mid x)=\frac{\mathbb{P}(x\mid y=k)\,\mathbb{P}(y=k)}{\mathbb{P}(x)}.
+\]</span></p>
+<p>gdzie</p>
 <ul>
-<li>Twierdzenie Bayesa oraz pojecia: rozklad aprioryczny i a posteriori.</li>
-<li>MLE maksymalizuje prawdopodobienstwo danych przy danym parametrze.</li>
-<li>MAP maksymalizuje iloczyn prawdopodobienstwa i rozkladu apriorycznego, co wprowadza regularizacje.</li>
+<li><span class="math inline">\(\mathbb{P}(y=k)\)</span> to rozkład a priori (<em>prior</em>) – „przekonanie” o częstości klas przed zobaczeniem <span class="math inline">\(x\)</span>,</li>
+<li><span class="math inline">\(\mathbb{P}(x\mid y=k)\)</span> to wiarygodność (<em>likelihood</em>) – model generowania cech w klasie <span class="math inline">\(k\)</span>,</li>
+<li><span class="math inline">\(\mathbb{P}(x)\)</span> to stała normalizacyjna (taka sama dla wszystkich klas podczas porównywania), często pomijana w regule decyzyjnej,</li>
+<li><span class="math inline">\(\mathbb{P}(y=k\mid x)\)</span> to rozkład a posteriori (<em>posterior</em>).</li>
 </ul>
+<p>W uczeniu nadzorowanym musimy oszacować parametry modelu <span class="math inline">\(\mathbb{P}(x\mid y)\)</span> i <span class="math inline">\(\mathbb{P}(y)\)</span> na podstawie danych treningowych <span class="math inline">\(\{(x_i,y_i)\}_{i=1}^n\)</span>. W klasycznej estymacji spotyka się dwa fundamentalne podejścia: MLE i MAP.</p>
+<p>W podejściu MLE (<em>maximum likelihood estimation</em>) parametry <span class="math inline">\(\theta\)</span> wybiera się tak, aby maksymalizowały prawdopodobieństwo zaobserwowanych danych (wiarygodność):</p>
+<p><span class="math display">\[
+\hat\theta_{\text{MLE}}
+=\arg\max_{\theta}\ \mathbb{P}(\mathcal{D}\mid \theta)
+=\arg\max_{\theta}\ \prod_{i=1}^n \mathbb{P}(x_i,y_i\mid \theta).
+\]</span></p>
+<p>W kontekście klasyfikatorów bayesowskich często rozdziela się to na estymację priory klas i parametrów rozkładów cech w klasach. MLE nie wprowadza dodatkowych założeń poza strukturą modelu i jest „czysto danych-zależne”.</p>
+<p>W podejściu MAP (<em>maximum a posteriori</em>) dopuszczamy wcześniejsze przekonanie o parametrach w postaci prioru <span class="math inline">\(\mathbb{P}(\theta)\)</span> i maksymalizujemy rozkład a posteriori parametrów:</p>
+<p><span class="math display">\[
+\hat\theta_{\text{MAP}}
+=\arg\max_{\theta}\ \mathbb{P}(\theta\mid \mathcal{D})
+=\arg\max_{\theta}\ \mathbb{P}(\mathcal{D}\mid \theta)\,\mathbb{P}(\theta).
+\]</span></p>
+<p>To podejście można rozumieć jako wprowadzenie regularizacji: prior <span class="math inline">\(\mathbb{P}(\theta)\)</span> „ściąga” estymator w stronę wartości bardziej prawdopodobnych a priori. W szczególności, gdy <em>prior</em> jest jednostajny (płaski), MAP redukuje się do MLE. Gdy <em>prior</em> preferuje pewne wartości (np. gładkość, brak zerowych prawdopodobieństw), MAP stabilizuje estymację, zwłaszcza dla małych prób lub rzadkich zdarzeń.</p>
 </section>
 <section id="klasyfikator-mapml" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="klasyfikator-mapml"><span class="header-section-number">6.2</span> Klasyfikator MAP/ML</h2>
-<ul>
-<li>Naiwny Bayes w wariancie ML (parametry z estymacji wiarygodnosci).</li>
-<li>Naiwny Bayes w wariancie MAP (parametry z uwzglednieniem priory).</li>
-</ul>
+<p>Niezależnie od tego, czy parametry <span class="math inline">\(\theta\)</span> szacujemy przez MLE czy MAP, reguła klasyfikacji wynika z Bayesa. Dla nowej obserwacji <span class="math inline">\(x\)</span> wybieramy klasę maksymalizującą posterior:</p>
+<p><span class="math display">\[
+\hat y(x) = \arg\max_{k}\ \mathbb{P}(y=k\mid x)
+= \arg\max_{k}\ \mathbb{P}(x\mid y=k)\,\mathbb{P}(y=k).
+\]</span></p>
+<p>W praktyce obliczenia wykonuje się na logarytmach:</p>
+<p><span class="math display">\[
+\hat y(x)=\arg\max_k \left[\log \mathbb{P}(y=k)+\log \mathbb{P}(x\mid y=k)\right].
+\]</span></p>
+<p>Różnica „ML vs MAP” w klasyfikatorze polega na tym, jak wyznaczamy parametry <em>prior</em> i <em>likelihood</em>.</p>
 </section>
-<section id="naive-bayes" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="naive-bayes"><span class="header-section-number">6.3</span> Naive Bayes</h2>
+<section id="naiwny-bayes-w-wariancie-ml" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="naiwny-bayes-w-wariancie-ml"><span class="header-section-number">6.3</span> Naiwny Bayes w wariancie ML</h2>
+<p>W wariancie ML estymujemy parametry likelihood na podstawie częstości/średnich z danych treningowych bez dodatkowych „pseudo-obserwacji”. Typowy problem - jeśli pewna cecha/kategoria nie wystąpiła w klasie w treningu, to MLE daje prawdopodobieństwo równe 0, a wtedy cały iloczyn <span class="math inline">\(\mathbb{P}(x\mid y=k)\)</span> może stać się 0. To jest jedna z głównych motywacji do wersji MAP z wygładzaniem.</p>
+</section>
+<section id="naiwny-bayes-w-wariancie-map" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="naiwny-bayes-w-wariancie-map"><span class="header-section-number">6.4</span> Naiwny Bayes w wariancie MAP</h2>
+<p>W wariancie MAP wprowadzamy prior na parametry rozkładu. W praktyce dla modeli dyskretnych (tekst, cechy binarne) standardem jest prior Dirichleta/Beta, co daje proste „wygładzanie” (<em>smoothing</em>). Przykładowo, dla wielomianowego NB (MultinomialNB) przyjmując prior Dirichleta z parametrem <span class="math inline">\(\alpha&gt;0\)</span>, otrzymujemy estymator:</p>
+<p><span class="math display">\[
+\hat\theta_{k,j}=
+\frac{N_{k,j}+\alpha}{N_k+\alpha\,V},
+\]</span></p>
+<p>gdzie <span class="math inline">\(N_{k,j}\)</span> to liczność (np. suma zliczeń słowa <span class="math inline">\(j\)</span> w klasie <span class="math inline">\(k\)</span>), <span class="math inline">\(N_k\)</span> to suma zliczeń w klasie, a <span class="math inline">\(V\)</span> to liczba cech/słów. Widać tu regularizację, bo nawet gdy <span class="math inline">\(N_{k,j}=0\)</span>, prawdopodobieństwo nie jest zerowe.</p>
+</section>
+<section id="naive-bayes" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="naive-bayes"><span class="header-section-number">6.5</span> Naive Bayes</h2>
+<p>Naiwny Bayes jest rodziną probabilistycznych klasyfikatorów opartych na twierdzeniu Bayesa i kluczowym założeniu warunkowej niezależności cech w obrębie klasy:</p>
+<p><span class="math display">\[
+\mathbb{P}(x\mid y=k)=\prod_{j=1}^{p}\mathbb{P}(x_j\mid y=k).
+\]</span></p>
+<p>To założenie rzadko jest dosłownie prawdziwe w danych rzeczywistych, ale w wielu zastosowaniach działa zaskakująco dobrze, ponieważ model dobrze aproksymuje relacje klasy–cechy, a błąd wynikający z zależności bywa „przykrywany” przez prostotę i stabilność estymacji.</p>
+<p>W praktyce spotyka się kilka najważniejszych wariantów Naive Bayes, zależnie od rodzaju cech:</p>
 <ul>
-<li>Probabilistyczny algorytm oparty na twierdzeniu Bayesa z zalozeniem niezaleznosci cech.</li>
-<li>Skuteczny w klasyfikacji tekstu, filtracji spamu i analizie uczuc.</li>
+<li>GaussianNB - cechy ciągłe, w klasie zakładamy rozkład normalny dla każdej cechy,</li>
+<li>MultinomialNB - cechy dyskretne nieujemne (np. zliczenia słów w tekście),</li>
+<li>BernoulliNB - cechy binarne (0/1), np. obecność słowa.</li>
 </ul>
+<p>Naiwny Bayes jest szczególnie skuteczny w klasyfikacji tekstu, filtracji spamu i analizie sentymentu, ponieważ (i) dane są wysokowymiarowe, (ii) wiele cech jest rzadkich, a (iii) prostota modelu ogranicza przeuczenie. W tekście typowe jest użycie MultinomialNB z wygładzaniem (MAP), bo problem zerowych częstości występuje bardzo często.</p>
+</section>
+<section id="przykłady" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="przykłady"><span class="header-section-number">6.6</span> Przykłady</h2>
+<p>Poniżej znajdują się praktyczne przykłady dla trzech głównych wariantów. Kluczowa uwaga: w <code>scikit-learn</code> parametr <code>alpha</code> w MultinomialNB i BernoulliNB odpowiada wygładzaniu. Ustawienie <code>alpha=0</code> odpowiada MLE, ale zwykle prowadzi do problemów z zerowymi prawdopodobieństwami, więc jest rzadko używane w praktyce.</p>
+<section id="przygotowanie-danych" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="przygotowanie-danych"><span class="header-section-number">6.6.1</span> Przygotowanie danych</h3>
+<p><strong>Cel zadania</strong>: Klasyfikacja emocji w krótkich tekstach (tweetach) na podstawie ich treści. Będziemy przewidywać jedną z 6 emocji: <em>sadness</em> (smutek), <em>joy</em> (radość), <em>love</em> (miłość), <em>anger</em> (gniew), <em>fear</em> (strach), <em>surprise</em> (zaskoczenie).</p>
+<p><strong>Dlaczego ten problem jest idealny dla Naive Bayes?</strong></p>
+<ul>
+<li>Wysokowymiarowość: tysiące unikalnych słów jako cechy</li>
+<li>Rzadkość: większość słów nie występuje w danym dokumencie (macierz rzadka)</li>
+<li>Założenie niezależności jest rozsądną aproksymacją dla występowania słów</li>
+<li>Szybkość uczenia i predykcji nawet dla dużych korpusów tekstowych</li>
+</ul>
+<p>Przygotujemy dane w trzech różnych reprezentacjach, aby zillustrować działanie trzech wariantów Naive Bayes:</p>
+<div id="4bb79a5e" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> load_dataset</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer, TfidfVectorizer</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ładowanie datasetu emotion (6 klas emocji: sadness, joy, love, anger, fear, surprise)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> load_dataset(<span class="st">"emotion"</span>, split<span class="op">=</span><span class="st">"train"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>dataset_test <span class="op">=</span> load_dataset(<span class="st">"emotion"</span>, split<span class="op">=</span><span class="st">"test"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Konwersja do list</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>texts_train <span class="op">=</span> dataset[<span class="st">"text"</span>]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> np.array(dataset[<span class="st">"label"</span>])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>texts_test <span class="op">=</span> dataset_test[<span class="st">"text"</span>]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> np.array(dataset_test[<span class="st">"label"</span>])</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Bag-of-Words (zliczenia słów) dla MultinomialNB</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#    CountVectorizer tworzy macierz, gdzie każda kolumna to słowo, a wartość to liczba wystąpień</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#    max_features=5000: ograniczamy do 5000 najczęstszych słów (redukcja wymiarowości)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#    min_df=5: ignorujemy słowa występujące w mniej niż 5 dokumentach (szum)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#    max_df=0.7: ignorujemy słowa w &gt;70% dokumentów (stop words, mało dyskryminujące)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>vectorizer <span class="op">=</span> CountVectorizer(max_features<span class="op">=</span><span class="dv">5000</span>, min_df<span class="op">=</span><span class="dv">5</span>, max_df<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> vectorizer.fit_transform(texts_train)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>X_test_counts <span class="op">=</span> vectorizer.transform(texts_test)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Reprezentacja binarna (obecność/brak) dla BernoulliNB</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#    BernoulliNB modeluje P(słowo obecne|klasa), nie liczby wystąpień</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#    Konwertujemy zliczenia na 0/1: czy słowo wystąpiło w dokumencie czy nie</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>X_bin <span class="op">=</span> (X <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>X_test_bin <span class="op">=</span> (X_test_counts <span class="op">&gt;</span> <span class="dv">0</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. TF-IDF (cechy ciągłe) dla GaussianNB</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">#    TF-IDF = Term Frequency × Inverse Document Frequency</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#    Daje wyższe wagi rzadkim, ale informacyjnym słowom</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#    Traktujemy te wagi jako cechy ciągłe z rozkładem normalnym</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#    max_features=100: dla GaussianNB ograniczamy liczbę cech (stabilność kovariancji)</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>tfidf <span class="op">=</span> TfidfVectorizer(max_features<span class="op">=</span><span class="dv">100</span>, min_df<span class="op">=</span><span class="dv">5</span>, max_df<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>X_cont <span class="op">=</span> tfidf.fit_transform(texts_train).toarray()</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>X_test_cont <span class="op">=</span> tfidf.transform(texts_test).toarray()</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Liczba próbek treningowych: </span><span class="sc">{</span>X<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Liczba cech (słów): </span><span class="sc">{</span>X<span class="sc">.</span>shape[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Rozkład klas: </span><span class="sc">{</span>np<span class="sc">.</span>bincount(y_train)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Liczba próbek treningowych: 16000
+Liczba cech (słów): 3421
+Rozkład klas: [4666 5362 1304 2159 1937  572]</code></pre>
+</div>
+</div>
+</section>
+<section id="multinomialnb" class="level3" data-number="6.6.2">
+<h3 data-number="6.6.2" class="anchored" data-anchor-id="multinomialnb"><span class="header-section-number">6.6.2</span> MultinomialNB</h3>
+<p>MultinomialNB modeluje rozkład wielomianowy - zakłada, że dokumenty są generowane przez losowe wybieranie słów z rozkładu charakterystycznego dla danej klasy. Dla każdej klasy <span class="math inline">\(k\)</span> i słowa <span class="math inline">\(j\)</span> estymuje prawdopodobieństwo <span class="math inline">\(\mathbb{P}(słowo_j\mid klasa=k)\)</span> na podstawie proporcji wystąpień tego słowa w klasie. Wykorzystuje <em>zliczenia</em> słów - im częściej dane słowo występuje w dokumencie, tym silniej wpływa na klasyfikację.</p>
+<p><strong>Parametr alpha</strong> kontroluje wygładzanie Laplace’a (MAP z priorem Dirichleta): większe alpha = silniejsza regularyzacja, mniejsze prawdopodobieństwo zerowe dla niewidzianych słów.</p>
+<div id="24e43ccc" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> MultinomialNB</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report, confusion_matrix, accuracy_score</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># MAP (Dirichlet prior): alpha &gt; 0 (np. Laplace alpha=1.0 lub łagodniejsze 0.1)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>nb_map <span class="op">=</span> MultinomialNB(alpha<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>nb_map.fit(X, y_train)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>y_pred_map <span class="op">=</span> nb_map.predict(X_test_counts)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"MultinomialNB z wygładzaniem Laplace'a (alpha=1.0, MAP):"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy: </span><span class="sc">{</span>accuracy_score(y_test, y_pred_map)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Confusion Matrix:"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(y_test, y_pred_map))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Classification Report:"</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred_map))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Porównanie z mniejszym wygładzaniem</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>nb_map_01 <span class="op">=</span> MultinomialNB(alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>nb_map_01.fit(X, y_train)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>y_pred_01 <span class="op">=</span> nb_map_01.predict(X_test_counts)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Accuracy z alpha=0.1: </span><span class="sc">{</span>accuracy_score(y_test, y_pred_01)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>MultinomialNB z wygładzaniem Laplace'a (alpha=1.0, MAP):
+Accuracy: 0.8460
+
+Confusion Matrix:
+[[531  21   6  14   9   0]
+ [ 16 637  26   9   4   3]
+ [  8  42  99   7   1   2]
+ [ 24  14   1 226  10   0]
+ [ 26  10   1  11 174   2]
+ [  5  18   0   2  16  25]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.87      0.91      0.89       581
+           1       0.86      0.92      0.89       695
+           2       0.74      0.62      0.68       159
+           3       0.84      0.82      0.83       275
+           4       0.81      0.78      0.79       224
+           5       0.78      0.38      0.51        66
+
+    accuracy                           0.85      2000
+   macro avg       0.82      0.74      0.77      2000
+weighted avg       0.84      0.85      0.84      2000
 
 
+Accuracy z alpha=0.1: 0.8260</code></pre>
+</div>
+</div>
+</section>
+<section id="bernoullinb" class="level3" data-number="6.6.3">
+<h3 data-number="6.6.3" class="anchored" data-anchor-id="bernoullinb"><span class="header-section-number">6.6.3</span> BernoulliNB</h3>
+<p>BernoulliNB modeluje rozkład Bernoulliego dla każdej cechy - traktuje każde słowo jako próbę Bernoulliego (wystąpiło/nie wystąpiło). W przeciwieństwie do MultinomialNB, <em>nie liczy</em> ile razy słowo wystąpiło, tylko czy w ogóle się pojawiło. Estymuje dwa prawdopodobieństwa dla każdej klasy <span class="math inline">\(k\)</span> i słowa <span class="math inline">\(j\)</span>:</p>
+<ul>
+<li><span class="math inline">\(\mathbb{P}(słowo_j=1\mid klasa=k)\)</span> - prawdopodobieństwo obecności słowa</li>
+<li><span class="math inline">\(\mathbb{P}(słowo_j=0\mid klasa=k)\)</span> - prawdopodobieństwo braku słowa (również używane!)</li>
+</ul>
+<p>Jest to przydatne, gdy struktura dokumentu (które słowa występują) jest ważniejsza niż ich częstość.</p>
+<div id="cbe109b3" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> BernoulliNB</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># alpha &gt; 0 to MAP (Beta prior / smoothing)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># X_bin: macierz 0/1 reprezentująca obecność/brak słowa</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>bnb <span class="op">=</span> BernoulliNB(alpha<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>bnb.fit(X_bin, y_train)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>y_pred_bnb <span class="op">=</span> bnb.predict(X_test_bin)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"BernoulliNB (reprezentacja binarna):"</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy: </span><span class="sc">{</span>accuracy_score(y_test, y_pred_bnb)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Confusion Matrix:"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(y_test, y_pred_bnb))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Classification Report:"</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred_bnb))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>BernoulliNB (reprezentacja binarna):
+Accuracy: 0.8200
+
+Confusion Matrix:
+[[510  16  18  19  10   8]
+ [ 17 632  31   8   4   3]
+ [ 12  50  88   4   3   2]
+ [ 25   8   1 228  11   2]
+ [ 28   9   3  11 168   5]
+ [ 11  24   0   1  16  14]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.85      0.88      0.86       581
+           1       0.86      0.91      0.88       695
+           2       0.62      0.55      0.59       159
+           3       0.84      0.83      0.84       275
+           4       0.79      0.75      0.77       224
+           5       0.41      0.21      0.28        66
+
+    accuracy                           0.82      2000
+   macro avg       0.73      0.69      0.70      2000
+weighted avg       0.81      0.82      0.81      2000
+</code></pre>
+</div>
+</div>
+</section>
+<section id="gaussiannb" class="level3" data-number="6.6.4">
+<h3 data-number="6.6.4" class="anchored" data-anchor-id="gaussiannb"><span class="header-section-number">6.6.4</span> GaussianNB</h3>
+<p>GaussianNB zakłada, że cechy ciągłe mają w obrębie każdej klasy rozkład normalny (gaussowski). Dla każdej klasy <span class="math inline">\(k\)</span> i cechy <span class="math inline">\(j\)</span> estymuje średnią <span class="math inline">\(\mu_{k,j}\)</span> i wariancję <span class="math inline">\(\sigma^2_{k,j}\)</span>, a następnie wykorzystuje gęstość rozkładu normalnego do obliczenia <span class="math inline">\(\mathbb{P}(x_j\mid klasa=k)\)</span>.</p>
+<p>W kontekście NLP: TF-IDF daje wagi ciągłe (nie zliczenia), co pozwala traktować je jako zmienne losowe o rozkładzie normalnym. GaussianNB <em>nie</em> zakłada niezależności wartości cech między próbkami, ale nadal zakłada warunkową niezależność cech <em>w obrębie klasy</em>.</p>
+<p><strong>Uwaga</strong>: GaussianNB zazwyczaj działa gorzej na tekście niż MultinomialNB/BernoulliNB, ponieważ założenie normalności jest słabe dla rzadkich, dyskretnych danych tekstowych. Używamy go tu dla ilustracji.</p>
+<p>Dla GaussianNB zakładamy: <span class="math display">\[
+x_j \mid (y=k) \sim \mathcal{N}(\mu_{k,j}, \sigma_{k,j}^2).
+\]</span></p>
+<p>MLE daje <span class="math display">\[
+\hat\mu_{k,j}=\frac{1}{n_k}\sum_{i:y_i=k} x_{i,j},\qquad
+\hat\sigma^2_{k,j}=\frac{1}{n_k}\sum_{i:y_i=k}(x_{i,j}-\hat\mu_{k,j})^2
+\]</span></p>
+<div id="09d361d8" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> GaussianNB</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Używamy cech ciągłych (TF-IDF)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>gnb <span class="op">=</span> GaussianNB()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>gnb.fit(X_cont, y_train)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>y_pred_gnb <span class="op">=</span> gnb.predict(X_test_cont)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"GaussianNB (cechy ciągłe TF-IDF):"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy: </span><span class="sc">{</span>accuracy_score(y_test, y_pred_gnb)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Confusion Matrix:"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(y_test, y_pred_gnb))</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Classification Report:"</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred_gnb))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>GaussianNB (cechy ciągłe TF-IDF):
+Accuracy: 0.2340
+
+Confusion Matrix:
+[[121 100 104  91  68  97]
+ [118 193 140  89  71  84]
+ [ 27  33  46  20  15  18]
+ [ 45  43  46  47  35  59]
+ [ 38  37  25  32  44  48]
+ [ 11  13   5   7  13  17]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.34      0.21      0.26       581
+           1       0.46      0.28      0.35       695
+           2       0.13      0.29      0.18       159
+           3       0.16      0.17      0.17       275
+           4       0.18      0.20      0.19       224
+           5       0.05      0.26      0.09        66
+
+    accuracy                           0.23      2000
+   macro avg       0.22      0.23      0.20      2000
+weighted avg       0.31      0.23      0.26      2000
+</code></pre>
+</div>
+</div>
+<p>Warto zaznaczyć, że GaussianNB nie wymaga skalowania „z konieczności” (bo pracuje na gęstościach dla każdej cechy), ale w praktyce ekstremalnie różne skale mogą wpływać na stabilność numeryczną i porównywalność cech.</p>
+
+
+</section>
 </section>
 
 </main> <!-- /main -->

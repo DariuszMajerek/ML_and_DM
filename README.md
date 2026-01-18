@@ -13,5 +13,6 @@ uv sync
 ## Renderowanie ksiazki
 
 ```bash
+python -m ipykernel install --user --name ml-and-dm-uv --display-name "ml-and-dm (uv)"
 quarto render
 ```

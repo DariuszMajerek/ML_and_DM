@@ -2,18 +2,243 @@
 title: "Klasyfikatory bayesowskie"
 ---
 
-## Teoria Bayesa i dwa podejscia estymacji
+## Teoria Bayesa i dwa podejścia estymacji
 
-- Twierdzenie Bayesa oraz pojecia: rozklad aprioryczny i a posteriori.
-- MLE maksymalizuje prawdopodobienstwo danych przy danym parametrze.
-- MAP maksymalizuje iloczyn prawdopodobienstwa i rozkladu apriorycznego, co wprowadza regularizacje.
+Punktem wyjścia dla metod bayesowskich jest rozumienie, że niepewność co do klasy $y$ (lub parametrów modelu) można opisywać probabilistycznie. W klasyfikacji interesuje nas zwykle rozkład a posteriori klas $\mathbb{P}(y\mid x)$, czyli prawdopodobieństwo klasy po zaobserwowaniu cech $x$. Kluczową rolę odgrywa twierdzenie Bayesa, które dla klasyfikacji przyjmuje postać:
+
+$$
+\mathbb{P}(y=k\mid x)=\frac{\mathbb{P}(x\mid y=k)\,\mathbb{P}(y=k)}{\mathbb{P}(x)}.
+$$
+
+gdzie
+
+- $\mathbb{P}(y=k)$ to rozkład a priori (*prior*) – „przekonanie” o częstości klas przed zobaczeniem $x$,
+- $\mathbb{P}(x\mid y=k)$ to wiarygodność (*likelihood*) – model generowania cech w klasie $k$,
+- $\mathbb{P}(x)$ to stała normalizacyjna (taka sama dla wszystkich klas podczas porównywania), często pomijana w regule decyzyjnej,
+- $\mathbb{P}(y=k\mid x)$ to rozkład a posteriori (*posterior*).
+
+W uczeniu nadzorowanym musimy oszacować parametry modelu $\mathbb{P}(x\mid y)$ i $\mathbb{P}(y)$ na podstawie danych treningowych $\{(x_i,y_i)\}_{i=1}^n$. W klasycznej estymacji spotyka się dwa fundamentalne podejścia: MLE i MAP.
+
+W podejściu MLE (*maximum likelihood estimation*) parametry $\theta$ wybiera się tak, aby maksymalizowały prawdopodobieństwo zaobserwowanych danych (wiarygodność):
+
+$$
+\hat\theta_{\text{MLE}}
+=\arg\max_{\theta}\ \mathbb{P}(\mathcal{D}\mid \theta)
+=\arg\max_{\theta}\ \prod_{i=1}^n \mathbb{P}(x_i,y_i\mid \theta).
+$$
+
+W kontekście klasyfikatorów bayesowskich często rozdziela się to na estymację priory klas i parametrów rozkładów cech w klasach. MLE nie wprowadza dodatkowych założeń poza strukturą modelu i jest „czysto danych-zależne”.
+
+W podejściu MAP (*maximum a posteriori*) dopuszczamy wcześniejsze przekonanie o parametrach w postaci prioru $\mathbb{P}(\theta)$ i maksymalizujemy rozkład a posteriori parametrów:
+
+$$
+\hat\theta_{\text{MAP}}
+=\arg\max_{\theta}\ \mathbb{P}(\theta\mid \mathcal{D})
+=\arg\max_{\theta}\ \mathbb{P}(\mathcal{D}\mid \theta)\,\mathbb{P}(\theta).
+$$
+
+To podejście można rozumieć jako wprowadzenie regularizacji: prior $\mathbb{P}(\theta)$ „ściąga” estymator w stronę wartości bardziej prawdopodobnych a priori. W szczególności, gdy *prior* jest jednostajny (płaski), MAP redukuje się do MLE. Gdy *prior* preferuje pewne wartości (np. gładkość, brak zerowych prawdopodobieństw), MAP stabilizuje estymację, zwłaszcza dla małych prób lub rzadkich zdarzeń.
 
 ## Klasyfikator MAP/ML
 
-- Naiwny Bayes w wariancie ML (parametry z estymacji wiarygodnosci).
-- Naiwny Bayes w wariancie MAP (parametry z uwzglednieniem priory).
+Niezależnie od tego, czy parametry $\theta$ szacujemy przez MLE czy MAP, reguła klasyfikacji wynika z Bayesa. Dla nowej obserwacji $x$ wybieramy klasę maksymalizującą posterior:
+
+$$
+\hat y(x) = \arg\max_{k}\ \mathbb{P}(y=k\mid x)
+= \arg\max_{k}\ \mathbb{P}(x\mid y=k)\,\mathbb{P}(y=k).
+$$
+
+W praktyce obliczenia wykonuje się na logarytmach:
+
+$$
+\hat y(x)=\arg\max_k \left[\log \mathbb{P}(y=k)+\log \mathbb{P}(x\mid y=k)\right].
+$$
+
+Różnica „ML vs MAP” w klasyfikatorze polega na tym, jak wyznaczamy parametry *prior* i *likelihood*.
+
+## Naiwny Bayes w wariancie ML
+
+W wariancie ML estymujemy parametry likelihood na podstawie częstości/średnich z danych treningowych bez dodatkowych „pseudo-obserwacji”. Typowy problem - jeśli pewna cecha/kategoria nie wystąpiła w klasie w treningu, to MLE daje prawdopodobieństwo równe 0, a wtedy cały iloczyn $\mathbb{P}(x\mid y=k)$ może stać się 0. To jest jedna z głównych motywacji do wersji MAP z wygładzaniem.
+
+## Naiwny Bayes w wariancie MAP
+
+W wariancie MAP wprowadzamy prior na parametry rozkładu. W praktyce dla modeli dyskretnych (tekst, cechy binarne) standardem jest prior Dirichleta/Beta, co daje proste „wygładzanie” (*smoothing*). Przykładowo, dla wielomianowego NB (MultinomialNB) przyjmując prior Dirichleta z parametrem $\alpha>0$, otrzymujemy estymator:
+
+$$
+\hat\theta_{k,j}=
+\frac{N_{k,j}+\alpha}{N_k+\alpha\,V},
+$$
+
+gdzie $N_{k,j}$ to liczność (np. suma zliczeń słowa $j$ w klasie $k$), $N_k$ to suma zliczeń w klasie, a $V$ to liczba cech/słów. Widać tu regularizację, bo nawet gdy $N_{k,j}=0$, prawdopodobieństwo nie jest zerowe.
 
 ## Naive Bayes
 
-- Probabilistyczny algorytm oparty na twierdzeniu Bayesa z zalozeniem niezaleznosci cech.
-- Skuteczny w klasyfikacji tekstu, filtracji spamu i analizie uczuc.
+Naiwny Bayes jest rodziną probabilistycznych klasyfikatorów opartych na twierdzeniu Bayesa i kluczowym założeniu warunkowej niezależności cech w obrębie klasy:
+
+$$
+\mathbb{P}(x\mid y=k)=\prod_{j=1}^{p}\mathbb{P}(x_j\mid y=k).
+$$
+
+To założenie rzadko jest dosłownie prawdziwe w danych rzeczywistych, ale w wielu zastosowaniach działa zaskakująco dobrze, ponieważ model dobrze aproksymuje relacje klasy–cechy, a błąd wynikający z zależności bywa „przykrywany” przez prostotę i stabilność estymacji.
+
+W praktyce spotyka się kilka najważniejszych wariantów Naive Bayes, zależnie od rodzaju cech:
+
+- GaussianNB - cechy ciągłe, w klasie zakładamy rozkład normalny dla każdej cechy,
+- MultinomialNB - cechy dyskretne nieujemne (np. zliczenia słów w tekście),
+- BernoulliNB - cechy binarne (0/1), np. obecność słowa.
+
+Naiwny Bayes jest szczególnie skuteczny w klasyfikacji tekstu, filtracji spamu i analizie sentymentu, ponieważ (i) dane są wysokowymiarowe, (ii) wiele cech jest rzadkich, a (iii) prostota modelu ogranicza przeuczenie. W tekście typowe jest użycie MultinomialNB z wygładzaniem (MAP), bo problem zerowych częstości występuje bardzo często.
+
+## Przykłady
+
+Poniżej znajdują się praktyczne przykłady dla trzech głównych wariantów. Kluczowa uwaga: w `scikit-learn` parametr `alpha` w MultinomialNB i BernoulliNB odpowiada wygładzaniu. Ustawienie `alpha=0` odpowiada MLE, ale zwykle prowadzi do problemów z zerowymi prawdopodobieństwami, więc jest rzadko używane w praktyce.
+
+### Przygotowanie danych
+
+**Cel zadania**: Klasyfikacja emocji w krótkich tekstach (tweetach) na podstawie ich treści. Będziemy przewidywać jedną z 6 emocji: *sadness* (smutek), *joy* (radość), *love* (miłość), *anger* (gniew), *fear* (strach), *surprise* (zaskoczenie).
+
+**Dlaczego ten problem jest idealny dla Naive Bayes?**
+
+- Wysokowymiarowość: tysiące unikalnych słów jako cechy
+- Rzadkość: większość słów nie występuje w danym dokumencie (macierz rzadka)
+- Założenie niezależności jest rozsądną aproksymacją dla występowania słów
+- Szybkość uczenia i predykcji nawet dla dużych korpusów tekstowych
+
+Przygotujemy dane w trzech różnych reprezentacjach, aby zillustrować działanie trzech wariantów Naive Bayes:
+
+```{python}
+import numpy as np
+from datasets import load_dataset
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+
+# Ładowanie datasetu emotion (6 klas emocji: sadness, joy, love, anger, fear, surprise)
+dataset = load_dataset("emotion", split="train")
+dataset_test = load_dataset("emotion", split="test")
+
+# Konwersja do list
+texts_train = dataset["text"]
+y_train = np.array(dataset["label"])
+texts_test = dataset_test["text"]
+y_test = np.array(dataset_test["label"])
+
+# 1. Bag-of-Words (zliczenia słów) dla MultinomialNB
+#    CountVectorizer tworzy macierz, gdzie każda kolumna to słowo, a wartość to liczba wystąpień
+#    max_features=5000: ograniczamy do 5000 najczęstszych słów (redukcja wymiarowości)
+#    min_df=5: ignorujemy słowa występujące w mniej niż 5 dokumentach (szum)
+#    max_df=0.7: ignorujemy słowa w >70% dokumentów (stop words, mało dyskryminujące)
+vectorizer = CountVectorizer(max_features=5000, min_df=5, max_df=0.7)
+X = vectorizer.fit_transform(texts_train)
+X_test_counts = vectorizer.transform(texts_test)
+
+# 2. Reprezentacja binarna (obecność/brak) dla BernoulliNB
+#    BernoulliNB modeluje P(słowo obecne|klasa), nie liczby wystąpień
+#    Konwertujemy zliczenia na 0/1: czy słowo wystąpiło w dokumencie czy nie
+X_bin = (X > 0).astype(int)
+X_test_bin = (X_test_counts > 0).astype(int)
+
+# 3. TF-IDF (cechy ciągłe) dla GaussianNB
+#    TF-IDF = Term Frequency × Inverse Document Frequency
+#    Daje wyższe wagi rzadkim, ale informacyjnym słowom
+#    Traktujemy te wagi jako cechy ciągłe z rozkładem normalnym
+#    max_features=100: dla GaussianNB ograniczamy liczbę cech (stabilność kovariancji)
+tfidf = TfidfVectorizer(max_features=100, min_df=5, max_df=0.7)
+X_cont = tfidf.fit_transform(texts_train).toarray()
+X_test_cont = tfidf.transform(texts_test).toarray()
+
+print(f"Liczba próbek treningowych: {X.shape[0]}")
+print(f"Liczba cech (słów): {X.shape[1]}")
+print(f"Rozkład klas: {np.bincount(y_train)}")
+```
+
+### MultinomialNB
+
+MultinomialNB modeluje rozkład wielomianowy - zakłada, że dokumenty są generowane przez losowe wybieranie słów z rozkładu charakterystycznego dla danej klasy. Dla każdej klasy $k$ i słowa $j$ estymuje prawdopodobieństwo $\mathbb{P}(słowo_j\mid klasa=k)$ na podstawie proporcji wystąpień tego słowa w klasie. Wykorzystuje *zliczenia* słów - im częściej dane słowo występuje w dokumencie, tym silniej wpływa na klasyfikację.
+
+**Parametr alpha** kontroluje wygładzanie Laplace'a (MAP z priorem Dirichleta): większe alpha = silniejsza regularyzacja, mniejsze prawdopodobieństwo zerowe dla niewidzianych słów.
+
+```{python}
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+# MAP (Dirichlet prior): alpha > 0 (np. Laplace alpha=1.0 lub łagodniejsze 0.1)
+nb_map = MultinomialNB(alpha=1.0)
+nb_map.fit(X, y_train)
+
+y_pred_map = nb_map.predict(X_test_counts)
+print("MultinomialNB z wygładzaniem Laplace'a (alpha=1.0, MAP):")
+print(f"Accuracy: {accuracy_score(y_test, y_pred_map):.4f}")
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred_map))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_map))
+
+# Porównanie z mniejszym wygładzaniem
+nb_map_01 = MultinomialNB(alpha=0.1)
+nb_map_01.fit(X, y_train)
+y_pred_01 = nb_map_01.predict(X_test_counts)
+print(f"\nAccuracy z alpha=0.1: {accuracy_score(y_test, y_pred_01):.4f}")
+```
+
+### BernoulliNB
+
+BernoulliNB modeluje rozkład Bernoulliego dla każdej cechy - traktuje każde słowo jako próbę Bernoulliego (wystąpiło/nie wystąpiło). W przeciwieństwie do MultinomialNB, *nie liczy* ile razy słowo wystąpiło, tylko czy w ogóle się pojawiło. Estymuje dwa prawdopodobieństwa dla każdej klasy $k$ i słowa $j$:
+
+- $\mathbb{P}(słowo_j=1\mid klasa=k)$ - prawdopodobieństwo obecności słowa
+- $\mathbb{P}(słowo_j=0\mid klasa=k)$ - prawdopodobieństwo braku słowa (również używane!)
+
+Jest to przydatne, gdy struktura dokumentu (które słowa występują) jest ważniejsza niż ich częstość.
+
+```{python}
+from sklearn.naive_bayes import BernoulliNB
+
+# alpha > 0 to MAP (Beta prior / smoothing)
+# X_bin: macierz 0/1 reprezentująca obecność/brak słowa
+bnb = BernoulliNB(alpha=1.0)
+bnb.fit(X_bin, y_train)
+
+y_pred_bnb = bnb.predict(X_test_bin)
+print("BernoulliNB (reprezentacja binarna):")
+print(f"Accuracy: {accuracy_score(y_test, y_pred_bnb):.4f}")
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred_bnb))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_bnb))
+```
+
+### GaussianNB
+
+GaussianNB zakłada, że cechy ciągłe mają w obrębie każdej klasy rozkład normalny (gaussowski). Dla każdej klasy $k$ i cechy $j$ estymuje średnią $\mu_{k,j}$ i wariancję $\sigma^2_{k,j}$, a następnie wykorzystuje gęstość rozkładu normalnego do obliczenia $\mathbb{P}(x_j\mid klasa=k)$.
+
+W kontekście NLP: TF-IDF daje wagi ciągłe (nie zliczenia), co pozwala traktować je jako zmienne losowe o rozkładzie normalnym. GaussianNB *nie* zakłada niezależności wartości cech między próbkami, ale nadal zakłada warunkową niezależność cech *w obrębie klasy*.
+
+**Uwaga**: GaussianNB zazwyczaj działa gorzej na tekście niż MultinomialNB/BernoulliNB, ponieważ założenie normalności jest słabe dla rzadkich, dyskretnych danych tekstowych. Używamy go tu dla ilustracji.
+
+Dla GaussianNB zakładamy:
+$$
+x_j \mid (y=k) \sim \mathcal{N}(\mu_{k,j}, \sigma_{k,j}^2).
+$$
+
+MLE daje
+$$
+\hat\mu_{k,j}=\frac{1}{n_k}\sum_{i:y_i=k} x_{i,j},\qquad
+\hat\sigma^2_{k,j}=\frac{1}{n_k}\sum_{i:y_i=k}(x_{i,j}-\hat\mu_{k,j})^2
+$$
+
+```{python}
+from sklearn.naive_bayes import GaussianNB
+
+# Używamy cech ciągłych (TF-IDF)
+gnb = GaussianNB()
+gnb.fit(X_cont, y_train)
+
+y_pred_gnb = gnb.predict(X_test_cont)
+print("GaussianNB (cechy ciągłe TF-IDF):")
+print(f"Accuracy: {accuracy_score(y_test, y_pred_gnb):.4f}")
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred_gnb))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_gnb))
+```
+
+Warto zaznaczyć, że GaussianNB nie wymaga skalowania „z konieczności” (bo pracuje na gęstościach dla każdej cechy), ale w praktyce ekstremalnie różne skale mogą wpływać na stabilność numeryczną i porównywalność cech.
+

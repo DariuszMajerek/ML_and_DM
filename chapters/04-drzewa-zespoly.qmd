@@ -1025,19 +1025,6 @@ results.append(eval_model(cat, "CatBoost"))
 # 4) LightGBM
 from lightgbm import LGBMClassifier
 
-lgbm = LGBMClassifier(
-    n_estimators=800,
-    learning_rate=0.05,
-    num_leaves=63,
-    max_depth=-1,
-    subsample=0.8,
-    colsample_bytree=0.8,
-    objective="multiclass",
-    num_class=len(le.classes_),
-    random_state=44,
-    n_jobs=-1,
-    verbosity=-1
-)
 lgbm.fit(X_train, y_train_enc)
 
 yhat_lgbm = le.inverse_transform(lgbm.predict(X_test).astype(int))
