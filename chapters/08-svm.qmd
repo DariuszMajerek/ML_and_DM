@@ -1,10 +1,441 @@
 ---
-title: "Metoda SVM"
+title: "Support Vector Machines"
 ---
 
-- Support Vector Machines (SVM) szukaja hiperpłaszczyzny maksymalizujacej margines miedzy klasami.
-- Kluczowe pojecia: hiperpłaszczyzna, wektory nosne, margines i jadra.
-- Twardy margines wymaga braku bledow klasyfikacji, miekkim marginesem steruje parametr regularyzacji.
-- Typy jader: liniowe, wielomianowe, RBF.
-- Zalety: skutecznosc w danych wysokowymiarowych i przy malych probach.
-- Wady: koniecznosc doboru parametrow i wrazliwosc na skale cech.
+## Wprowadzenie
+
+*Support Vector Machines* (SVM) to rodzina metod uczenia nadzorowanego opartych na geometrii przestrzeni cech i optymalizacji wypukłej. Historycznie SVM wyrosły z prac nad maksymalnym marginesem w klasyfikacji liniowej na początku lat 90. (m.in. idea *maximum margin classifier*), a następnie zostały uogólnione przez „trik jądrowy” (*kernel trick*) na sytuacje nieliniowo separowalne. Z perspektywy klasyfikacji SVM należą do metod **dyskryminacyjnych**: nie modelują rozkładów $\mathbb{P}(x\mid y)$, lecz konstruują granicę decyzyjną w przestrzeni cech tak, aby jak najlepiej rozdzielała klasy przy kontrolowanej złożoności.
+
+W praktyce SVM spotykamy w dwóch podstawowych wariantach: (i) klasyfikacja SVC, gdzie uczymy hiperpłaszczyznę maksymalizującą margines, oraz (ii) regresja SVR, gdzie uczymy funkcję o maksymalnej „płaskości” w sensie normy $\|w\|$ przy tolerancji błędu typu $\varepsilon$-insensitive. W obu przypadkach kluczowe pojęcia to: hiperpłaszczyzna, margines, wektory nośne oraz jądra.
+
+## Klasyfikacja liniowo separowalna: twardy margines
+
+Rozważamy dane uczące $\{(x_i,y_i)\}_{i=1}^n$, gdzie $x_i\in\mathbb{R}^p$ i $y_i\in\{-1,+1\}$. Hiperpłaszczyzna ma postać $w^\top x + b = 0$. SVM wybiera taką hiperpłaszczyznę, która maksymalizuje margines, tj. minimalizuje $\|w\|$ przy warunkach poprawnej klasyfikacji z zapasem:
+
+$$
+\min_{w,b}\ \frac{1}{2}\|w\|^2\quad\text{s.t.}\quad y_i(w^\top x_i + b)\ge 1,\ i=1,\dots,n.
+$$
+
+Warunki $y_i(w^\top x_i + b)\ge 1$ oznaczają, że obserwacje leżą po właściwej stronie dwóch hiperpłaszczyzn $w^\top x + b = \pm 1$, które wyznaczają pas marginesu. Szerokość marginesu wynosi $2/\|w\|$, więc minimalizacja $\|w\|$ jest równoważna maksymalizacji marginesu. Obserwacje, które leżą dokładnie na brzegach marginesu, nazywamy **wektorami nośnymi** (*support vectors*) – to one determinują położenie rozwiązania.
+
+![](../images/Svm_max_sep_hyperplane_with_margin.png){fig-align="center" width=30%}
+
+## Miękki margines: dopuszczenie naruszeń i rola parametru $C$
+
+W danych rzeczywistych idealna separacja jest rzadkością. Wprowadzamy więc zmienne luzu $\xi_i\ge 0$, które pozwalają naruszać margines i (w skrajnym przypadku) popełniać błędy klasyfikacji:
+
+$$
+\min_{w,b,\xi}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n\xi_i\quad\text{s.t.}\quad y_i(w^\top x_i + b)\ge 1-\xi_i,\ \xi_i\ge 0.
+$$
+
+Parametr $C>0$ reguluje kompromis między szerokością marginesu a karą za naruszenia: duże $C$ prowadzi do silniejszego „ścigania” błędów treningowych, a małe $C$ do większej regularizacji i szerszego marginesu kosztem większej tolerancji błędów.
+```{python}
+#| code-fold: true
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.svm import SVC
+
+# Generujemy dane z częściowym zachodzeniem klas
+np.random.seed(42)
+X1 = np.random.randn(40, 2) + np.array([2, 2])
+X2 = np.random.randn(40, 2) + np.array([0, 0])
+
+# Dodajemy kilka punktów "trudnych" w obszarze zachodzenia
+X1 = np.vstack([X1, np.array([[0.5, 0.5], [0.3, 0.8]])])
+X2 = np.vstack([X2, np.array([[1.8, 1.5], [1.5, 2.0]])])
+
+X = np.vstack([X1, X2])
+y = np.hstack([np.ones(len(X1)), -np.ones(len(X2))])
+
+# Funkcja rysująca granicę decyzyjną i margines
+def plot_svm_decision_boundary(ax, clf, X, y, title):
+    # Siatka
+    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200),
+                         np.linspace(y_min, y_max, 200))
+    
+    # Funkcja decyzyjna
+    Z = clf.decision_function(np.c_[xx.ravel(), yy.ravel()])
+    Z = Z.reshape(xx.shape)
+    
+    # Granica decyzyjna i margines
+    ax.contour(xx, yy, Z, levels=[-1, 0, 1], linewidths=[1.5, 2.5, 1.5],
+               linestyles=['dashed', 'solid', 'dashed'], colors=['gray', 'black', 'gray'])
+    
+    # Punkty
+    ax.scatter(X[y == 1, 0], X[y == 1, 1], c='royalblue', s=50, 
+               edgecolors='k', alpha=0.7, label='Klasa +1')
+    ax.scatter(X[y == -1, 0], X[y == -1, 1], c='coral', s=50, 
+               edgecolors='k', alpha=0.7, label='Klasa -1')
+    
+    # Wektory nośne
+    ax.scatter(clf.support_vectors_[:, 0], clf.support_vectors_[:, 1],
+               s=200, linewidth=2, facecolors='none', edgecolors='green',
+               label=f'Wektory nośne ({len(clf.support_vectors_)})')
+    
+    ax.set_xlim(x_min, x_max)
+    ax.set_ylim(y_min, y_max)
+    ax.set_xlabel('$x_1$')
+    ax.set_ylabel('$x_2$')
+    ax.set_title(title)
+    ax.legend(loc='upper left', fontsize=8)
+    ax.grid(alpha=0.3)
+
+# Trenujemy SVM z różnymi wartościami C
+fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+
+C_values = [0.1, 1, 100]
+for ax, C in zip(axes, C_values):
+    clf = SVC(kernel='linear', C=C)
+    clf.fit(X, y)
+    plot_svm_decision_boundary(ax, clf, X, y, f'C = {C}')
+
+plt.tight_layout()
+plt.show()
+```
+
+Przy małym $C=0.1$ margines jest szerszy (większa odległość między przerywaną linią a linią ciągłą), ale model toleruje więcej naruszeń – wiele punktów znajduje się wewnątrz marginesu lub po złej stronie. Przy dużym $C=100$ margines jest węższy, a granica decyzyjna stara się uniknąć błędów kosztem mniejszej regularyzacji, co może prowadzić do przeuczenia.
+
+Wektory nośne (miękki margines):
+
+- $\xi_i = 0$ i $y_i(w^\top x_i + b)=1$ — punkt leży na brzegu marginesu i jest wektorem nośnym.
+- $0 < \xi_i < 1$ — punkt leży wewnątrz marginesu po właściwej stronie granicy; nadal jest wektorem nośnym.
+- $\xi_i \ge 1$ — punkt jest błędnie sklasyfikowany; także jest wektorem nośnym.
+Tylko wektory nośne mają niezerowe współczynniki $\alpha_i$ w dualnym rozwiązaniu i wyznaczają położenie granicy decyzyjnej.
+
+## Nieliniowa separacja i jądra
+
+Jeżeli dane nie są dobrze separowalne liniowo w $\mathbb{R}^p$, stosujemy odwzorowanie $\varphi(x)$ do przestrzeni cech $\mathcal{H}$, w której separacja staje się liniowa. W praktyce nie konstruujemy jawnie $\varphi$, lecz korzystamy z jądra $K$, które realizuje iloczyn skalarny w $\mathcal{H}$:
+
+$$
+K(x,z)=\langle\varphi(x),\varphi(z)\rangle.
+$$
+
+W postaci dualnej funkcja decyzyjna przyjmuje postać:
+
+$$
+f(x)=\sum_{i=1}^n \alpha_i y_i K(x_i,x) + b,\qquad \hat y(x)=\mathrm{sign}(f(x)),
+$$
+
+gdzie niezerowe $\alpha_i$ odpowiadają wektorom nośnym. 
+
+### Popularne jądra i ich zastosowania
+
+**1. Jądro liniowe:** $K(x,z) = x^\top z$
+
+- Najprostsze; równoważne SVM bez kernela
+- **Kiedy stosować:** dane liniowo lub prawie liniowo separowalne, wysokowymiarowe dane rzadkie (tekst, genomika), gdy chcemy interpretowalności lub szybkiego treningu/predykcji
+- Zalety: bardzo szybkie, skalowalne, niewielkie ryzyko przeuczenia
+- Wady: ograniczona elastyczność dla złożonych granic nieliniowych
+
+**2. Jądro wielomianowe:** $K(x,z) = (\gamma\, x^\top z + r)^d$
+
+- Parametry: $d$ (stopień), $\gamma$ (skalowanie), $r$ (stała, często 0)
+- **Kiedy stosować:** interakcje między cechami mają znaczenie (np. pixel × pixel w obrazach), znamy z dziedziny, że zależności są wielomianowe, dane niskodymiarowe z wyraźnymi nieliniowościami niskiego stopnia
+- Zalety: jawnie modeluje interakcje do stopnia $d$
+- Wady: droższe obliczeniowo niż liniowe, wrażliwe na dobór $d$ i $\gamma$, ryzyko przeuczenia przy dużych $d$
+
+**3. Jądro RBF (Gaussa):** $K(x,z) = \exp(-\gamma\|x-z\|^2)$
+
+- Parametr $\gamma>0$ kontroluje „promień wpływu" każdego punktu
+- **Kiedy stosować:** uniwersalne jądro domyślne, gdy nie znamy struktury danych, granice decyzyjne mają złożone, lokalne kształty, dane nisko- i średniowymiarowe z nieliniowymi zależnościami
+- Zalety: bardzo elastyczne, dobrze działa w praktyce, może aproksymować dowolną ciągłą funkcję (uniwersalne)
+- Wady: duże $\gamma$ → przeuczenie (zbyt lokalne granice), wymaga standaryzacji, wolniejsze niż liniowe, trudniej interpretować
+
+**4. Jądro sigmoidalne:** $K(x,z) = \tanh(\gamma\, x^\top z + r)$
+
+- Inspirowane sieciami neuronowymi (funkcja aktywacji)
+- **Kiedy stosować:** rzadko w praktyce; czasem w problemach podobnych do sieci neuronowych, gdy chcemy zachowania „S-kształtnego"
+- Wady: nie zawsze dodatnio określone (wymóg jądra Mercera); może być niestabilne
+
+**5. Jądro Laplace'a:** $K(x,z) = \exp(-\gamma\|x-z\|_1)$
+
+- Wariant RBF z normą $L^1$ zamiast $L^2$
+- **Kiedy stosować:** gdy cechy mają duże odstające wartości lub preferujemy robustność normy $L^1$, podobne zastosowania jak RBF
+- Rzadziej spotykane niż RBF
+
+**6. Jądra stringowe (dla tekstów/sekwencji):**
+
+- Przykłady: *spectrum kernel*, *subsequence kernel*, *mismatch kernel*
+- **Kiedy stosować:** klasyfikacja tekstów, sekwencji DNA/białek, analiza dokumentów bez jawnej wektoryzacji
+- Mierzą podobieństwo na podstawie wspólnych podsłów, n-gramów lub motywów
+
+**7. Jądro chi-kwadrat:** $K(x,z) = \exp\bigg(-\gamma\sum_i \frac{(x_i-z_i)^2}{x_i+z_i}\bigg)$
+
+- **Kiedy stosować:** histogramy (np. w computer vision: SIFT, HOG), dane nieujemne o charakterze zliczeniowym
+- Szczególnie popularne w rozpoznawaniu obrazów
+
+**Wybór jądra w praktyce:**
+
+- **Start:** spróbuj liniowego (jeśli $p$ duże lub dane rzadkie) lub RBF (jeśli $p$ małe/średnie)
+- **Grid search:** dobieraj $C$ i $\gamma$ (lub $d$) przez walidację krzyżową
+- **Standaryzacja:** zawsze dla RBF i wielomianowego
+- **Dziedzina:** jeśli masz wiedzę problemową (tekst → stringowe, histogramy → chi-kwadrat), użyj specjalistycznego jądra
+
+Parametr $\gamma$ w RBF kontroluje lokalność granicy decyzyjnej: duże $\gamma$ daje granice bardziej „lokalne" (większe ryzyko przeuczenia), a małe $\gamma$ bardziej „globalne" i gładkie.
+
+## Estymacja parametrów w SVM: margines twardy i miękki
+
+Estymacja parametrów SVM jest problemem optymalizacji wypukłej. W wersji liniowej parametry modelu to $(w,b)$, natomiast w ujęciu dualnym (które jest kluczowe zarówno obliczeniowo, jak i dla jąder) parametrami roboczymi stają się mnożniki Lagrange’a $\alpha_1,\dots,\alpha_n$ oraz $b$. Przejście do postaci dualnej nie jest tylko „trikiem” formalnym: ono wyjaśnia, dlaczego rozwiązanie zależy wyłącznie od części obserwacji (wektorów nośnych) oraz dlaczego kernel SVM można zrealizować bez jawnego konstruowania $\varphi(x)$.
+
+### Margines twardy: od postaci pierwotnej do dualnej
+
+W hard-margin SVM rozwiązujemy zadanie z ograniczeniami nierównościowymi. Aby przejść do dualu, konstruujemy Lagrangian przez dołączenie ograniczeń z mnożnikami $\alpha_i\ge 0$. Otrzymujemy funkcję:
+
+$$
+\mathcal{L}(w,b,\alpha)=\frac{1}{2}\|w\|^2-\sum_{i=1}^n \alpha_i\big(y_i(w^\top x_i+b)-1\big).
+$$
+
+Następnie narzucamy warunki stacjonarności (pochodne po $w$ i $b$ równe zero), które są kluczowe, bo pozwalają wyeliminować $w$ i $b$ z problemu. Z pochodnej po w dostajemy:
+
+$$
+\frac{\partial \mathcal{L}}{\partial w}=0 \quad\Rightarrow\quad
+w=\sum_{i=1}^n \alpha_i y_i x_i,
+$$
+
+a z pochodnej po $b$:
+
+$$
+\frac{\partial \mathcal{L}}{\partial b}=0 \quad\Rightarrow\quad
+\sum_{i=1}^n \alpha_i y_i=0.
+$$
+
+Po podstawieniu tych zależności do Lagrangianu otrzymujemy problem dualny w zmiennych $\alpha$:
+
+$$
+\max_{\alpha}\ \sum_{i=1}^n \alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n \alpha_i\alpha_j y_i y_j\, x_i^\top x_j,
+\quad
+\text{s.t. } \alpha_i\ge 0,\ \sum_{i=1}^n \alpha_i y_i=0.
+$$
+
+Jest to programowanie kwadratowe (QP) z liniowymi ograniczeniami. Wypukłość zapewnia globalne optimum. Sens praktyczny jest następujący: zamiast szukać $w$ wprost, rozwiązujemy QP dla $\alpha$, a dopiero potem rekonstruujemy $w$.
+
+Centralną rolę odgrywają warunki KKT (Karush–Kuhn–Tucker), zwłaszcza warunek komplementarności:
+
+$$
+\alpha_i\big(y_i(w^\top x_i+b)-1\big)=0.
+$$
+
+Oznacza on, że jeśli $\alpha_i>0$, to musi zachodzić równość $y_i(w^\top x_i+b)=1$, czyli punkt leży dokładnie na brzegu marginesu. Innymi słowy, niezerowe $\alpha_i$ odpowiadają wektorom nośnym i tylko te punkty „trzymają” rozwiązanie. Punkty z $\alpha_i=0$ są w sensie optymalizacji „nieaktywne” i nie wpływają na położenie hiperpłaszczyzny.
+
+Po wyznaczeniu $\alpha$ obliczamy $\hat w$ ze wzoru $\hat w=\sum_i \alpha_i y_i x_i$. Bias $\hat b$ odzyskujemy korzystając z dowolnego wektora nośnego $x_s$ (w praktyce uśredniając po wielu SV): dla hard-margin mamy równanie $y_s(\hat w^\top x_s+\hat b)=1,$ więc
+
+$$
+\hat b = y_s-\hat w^\top x_s.
+$$
+
+### Margines miękki
+
+W soft-margin SVM wprowadzamy zmienne luzu $\xi_i\ge 0$, a w funkcji celu pojawia się składnik $C\sum_i \xi_i$. Formalnie w problemie dualnym prowadzi to do tego, że mnożniki $\alpha_i$ nie tylko są nieujemne, ale także mają górne ograniczenie:
+
+$$
+0\le \alpha_i \le C.
+$$
+
+Dual dla soft-margin ma więc tę samą funkcję celu co w hard-margin, ale inne ograniczenia:
+
+$$
+\max_{\alpha}\ \sum_{i=1}^n \alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n \alpha_i\alpha_j y_i y_j\, x_i^\top x_j,
+\quad
+\text{s.t. } 0\le \alpha_i\le C,\ \sum_{i=1}^n \alpha_i y_i=0.
+$$
+
+Ten pozornie „mały” detal ma bardzo ważną interpretację. Warunki KKT pozwalają rozróżnić trzy typy obserwacji. Jeśli $\alpha_i=0$, obserwacja jest na tyle „łatwa”, że nie wpływa na rozwiązanie. Jeśli $0<\alpha_i<C$, obserwacja jest klasycznym wektorem nośnym leżącym na brzegu marginesu (wiąże równość $y_i(w^\top x_i+b)=1$). Jeśli natomiast $\alpha_i=C$, obserwacja jest w sensie KKT „nasycona” karą: typowo odpowiada to punktom naruszającym margines (a czasem błędnie sklasyfikowanym). Z tego powodu w soft-margin najstabilniej wyznacza się $\hat b$ korzystając z tych wektorów nośnych, dla których $0<\alpha_i<C$, ponieważ wtedy zachodzi dokładna równość brzegowa i unikamy przypadków naruszeń.
+
+Warto też zauważyć równoważność soft-margin z minimalizacją straty *hinge loss* w ujęciu „bez $\xi$”. Zmienne luzu można interpretować jako miarę naruszenia:
+
+$$
+\xi_i=\max\{0,\ 1-y_i(w^\top x_i+b)\},
+$$
+
+co prowadzi do równoważnego zapisu:
+
+$$
+\min_{w,b}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n \max\{0,\ 1-y_i(w^\top x_i+b)\}.
+$$
+
+To jest ważne z perspektywy uczenia maszynowego: pokazuje, że soft-margin SVM jest klasycznym przypadkiem uczenia z wypukłą funkcją straty i regularizacją, a parametry $C$ sterują intensywnością kary za naruszenia.
+
+### Kernelowa wersja a estymacja parametrów
+
+Przejście do kernela nie zmienia mechaniki estymacji — zmienia jedynie sposób, w jaki w problemie dualnym pojawiają się dane. W problemie dualnym występują iloczyny skalarne $x_i^\top x_j$, które zastępujemy $K(x_i,x_j)$. Soft-margin dual przyjmuje postać:
+
+$$
+\max_{\alpha}\ \sum_{i=1}^n \alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n \alpha_i\alpha_j y_i y_j\, K(x_i,x_j),
+\quad
+\text{s.t. } 0\le \alpha_i\le C,\ \sum_{i=1}^n \alpha_i y_i=0.
+$$
+
+Po rozwiązaniu problemu dostajemy funkcję decyzyjną:
+
+$$
+f(x)=\sum_{i=1}^n \alpha_i y_i K(x_i,x)+b,
+$$
+
+gdzie niezerowe $\alpha_i$ odpowiadają wektorom nośnym. W wersji liniowej można rekonstruować $w$, natomiast w kernelowej zwykle tego nie robimy — model jest reprezentowany przez $\alpha$, wybrane wektory nośne i $b$.
+
+Chociaż problem dualny ma postać QP, w praktyce nie rozwiązuje się go ogólnymi solverami programowania kwadratowego, ponieważ byłoby to zbyt kosztowne dla większych $n$. Klasyczne implementacje SVM (rodzina LIBSVM, używana m.in. w wielu bibliotekach) stosują SMO (*Sequential Minimal Optimization*). SMO rozbija problem na serię bardzo małych podproblemów (zwykle dla pary zmiennych $\alpha$), które można rozwiązać analitycznie, a następnie iteracyjnie aktualizuje rozwiązanie aż do spełnienia warunków optymalności KKT. W tym sensie „estymacja parametrów SVM” w praktyce oznacza: wyznaczenie współczynników dualnych $\alpha$ metodą SMO (lub jej wariantami), obliczenie $b$ na podstawie wektorów nośnych oraz — w przypadku wersji liniowej — rekonstrukcję $w$.
+
+## Wariant wieloklasowy
+
+SVM jest z natury klasyfikatorem binarnym. Dla problemów wieloklasowych stosujemy konstrukcje redukcyjne. Najczęściej spotykamy:
+
+- **one-vs-rest (OvR)** – uczymy $K$ klasyfikatorów binarnych „klasa $k$ vs reszta” i wybieramy klasę o największej wartości funkcji decyzyjnej;
+- **one-vs-one (OvO)** – uczymy $K(K-1)/2$ klasyfikatorów dla każdej pary klas i stosujemy głosowanie.
+
+W praktyce implementacje (np. scikit-learn) domyślnie stosują OvO dla `SVC`, a OvR jest często spotykany w wersjach liniowych (np. `LinearSVC`). Wybór strategii wpływa na koszt obliczeń i zachowanie w przypadku niezbalansowanych klas.
+
+## SVM w regresji: SVR
+
+W regresji celem nie jest rozdział klas, lecz znalezienie funkcji możliwie „płaskiej”, która dopuszcza błąd do $\varepsilon$. W SVR wprowadza się stratę $\varepsilon$-insensitive: błędy mniejsze niż $\varepsilon$ nie są karane. Model ma postać $f(x)=w^\top\varphi(x)+b$, a problem optymalizacyjny:
+
+$$
+\min_{w,b,\xi,\xi^*}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n (\xi_i+\xi_i^*)
+$$
+$$
+\text{s.t.}\quad y_i - (w^\top\varphi(x_i)+b)\le \varepsilon + \xi_i,\quad (w^\top\varphi(x_i)+b) - y_i\le \varepsilon + \xi_i^*,\quad \xi_i,\xi_i^*\ge 0.
+$$
+
+W praktyce $\varepsilon$ kontroluje „szerokość rurki” tolerancji, a $C$ kontroluje karę za przekroczenia. SVR, podobnie jak SVC, może korzystać z jąder.
+
+## Założenia, zalety i wady
+
+SVM zakłada, że klasy (lub zależność w regresji) są dobrze aproksymowalne przez hiperpłaszczyznę w pewnej przestrzeni cech (jawnej lub indukowanej jądrem). Metoda jest bardzo wrażliwa na skalę cech (zwłaszcza dla jąder RBF i wielomianowych), dlatego w praktyce niemal zawsze stosujemy standaryzację. SVM ma silne podstawy teoretyczne (maksymalizacja marginesu, optymalizacja wypukła), często dobrze działa w danych wysokowymiarowych (np. tekst) i przy umiarkowanych próbach. Wadą jest koszt obliczeniowy dla dużych $n$ (szczególnie w kernel SVM), konieczność strojenia hiperparametrów ($C$, $\gamma$, wybór jądra) oraz mniejsza interpretowalność w porównaniu z prostymi modelami liniowymi.
+
+## Przykład klasyfikacji wieloklasowej
+
+Poniżej wykorzystujemy zbiór `scikit-learn/iris` z Hugging Face i uczymy wieloklasowe SVM z jądrem RBF. Zwracamy uwagę na dwa elementy praktyczne: standaryzację oraz dobór hiperparametrów $C$ i $\gamma$ przez walidację krzyżową.
+
+```{python}
+import numpy as np
+import pandas as pd
+
+from datasets import load_dataset
+from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+
+# 1) Dane
+iris = load_dataset("scikit-learn/iris", split="train")
+df = iris.to_pandas()
+
+# 2) Target i cechy (różne wersje zbioru mogą mieć różne nazwy kolumny docelowej)
+possible_targets = ["label", "target", "species", "class"]
+target_col = next((c for c in possible_targets if c in df.columns), None)
+
+if target_col is None:
+    non_num = df.select_dtypes(exclude=["number"]).columns.tolist()
+    if len(non_num) == 0:
+        raise ValueError(
+            "Nie znaleziono kolumny docelowej. Dostępne kolumny: " + ", ".join(df.columns)
+        )
+    target_col = non_num[0]
+
+# y: etykiety klas (kodujemy tekst do liczb)
+y_raw = df[target_col]
+if y_raw.dtype.kind in {"i", "u"}:
+    y = y_raw.astype(int)
+else:
+    y = y_raw.astype("category").cat.codes
+
+# X: wszystkie cechy liczbowe z wykluczeniem targetu
+X = df.select_dtypes(include=["number"]).drop(columns=[target_col], errors="ignore")
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
+
+# 3) Pipeline: skalowanie + SVC
+pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("svc", SVC(kernel="rbf"))
+])
+
+param_grid = {
+    "svc__C": [0.1, 1, 10, 100],
+    "svc__gamma": [0.01, 0.1, 1, 10]
+}
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+search = GridSearchCV(pipe, param_grid=param_grid, scoring="accuracy", cv=cv, n_jobs=-1)
+search.fit(X_train, y_train)
+
+best = search.best_estimator_
+print("Best params:", search.best_params_)
+
+y_pred = best.predict(X_test)
+acc = accuracy_score(y_test, y_pred)
+print("Test accuracy:", acc)
+print(classification_report(y_test, y_pred))
+
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(cm)
+plt.figure(figsize=(4.5,4))
+disp.plot(values_format="d")
+plt.title("SVM (RBF): macierz pomyłek (Iris)")
+plt.tight_layout()
+plt.show()
+```
+
+## Przykład regresyjny
+
+W drugim przykładzie pokazujemy SVR na zbiorze `scikit-learn/Fish`. Ponownie stosujemy skalowanie i stroimy $C$, $\varepsilon$ oraz $\gamma$ (dla RBF) przez walidację krzyżową.
+
+```{python}
+import numpy as np
+import pandas as pd
+
+from datasets import load_dataset
+from sklearn.model_selection import train_test_split, KFold, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR
+from sklearn.metrics import r2_score, mean_squared_error
+
+# 1) Dane: tabular regression (masa ryby) z Hugging Face
+# Dataset: scikit-learn/Fish
+fish = load_dataset("scikit-learn/Fish", split="train")
+df = fish.to_pandas()
+
+# 2) Target i cechy
+# Target: 'Weight' (waga w gramach). Kolumna 'Species' jest kategoryczna;
+# dla prostoty przykładu SVR używamy wyłącznie cech liczbowych.
+target = "Weight"
+if target not in df.columns:
+    raise ValueError(
+        "Nie znaleziono kolumny 'Weight'. Dostępne kolumny: " + ", ".join(df.columns)
+    )
+
+y = df[target].astype(float)
+X = df.select_dtypes(include=["number"]).drop(columns=[target], errors="ignore").copy()
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
+
+pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("svr", SVR(kernel="rbf"))
+])
+
+param_grid = {
+    "svr__C": [1, 10, 100, 300],
+    "svr__epsilon": [1, 5, 10, 20],
+    "svr__gamma": [0.001, 0.01, 0.1, 1]
+}
+
+cv = KFold(n_splits=5, shuffle=True, random_state=42)
+search = GridSearchCV(pipe, param_grid=param_grid, scoring="r2", cv=cv, n_jobs=-1)
+search.fit(X_train, y_train)
+
+best = search.best_estimator_
+print("Best params:", search.best_params_)
+
+pred = best.predict(X_test)
+print("Test R2:", r2_score(y_test, pred))
+print("Test RMSE:", np.sqrt(mean_squared_error(y_test, pred)))
+```

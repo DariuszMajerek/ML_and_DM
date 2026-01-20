@@ -223,7 +223,7 @@ B_{j,p}(x)=\frac{x-\kappa_j}{\kappa_{j+p}-\kappa_j}B_{j,p-1}(x)\;+\;
 \frac{\kappa_{j+p+1}-x}{\kappa_{j+p+1}-\kappa_{j+1}}B_{j+1,p-1}(x),
 $$
 
-gdzie $$\kappa$$ to tzw. *knot vector* (węzły z powtórzeniami na brzegach).
+gdzie $\kappa$ to tzw. *knot vector* (węzły z powtórzeniami na brzegach).
 
 4. Splajn naturalny (*Natural Cubic Spline*)
 

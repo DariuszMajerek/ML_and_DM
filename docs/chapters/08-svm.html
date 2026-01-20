@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Metoda SVM – Eksploracja danych i uczenie maszynowe</title>
+<title>9&nbsp; Support Vector Machines – Eksploracja danych i uczenie maszynowe</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -48,6 +83,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-6b8c1b7f874bdd152064db223e7d36ae.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark-7becdd8e1b79f26ea566d6ea537c1a09.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../site_libs/bootstrap/bootstrap-6b8c1b7f874bdd152064db223e7d36ae.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -76,6 +114,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -250,7 +317,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/08-svm.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/08-svm.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Przełącz pasek boczny" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Szukaj" onclick="window.quartoOpenSearch();">
@@ -340,7 +407,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/08-svm.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -366,8 +433,31 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Spis treści</h2>
+   
+  <ul>
+  <li><a href="#wprowadzenie" id="toc-wprowadzenie" class="nav-link active" data-scroll-target="#wprowadzenie"><span class="header-section-number">9.1</span> Wprowadzenie</a></li>
+  <li><a href="#klasyfikacja-liniowo-separowalna-twardy-margines" id="toc-klasyfikacja-liniowo-separowalna-twardy-margines" class="nav-link" data-scroll-target="#klasyfikacja-liniowo-separowalna-twardy-margines"><span class="header-section-number">9.2</span> Klasyfikacja liniowo separowalna: twardy margines</a></li>
+  <li><a href="#miękki-margines-dopuszczenie-naruszeń-i-rola-parametru-c" id="toc-miękki-margines-dopuszczenie-naruszeń-i-rola-parametru-c" class="nav-link" data-scroll-target="#miękki-margines-dopuszczenie-naruszeń-i-rola-parametru-c"><span class="header-section-number">9.3</span> Miękki margines: dopuszczenie naruszeń i rola parametru <span class="math inline">\(C\)</span></a></li>
+  <li><a href="#nieliniowa-separacja-i-jądra" id="toc-nieliniowa-separacja-i-jądra" class="nav-link" data-scroll-target="#nieliniowa-separacja-i-jądra"><span class="header-section-number">9.4</span> Nieliniowa separacja i jądra</a>
+  <ul class="collapse">
+  <li><a href="#popularne-jądra-i-ich-zastosowania" id="toc-popularne-jądra-i-ich-zastosowania" class="nav-link" data-scroll-target="#popularne-jądra-i-ich-zastosowania"><span class="header-section-number">9.4.1</span> Popularne jądra i ich zastosowania</a></li>
+  </ul></li>
+  <li><a href="#estymacja-parametrów-w-svm-margines-twardy-i-miękki" id="toc-estymacja-parametrów-w-svm-margines-twardy-i-miękki" class="nav-link" data-scroll-target="#estymacja-parametrów-w-svm-margines-twardy-i-miękki"><span class="header-section-number">9.5</span> Estymacja parametrów w SVM: margines twardy i miękki</a>
+  <ul class="collapse">
+  <li><a href="#margines-twardy-od-postaci-pierwotnej-do-dualnej" id="toc-margines-twardy-od-postaci-pierwotnej-do-dualnej" class="nav-link" data-scroll-target="#margines-twardy-od-postaci-pierwotnej-do-dualnej"><span class="header-section-number">9.5.1</span> Margines twardy: od postaci pierwotnej do dualnej</a></li>
+  <li><a href="#margines-miękki" id="toc-margines-miękki" class="nav-link" data-scroll-target="#margines-miękki"><span class="header-section-number">9.5.2</span> Margines miękki</a></li>
+  <li><a href="#kernelowa-wersja-a-estymacja-parametrów" id="toc-kernelowa-wersja-a-estymacja-parametrów" class="nav-link" data-scroll-target="#kernelowa-wersja-a-estymacja-parametrów"><span class="header-section-number">9.5.3</span> Kernelowa wersja a estymacja parametrów</a></li>
+  </ul></li>
+  <li><a href="#wariant-wieloklasowy" id="toc-wariant-wieloklasowy" class="nav-link" data-scroll-target="#wariant-wieloklasowy"><span class="header-section-number">9.6</span> Wariant wieloklasowy</a></li>
+  <li><a href="#svm-w-regresji-svr" id="toc-svm-w-regresji-svr" class="nav-link" data-scroll-target="#svm-w-regresji-svr"><span class="header-section-number">9.7</span> SVM w regresji: SVR</a></li>
+  <li><a href="#założenia-zalety-i-wady" id="toc-założenia-zalety-i-wady" class="nav-link" data-scroll-target="#założenia-zalety-i-wady"><span class="header-section-number">9.8</span> Założenia, zalety i wady</a></li>
+  <li><a href="#przykład-klasyfikacji-wieloklasowej" id="toc-przykład-klasyfikacji-wieloklasowej" class="nav-link" data-scroll-target="#przykład-klasyfikacji-wieloklasowej"><span class="header-section-number">9.9</span> Przykład klasyfikacji wieloklasowej</a></li>
+  <li><a href="#przykład-regresyjny" id="toc-przykład-regresyjny" class="nav-link" data-scroll-target="#przykład-regresyjny"><span class="header-section-number">9.10</span> Przykład regresyjny</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -375,7 +465,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></h1>
 </div>
 
 
@@ -392,16 +482,450 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="wprowadzenie" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="wprowadzenie"><span class="header-section-number">9.1</span> Wprowadzenie</h2>
+<p><em>Support Vector Machines</em> (SVM) to rodzina metod uczenia nadzorowanego opartych na geometrii przestrzeni cech i optymalizacji wypukłej. Historycznie SVM wyrosły z prac nad maksymalnym marginesem w klasyfikacji liniowej na początku lat 90. (m.in. idea <em>maximum margin classifier</em>), a następnie zostały uogólnione przez „trik jądrowy” (<em>kernel trick</em>) na sytuacje nieliniowo separowalne. Z perspektywy klasyfikacji SVM należą do metod <strong>dyskryminacyjnych</strong>: nie modelują rozkładów <span class="math inline">\(\mathbb{P}(x\mid y)\)</span>, lecz konstruują granicę decyzyjną w przestrzeni cech tak, aby jak najlepiej rozdzielała klasy przy kontrolowanej złożoności.</p>
+<p>W praktyce SVM spotykamy w dwóch podstawowych wariantach: (i) klasyfikacja SVC, gdzie uczymy hiperpłaszczyznę maksymalizującą margines, oraz (ii) regresja SVR, gdzie uczymy funkcję o maksymalnej „płaskości” w sensie normy <span class="math inline">\(\|w\|\)</span> przy tolerancji błędu typu <span class="math inline">\(\varepsilon\)</span>-insensitive. W obu przypadkach kluczowe pojęcia to: hiperpłaszczyzna, margines, wektory nośne oraz jądra.</p>
+</section>
+<section id="klasyfikacja-liniowo-separowalna-twardy-margines" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="klasyfikacja-liniowo-separowalna-twardy-margines"><span class="header-section-number">9.2</span> Klasyfikacja liniowo separowalna: twardy margines</h2>
+<p>Rozważamy dane uczące <span class="math inline">\(\{(x_i,y_i)\}_{i=1}^n\)</span>, gdzie <span class="math inline">\(x_i\in\mathbb{R}^p\)</span> i <span class="math inline">\(y_i\in\{-1,+1\}\)</span>. Hiperpłaszczyzna ma postać <span class="math inline">\(w^\top x + b = 0\)</span>. SVM wybiera taką hiperpłaszczyznę, która maksymalizuje margines, tj. minimalizuje <span class="math inline">\(\|w\|\)</span> przy warunkach poprawnej klasyfikacji z zapasem:</p>
+<p><span class="math display">\[
+\min_{w,b}\ \frac{1}{2}\|w\|^2\quad\text{s.t.}\quad y_i(w^\top x_i + b)\ge 1,\ i=1,\dots,n.
+\]</span></p>
+<p>Warunki <span class="math inline">\(y_i(w^\top x_i + b)\ge 1\)</span> oznaczają, że obserwacje leżą po właściwej stronie dwóch hiperpłaszczyzn <span class="math inline">\(w^\top x + b = \pm 1\)</span>, które wyznaczają pas marginesu. Szerokość marginesu wynosi <span class="math inline">\(2/\|w\|\)</span>, więc minimalizacja <span class="math inline">\(\|w\|\)</span> jest równoważna maksymalizacji marginesu. Obserwacje, które leżą dokładnie na brzegach marginesu, nazywamy <strong>wektorami nośnymi</strong> (<em>support vectors</em>) – to one determinują położenie rozwiązania.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="../images/Svm_max_sep_hyperplane_with_margin.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../images/Svm_max_sep_hyperplane_with_margin.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:30.0%"></a></p>
+</figure>
+</div>
+</section>
+<section id="miękki-margines-dopuszczenie-naruszeń-i-rola-parametru-c" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="miękki-margines-dopuszczenie-naruszeń-i-rola-parametru-c"><span class="header-section-number">9.3</span> Miękki margines: dopuszczenie naruszeń i rola parametru <span class="math inline">\(C\)</span></h2>
+<p>W danych rzeczywistych idealna separacja jest rzadkością. Wprowadzamy więc zmienne luzu <span class="math inline">\(\xi_i\ge 0\)</span>, które pozwalają naruszać margines i (w skrajnym przypadku) popełniać błędy klasyfikacji:</p>
+<p><span class="math display">\[
+\min_{w,b,\xi}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n\xi_i\quad\text{s.t.}\quad y_i(w^\top x_i + b)\ge 1-\xi_i,\ \xi_i\ge 0.
+\]</span></p>
+<p>Parametr <span class="math inline">\(C&gt;0\)</span> reguluje kompromis między szerokością marginesu a karą za naruszenia: duże <span class="math inline">\(C\)</span> prowadzi do silniejszego „ścigania” błędów treningowych, a małe <span class="math inline">\(C\)</span> do większej regularizacji i szerszego marginesu kosztem większej tolerancji błędów.</p>
+<div id="906bfc1e" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVC</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Generujemy dane z częściowym zachodzeniem klas</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>X1 <span class="op">=</span> np.random.randn(<span class="dv">40</span>, <span class="dv">2</span>) <span class="op">+</span> np.array([<span class="dv">2</span>, <span class="dv">2</span>])</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> np.random.randn(<span class="dv">40</span>, <span class="dv">2</span>) <span class="op">+</span> np.array([<span class="dv">0</span>, <span class="dv">0</span>])</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Dodajemy kilka punktów "trudnych" w obszarze zachodzenia</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>X1 <span class="op">=</span> np.vstack([X1, np.array([[<span class="fl">0.5</span>, <span class="fl">0.5</span>], [<span class="fl">0.3</span>, <span class="fl">0.8</span>]])])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> np.vstack([X2, np.array([[<span class="fl">1.8</span>, <span class="fl">1.5</span>], [<span class="fl">1.5</span>, <span class="fl">2.0</span>]])])</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.vstack([X1, X2])</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.hstack([np.ones(<span class="bu">len</span>(X1)), <span class="op">-</span>np.ones(<span class="bu">len</span>(X2))])</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Funkcja rysująca granicę decyzyjną i margines</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_svm_decision_boundary(ax, clf, X, y, title):</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Siatka</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    x_min, x_max <span class="op">=</span> X[:, <span class="dv">0</span>].<span class="bu">min</span>() <span class="op">-</span> <span class="dv">1</span>, X[:, <span class="dv">0</span>].<span class="bu">max</span>() <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    y_min, y_max <span class="op">=</span> X[:, <span class="dv">1</span>].<span class="bu">min</span>() <span class="op">-</span> <span class="dv">1</span>, X[:, <span class="dv">1</span>].<span class="bu">max</span>() <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    xx, yy <span class="op">=</span> np.meshgrid(np.linspace(x_min, x_max, <span class="dv">200</span>),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                         np.linspace(y_min, y_max, <span class="dv">200</span>))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Funkcja decyzyjna</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> clf.decision_function(np.c_[xx.ravel(), yy.ravel()])</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> Z.reshape(xx.shape)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Granica decyzyjna i margines</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    ax.contour(xx, yy, Z, levels<span class="op">=</span>[<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], linewidths<span class="op">=</span>[<span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">1.5</span>],</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>               linestyles<span class="op">=</span>[<span class="st">'dashed'</span>, <span class="st">'solid'</span>, <span class="st">'dashed'</span>], colors<span class="op">=</span>[<span class="st">'gray'</span>, <span class="st">'black'</span>, <span class="st">'gray'</span>])</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Punkty</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    ax.scatter(X[y <span class="op">==</span> <span class="dv">1</span>, <span class="dv">0</span>], X[y <span class="op">==</span> <span class="dv">1</span>, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'royalblue'</span>, s<span class="op">=</span><span class="dv">50</span>, </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>               edgecolors<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, label<span class="op">=</span><span class="st">'Klasa +1'</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    ax.scatter(X[y <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>], X[y <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'coral'</span>, s<span class="op">=</span><span class="dv">50</span>, </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>               edgecolors<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, label<span class="op">=</span><span class="st">'Klasa -1'</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Wektory nośne</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    ax.scatter(clf.support_vectors_[:, <span class="dv">0</span>], clf.support_vectors_[:, <span class="dv">1</span>],</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>               s<span class="op">=</span><span class="dv">200</span>, linewidth<span class="op">=</span><span class="dv">2</span>, facecolors<span class="op">=</span><span class="st">'none'</span>, edgecolors<span class="op">=</span><span class="st">'green'</span>,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>               label<span class="op">=</span><span class="ss">f'Wektory nośne (</span><span class="sc">{</span><span class="bu">len</span>(clf.support_vectors_)<span class="sc">}</span><span class="ss">)'</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(x_min, x_max)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(y_min, y_max)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'$x_1$'</span>)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'$x_2$'</span>)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    ax.legend(loc<span class="op">=</span><span class="st">'upper left'</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Trenujemy SVM z różnymi wartościami C</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">4</span>))</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>C_values <span class="op">=</span> [<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">100</span>]</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, C <span class="kw">in</span> <span class="bu">zip</span>(axes, C_values):</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    clf <span class="op">=</span> SVC(kernel<span class="op">=</span><span class="st">'linear'</span>, C<span class="op">=</span>C)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    clf.fit(X, y)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    plot_svm_decision_boundary(ax, clf, X, y, <span class="ss">f'C = </span><span class="sc">{</span>C<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="08-svm_files/figure-html/cell-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="08-svm_files/figure-html/cell-2-output-1.png" width="1334" height="374" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Przy małym <span class="math inline">\(C=0.1\)</span> margines jest szerszy (większa odległość między przerywaną linią a linią ciągłą), ale model toleruje więcej naruszeń – wiele punktów znajduje się wewnątrz marginesu lub po złej stronie. Przy dużym <span class="math inline">\(C=100\)</span> margines jest węższy, a granica decyzyjna stara się uniknąć błędów kosztem mniejszej regularyzacji, co może prowadzić do przeuczenia.</p>
+<p>Wektory nośne (miękki margines):</p>
 <ul>
-<li>Support Vector Machines (SVM) szukaja hiperpłaszczyzny maksymalizujacej margines miedzy klasami.</li>
-<li>Kluczowe pojecia: hiperpłaszczyzna, wektory nosne, margines i jadra.</li>
-<li>Twardy margines wymaga braku bledow klasyfikacji, miekkim marginesem steruje parametr regularyzacji.</li>
-<li>Typy jader: liniowe, wielomianowe, RBF.</li>
-<li>Zalety: skutecznosc w danych wysokowymiarowych i przy malych probach.</li>
-<li>Wady: koniecznosc doboru parametrow i wrazliwosc na skale cech.</li>
+<li><span class="math inline">\(\xi_i = 0\)</span> i <span class="math inline">\(y_i(w^\top x_i + b)=1\)</span> — punkt leży na brzegu marginesu i jest wektorem nośnym.</li>
+<li><span class="math inline">\(0 &lt; \xi_i &lt; 1\)</span> — punkt leży wewnątrz marginesu po właściwej stronie granicy; nadal jest wektorem nośnym.</li>
+<li><span class="math inline">\(\xi_i \ge 1\)</span> — punkt jest błędnie sklasyfikowany; także jest wektorem nośnym. Tylko wektory nośne mają niezerowe współczynniki <span class="math inline">\(\alpha_i\)</span> w dualnym rozwiązaniu i wyznaczają położenie granicy decyzyjnej.</li>
 </ul>
+</section>
+<section id="nieliniowa-separacja-i-jądra" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="nieliniowa-separacja-i-jądra"><span class="header-section-number">9.4</span> Nieliniowa separacja i jądra</h2>
+<p>Jeżeli dane nie są dobrze separowalne liniowo w <span class="math inline">\(\mathbb{R}^p\)</span>, stosujemy odwzorowanie <span class="math inline">\(\varphi(x)\)</span> do przestrzeni cech <span class="math inline">\(\mathcal{H}\)</span>, w której separacja staje się liniowa. W praktyce nie konstruujemy jawnie <span class="math inline">\(\varphi\)</span>, lecz korzystamy z jądra <span class="math inline">\(K\)</span>, które realizuje iloczyn skalarny w <span class="math inline">\(\mathcal{H}\)</span>:</p>
+<p><span class="math display">\[
+K(x,z)=\langle\varphi(x),\varphi(z)\rangle.
+\]</span></p>
+<p>W postaci dualnej funkcja decyzyjna przyjmuje postać:</p>
+<p><span class="math display">\[
+f(x)=\sum_{i=1}^n \alpha_i y_i K(x_i,x) + b,\qquad \hat y(x)=\mathrm{sign}(f(x)),
+\]</span></p>
+<p>gdzie niezerowe <span class="math inline">\(\alpha_i\)</span> odpowiadają wektorom nośnym.</p>
+<section id="popularne-jądra-i-ich-zastosowania" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="popularne-jądra-i-ich-zastosowania"><span class="header-section-number">9.4.1</span> Popularne jądra i ich zastosowania</h3>
+<p><strong>1. Jądro liniowe:</strong> <span class="math inline">\(K(x,z) = x^\top z\)</span></p>
+<ul>
+<li>Najprostsze; równoważne SVM bez kernela</li>
+<li><strong>Kiedy stosować:</strong> dane liniowo lub prawie liniowo separowalne, wysokowymiarowe dane rzadkie (tekst, genomika), gdy chcemy interpretowalności lub szybkiego treningu/predykcji</li>
+<li>Zalety: bardzo szybkie, skalowalne, niewielkie ryzyko przeuczenia</li>
+<li>Wady: ograniczona elastyczność dla złożonych granic nieliniowych</li>
+</ul>
+<p><strong>2. Jądro wielomianowe:</strong> <span class="math inline">\(K(x,z) = (\gamma\, x^\top z + r)^d\)</span></p>
+<ul>
+<li>Parametry: <span class="math inline">\(d\)</span> (stopień), <span class="math inline">\(\gamma\)</span> (skalowanie), <span class="math inline">\(r\)</span> (stała, często 0)</li>
+<li><strong>Kiedy stosować:</strong> interakcje między cechami mają znaczenie (np. pixel × pixel w obrazach), znamy z dziedziny, że zależności są wielomianowe, dane niskodymiarowe z wyraźnymi nieliniowościami niskiego stopnia</li>
+<li>Zalety: jawnie modeluje interakcje do stopnia <span class="math inline">\(d\)</span></li>
+<li>Wady: droższe obliczeniowo niż liniowe, wrażliwe na dobór <span class="math inline">\(d\)</span> i <span class="math inline">\(\gamma\)</span>, ryzyko przeuczenia przy dużych <span class="math inline">\(d\)</span></li>
+</ul>
+<p><strong>3. Jądro RBF (Gaussa):</strong> <span class="math inline">\(K(x,z) = \exp(-\gamma\|x-z\|^2)\)</span></p>
+<ul>
+<li>Parametr <span class="math inline">\(\gamma&gt;0\)</span> kontroluje „promień wpływu” każdego punktu</li>
+<li><strong>Kiedy stosować:</strong> uniwersalne jądro domyślne, gdy nie znamy struktury danych, granice decyzyjne mają złożone, lokalne kształty, dane nisko- i średniowymiarowe z nieliniowymi zależnościami</li>
+<li>Zalety: bardzo elastyczne, dobrze działa w praktyce, może aproksymować dowolną ciągłą funkcję (uniwersalne)</li>
+<li>Wady: duże <span class="math inline">\(\gamma\)</span> → przeuczenie (zbyt lokalne granice), wymaga standaryzacji, wolniejsze niż liniowe, trudniej interpretować</li>
+</ul>
+<p><strong>4. Jądro sigmoidalne:</strong> <span class="math inline">\(K(x,z) = \tanh(\gamma\, x^\top z + r)\)</span></p>
+<ul>
+<li>Inspirowane sieciami neuronowymi (funkcja aktywacji)</li>
+<li><strong>Kiedy stosować:</strong> rzadko w praktyce; czasem w problemach podobnych do sieci neuronowych, gdy chcemy zachowania „S-kształtnego”</li>
+<li>Wady: nie zawsze dodatnio określone (wymóg jądra Mercera); może być niestabilne</li>
+</ul>
+<p><strong>5. Jądro Laplace’a:</strong> <span class="math inline">\(K(x,z) = \exp(-\gamma\|x-z\|_1)\)</span></p>
+<ul>
+<li>Wariant RBF z normą <span class="math inline">\(L^1\)</span> zamiast <span class="math inline">\(L^2\)</span></li>
+<li><strong>Kiedy stosować:</strong> gdy cechy mają duże odstające wartości lub preferujemy robustność normy <span class="math inline">\(L^1\)</span>, podobne zastosowania jak RBF</li>
+<li>Rzadziej spotykane niż RBF</li>
+</ul>
+<p><strong>6. Jądra stringowe (dla tekstów/sekwencji):</strong></p>
+<ul>
+<li>Przykłady: <em>spectrum kernel</em>, <em>subsequence kernel</em>, <em>mismatch kernel</em></li>
+<li><strong>Kiedy stosować:</strong> klasyfikacja tekstów, sekwencji DNA/białek, analiza dokumentów bez jawnej wektoryzacji</li>
+<li>Mierzą podobieństwo na podstawie wspólnych podsłów, n-gramów lub motywów</li>
+</ul>
+<p><strong>7. Jądro chi-kwadrat:</strong> <span class="math inline">\(K(x,z) = \exp\bigg(-\gamma\sum_i \frac{(x_i-z_i)^2}{x_i+z_i}\bigg)\)</span></p>
+<ul>
+<li><strong>Kiedy stosować:</strong> histogramy (np. w computer vision: SIFT, HOG), dane nieujemne o charakterze zliczeniowym</li>
+<li>Szczególnie popularne w rozpoznawaniu obrazów</li>
+</ul>
+<p><strong>Wybór jądra w praktyce:</strong></p>
+<ul>
+<li><strong>Start:</strong> spróbuj liniowego (jeśli <span class="math inline">\(p\)</span> duże lub dane rzadkie) lub RBF (jeśli <span class="math inline">\(p\)</span> małe/średnie)</li>
+<li><strong>Grid search:</strong> dobieraj <span class="math inline">\(C\)</span> i <span class="math inline">\(\gamma\)</span> (lub <span class="math inline">\(d\)</span>) przez walidację krzyżową</li>
+<li><strong>Standaryzacja:</strong> zawsze dla RBF i wielomianowego</li>
+<li><strong>Dziedzina:</strong> jeśli masz wiedzę problemową (tekst → stringowe, histogramy → chi-kwadrat), użyj specjalistycznego jądra</li>
+</ul>
+<p>Parametr <span class="math inline">\(\gamma\)</span> w RBF kontroluje lokalność granicy decyzyjnej: duże <span class="math inline">\(\gamma\)</span> daje granice bardziej „lokalne” (większe ryzyko przeuczenia), a małe <span class="math inline">\(\gamma\)</span> bardziej „globalne” i gładkie.</p>
+</section>
+</section>
+<section id="estymacja-parametrów-w-svm-margines-twardy-i-miękki" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="estymacja-parametrów-w-svm-margines-twardy-i-miękki"><span class="header-section-number">9.5</span> Estymacja parametrów w SVM: margines twardy i miękki</h2>
+<p>Estymacja parametrów SVM jest problemem optymalizacji wypukłej. W wersji liniowej parametry modelu to <span class="math inline">\((w,b)\)</span>, natomiast w ujęciu dualnym (które jest kluczowe zarówno obliczeniowo, jak i dla jąder) parametrami roboczymi stają się mnożniki Lagrange’a <span class="math inline">\(\alpha_1,\dots,\alpha_n\)</span> oraz <span class="math inline">\(b\)</span>. Przejście do postaci dualnej nie jest tylko „trikiem” formalnym: ono wyjaśnia, dlaczego rozwiązanie zależy wyłącznie od części obserwacji (wektorów nośnych) oraz dlaczego kernel SVM można zrealizować bez jawnego konstruowania <span class="math inline">\(\varphi(x)\)</span>.</p>
+<section id="margines-twardy-od-postaci-pierwotnej-do-dualnej" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1" class="anchored" data-anchor-id="margines-twardy-od-postaci-pierwotnej-do-dualnej"><span class="header-section-number">9.5.1</span> Margines twardy: od postaci pierwotnej do dualnej</h3>
+<p>W hard-margin SVM rozwiązujemy zadanie z ograniczeniami nierównościowymi. Aby przejść do dualu, konstruujemy Lagrangian przez dołączenie ograniczeń z mnożnikami <span class="math inline">\(\alpha_i\ge 0\)</span>. Otrzymujemy funkcję:</p>
+<p><span class="math display">\[
+\mathcal{L}(w,b,\alpha)=\frac{1}{2}\|w\|^2-\sum_{i=1}^n \alpha_i\big(y_i(w^\top x_i+b)-1\big).
+\]</span></p>
+<p>Następnie narzucamy warunki stacjonarności (pochodne po <span class="math inline">\(w\)</span> i <span class="math inline">\(b\)</span> równe zero), które są kluczowe, bo pozwalają wyeliminować <span class="math inline">\(w\)</span> i <span class="math inline">\(b\)</span> z problemu. Z pochodnej po w dostajemy:</p>
+<p><span class="math display">\[
+\frac{\partial \mathcal{L}}{\partial w}=0 \quad\Rightarrow\quad
+w=\sum_{i=1}^n \alpha_i y_i x_i,
+\]</span></p>
+<p>a z pochodnej po <span class="math inline">\(b\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial \mathcal{L}}{\partial b}=0 \quad\Rightarrow\quad
+\sum_{i=1}^n \alpha_i y_i=0.
+\]</span></p>
+<p>Po podstawieniu tych zależności do Lagrangianu otrzymujemy problem dualny w zmiennych <span class="math inline">\(\alpha\)</span>:</p>
+<p><span class="math display">\[
+\max_{\alpha}\ \sum_{i=1}^n \alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n \alpha_i\alpha_j y_i y_j\, x_i^\top x_j,
+\quad
+\text{s.t. } \alpha_i\ge 0,\ \sum_{i=1}^n \alpha_i y_i=0.
+\]</span></p>
+<p>Jest to programowanie kwadratowe (QP) z liniowymi ograniczeniami. Wypukłość zapewnia globalne optimum. Sens praktyczny jest następujący: zamiast szukać <span class="math inline">\(w\)</span> wprost, rozwiązujemy QP dla <span class="math inline">\(\alpha\)</span>, a dopiero potem rekonstruujemy <span class="math inline">\(w\)</span>.</p>
+<p>Centralną rolę odgrywają warunki KKT (Karush–Kuhn–Tucker), zwłaszcza warunek komplementarności:</p>
+<p><span class="math display">\[
+\alpha_i\big(y_i(w^\top x_i+b)-1\big)=0.
+\]</span></p>
+<p>Oznacza on, że jeśli <span class="math inline">\(\alpha_i&gt;0\)</span>, to musi zachodzić równość <span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>, czyli punkt leży dokładnie na brzegu marginesu. Innymi słowy, niezerowe <span class="math inline">\(\alpha_i\)</span> odpowiadają wektorom nośnym i tylko te punkty „trzymają” rozwiązanie. Punkty z <span class="math inline">\(\alpha_i=0\)</span> są w sensie optymalizacji „nieaktywne” i nie wpływają na położenie hiperpłaszczyzny.</p>
+<p>Po wyznaczeniu <span class="math inline">\(\alpha\)</span> obliczamy <span class="math inline">\(\hat w\)</span> ze wzoru <span class="math inline">\(\hat w=\sum_i \alpha_i y_i x_i\)</span>. Bias <span class="math inline">\(\hat b\)</span> odzyskujemy korzystając z dowolnego wektora nośnego <span class="math inline">\(x_s\)</span> (w praktyce uśredniając po wielu SV): dla hard-margin mamy równanie <span class="math inline">\(y_s(\hat w^\top x_s+\hat b)=1,\)</span> więc</p>
+<p><span class="math display">\[
+\hat b = y_s-\hat w^\top x_s.
+\]</span></p>
+</section>
+<section id="margines-miękki" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2" class="anchored" data-anchor-id="margines-miękki"><span class="header-section-number">9.5.2</span> Margines miękki</h3>
+<p>W soft-margin SVM wprowadzamy zmienne luzu <span class="math inline">\(\xi_i\ge 0\)</span>, a w funkcji celu pojawia się składnik <span class="math inline">\(C\sum_i \xi_i\)</span>. Formalnie w problemie dualnym prowadzi to do tego, że mnożniki <span class="math inline">\(\alpha_i\)</span> nie tylko są nieujemne, ale także mają górne ograniczenie:</p>
+<p><span class="math display">\[
+0\le \alpha_i \le C.
+\]</span></p>
+<p>Dual dla soft-margin ma więc tę samą funkcję celu co w hard-margin, ale inne ograniczenia:</p>
+<p><span class="math display">\[
+\max_{\alpha}\ \sum_{i=1}^n \alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n \alpha_i\alpha_j y_i y_j\, x_i^\top x_j,
+\quad
+\text{s.t. } 0\le \alpha_i\le C,\ \sum_{i=1}^n \alpha_i y_i=0.
+\]</span></p>
+<p>Ten pozornie „mały” detal ma bardzo ważną interpretację. Warunki KKT pozwalają rozróżnić trzy typy obserwacji. Jeśli <span class="math inline">\(\alpha_i=0\)</span>, obserwacja jest na tyle „łatwa”, że nie wpływa na rozwiązanie. Jeśli <span class="math inline">\(0&lt;\alpha_i&lt;C\)</span>, obserwacja jest klasycznym wektorem nośnym leżącym na brzegu marginesu (wiąże równość <span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>). Jeśli natomiast <span class="math inline">\(\alpha_i=C\)</span>, obserwacja jest w sensie KKT „nasycona” karą: typowo odpowiada to punktom naruszającym margines (a czasem błędnie sklasyfikowanym). Z tego powodu w soft-margin najstabilniej wyznacza się <span class="math inline">\(\hat b\)</span> korzystając z tych wektorów nośnych, dla których <span class="math inline">\(0&lt;\alpha_i&lt;C\)</span>, ponieważ wtedy zachodzi dokładna równość brzegowa i unikamy przypadków naruszeń.</p>
+<p>Warto też zauważyć równoważność soft-margin z minimalizacją straty <em>hinge loss</em> w ujęciu „bez <span class="math inline">\(\xi\)</span>”. Zmienne luzu można interpretować jako miarę naruszenia:</p>
+<p><span class="math display">\[
+\xi_i=\max\{0,\ 1-y_i(w^\top x_i+b)\},
+\]</span></p>
+<p>co prowadzi do równoważnego zapisu:</p>
+<p><span class="math display">\[
+\min_{w,b}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n \max\{0,\ 1-y_i(w^\top x_i+b)\}.
+\]</span></p>
+<p>To jest ważne z perspektywy uczenia maszynowego: pokazuje, że soft-margin SVM jest klasycznym przypadkiem uczenia z wypukłą funkcją straty i regularizacją, a parametry <span class="math inline">\(C\)</span> sterują intensywnością kary za naruszenia.</p>
+</section>
+<section id="kernelowa-wersja-a-estymacja-parametrów" class="level3" data-number="9.5.3">
+<h3 data-number="9.5.3" class="anchored" data-anchor-id="kernelowa-wersja-a-estymacja-parametrów"><span class="header-section-number">9.5.3</span> Kernelowa wersja a estymacja parametrów</h3>
+<p>Przejście do kernela nie zmienia mechaniki estymacji — zmienia jedynie sposób, w jaki w problemie dualnym pojawiają się dane. W problemie dualnym występują iloczyny skalarne <span class="math inline">\(x_i^\top x_j\)</span>, które zastępujemy <span class="math inline">\(K(x_i,x_j)\)</span>. Soft-margin dual przyjmuje postać:</p>
+<p><span class="math display">\[
+\max_{\alpha}\ \sum_{i=1}^n \alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n \alpha_i\alpha_j y_i y_j\, K(x_i,x_j),
+\quad
+\text{s.t. } 0\le \alpha_i\le C,\ \sum_{i=1}^n \alpha_i y_i=0.
+\]</span></p>
+<p>Po rozwiązaniu problemu dostajemy funkcję decyzyjną:</p>
+<p><span class="math display">\[
+f(x)=\sum_{i=1}^n \alpha_i y_i K(x_i,x)+b,
+\]</span></p>
+<p>gdzie niezerowe <span class="math inline">\(\alpha_i\)</span> odpowiadają wektorom nośnym. W wersji liniowej można rekonstruować <span class="math inline">\(w\)</span>, natomiast w kernelowej zwykle tego nie robimy — model jest reprezentowany przez <span class="math inline">\(\alpha\)</span>, wybrane wektory nośne i <span class="math inline">\(b\)</span>.</p>
+<p>Chociaż problem dualny ma postać QP, w praktyce nie rozwiązuje się go ogólnymi solverami programowania kwadratowego, ponieważ byłoby to zbyt kosztowne dla większych <span class="math inline">\(n\)</span>. Klasyczne implementacje SVM (rodzina LIBSVM, używana m.in. w wielu bibliotekach) stosują SMO (<em>Sequential Minimal Optimization</em>). SMO rozbija problem na serię bardzo małych podproblemów (zwykle dla pary zmiennych <span class="math inline">\(\alpha\)</span>), które można rozwiązać analitycznie, a następnie iteracyjnie aktualizuje rozwiązanie aż do spełnienia warunków optymalności KKT. W tym sensie „estymacja parametrów SVM” w praktyce oznacza: wyznaczenie współczynników dualnych <span class="math inline">\(\alpha\)</span> metodą SMO (lub jej wariantami), obliczenie <span class="math inline">\(b\)</span> na podstawie wektorów nośnych oraz — w przypadku wersji liniowej — rekonstrukcję <span class="math inline">\(w\)</span>.</p>
+</section>
+</section>
+<section id="wariant-wieloklasowy" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="wariant-wieloklasowy"><span class="header-section-number">9.6</span> Wariant wieloklasowy</h2>
+<p>SVM jest z natury klasyfikatorem binarnym. Dla problemów wieloklasowych stosujemy konstrukcje redukcyjne. Najczęściej spotykamy:</p>
+<ul>
+<li><strong>one-vs-rest (OvR)</strong> – uczymy <span class="math inline">\(K\)</span> klasyfikatorów binarnych „klasa <span class="math inline">\(k\)</span> vs reszta” i wybieramy klasę o największej wartości funkcji decyzyjnej;</li>
+<li><strong>one-vs-one (OvO)</strong> – uczymy <span class="math inline">\(K(K-1)/2\)</span> klasyfikatorów dla każdej pary klas i stosujemy głosowanie.</li>
+</ul>
+<p>W praktyce implementacje (np. scikit-learn) domyślnie stosują OvO dla <code>SVC</code>, a OvR jest często spotykany w wersjach liniowych (np. <code>LinearSVC</code>). Wybór strategii wpływa na koszt obliczeń i zachowanie w przypadku niezbalansowanych klas.</p>
+</section>
+<section id="svm-w-regresji-svr" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="svm-w-regresji-svr"><span class="header-section-number">9.7</span> SVM w regresji: SVR</h2>
+<p>W regresji celem nie jest rozdział klas, lecz znalezienie funkcji możliwie „płaskiej”, która dopuszcza błąd do <span class="math inline">\(\varepsilon\)</span>. W SVR wprowadza się stratę <span class="math inline">\(\varepsilon\)</span>-insensitive: błędy mniejsze niż <span class="math inline">\(\varepsilon\)</span> nie są karane. Model ma postać <span class="math inline">\(f(x)=w^\top\varphi(x)+b\)</span>, a problem optymalizacyjny:</p>
+<p><span class="math display">\[
+\min_{w,b,\xi,\xi^*}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n (\xi_i+\xi_i^*)
+\]</span> <span class="math display">\[
+\text{s.t.}\quad y_i - (w^\top\varphi(x_i)+b)\le \varepsilon + \xi_i,\quad (w^\top\varphi(x_i)+b) - y_i\le \varepsilon + \xi_i^*,\quad \xi_i,\xi_i^*\ge 0.
+\]</span></p>
+<p>W praktyce <span class="math inline">\(\varepsilon\)</span> kontroluje „szerokość rurki” tolerancji, a <span class="math inline">\(C\)</span> kontroluje karę za przekroczenia. SVR, podobnie jak SVC, może korzystać z jąder.</p>
+</section>
+<section id="założenia-zalety-i-wady" class="level2" data-number="9.8">
+<h2 data-number="9.8" class="anchored" data-anchor-id="założenia-zalety-i-wady"><span class="header-section-number">9.8</span> Założenia, zalety i wady</h2>
+<p>SVM zakłada, że klasy (lub zależność w regresji) są dobrze aproksymowalne przez hiperpłaszczyznę w pewnej przestrzeni cech (jawnej lub indukowanej jądrem). Metoda jest bardzo wrażliwa na skalę cech (zwłaszcza dla jąder RBF i wielomianowych), dlatego w praktyce niemal zawsze stosujemy standaryzację. SVM ma silne podstawy teoretyczne (maksymalizacja marginesu, optymalizacja wypukła), często dobrze działa w danych wysokowymiarowych (np. tekst) i przy umiarkowanych próbach. Wadą jest koszt obliczeniowy dla dużych <span class="math inline">\(n\)</span> (szczególnie w kernel SVM), konieczność strojenia hiperparametrów (<span class="math inline">\(C\)</span>, <span class="math inline">\(\gamma\)</span>, wybór jądra) oraz mniejsza interpretowalność w porównaniu z prostymi modelami liniowymi.</p>
+</section>
+<section id="przykład-klasyfikacji-wieloklasowej" class="level2" data-number="9.9">
+<h2 data-number="9.9" class="anchored" data-anchor-id="przykład-klasyfikacji-wieloklasowej"><span class="header-section-number">9.9</span> Przykład klasyfikacji wieloklasowej</h2>
+<p>Poniżej wykorzystujemy zbiór <code>scikit-learn/iris</code> z Hugging Face i uczymy wieloklasowe SVM z jądrem RBF. Zwracamy uwagę na dwa elementy praktyczne: standaryzację oraz dobór hiperparametrów <span class="math inline">\(C\)</span> i <span class="math inline">\(\gamma\)</span> przez walidację krzyżową.</p>
+<div id="fb205011" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> load_dataset</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split, StratifiedKFold, GridSearchCV</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVC</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Dane</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>iris <span class="op">=</span> load_dataset(<span class="st">"scikit-learn/iris"</span>, split<span class="op">=</span><span class="st">"train"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> iris.to_pandas()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Target i cechy (różne wersje zbioru mogą mieć różne nazwy kolumny docelowej)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>possible_targets <span class="op">=</span> [<span class="st">"label"</span>, <span class="st">"target"</span>, <span class="st">"species"</span>, <span class="st">"class"</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>target_col <span class="op">=</span> <span class="bu">next</span>((c <span class="cf">for</span> c <span class="kw">in</span> possible_targets <span class="cf">if</span> c <span class="kw">in</span> df.columns), <span class="va">None</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> target_col <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    non_num <span class="op">=</span> df.select_dtypes(exclude<span class="op">=</span>[<span class="st">"number"</span>]).columns.tolist()</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(non_num) <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Nie znaleziono kolumny docelowej. Dostępne kolumny: "</span> <span class="op">+</span> <span class="st">", "</span>.join(df.columns)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    target_col <span class="op">=</span> non_num[<span class="dv">0</span>]</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># y: etykiety klas (kodujemy tekst do liczb)</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>y_raw <span class="op">=</span> df[target_col]</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> y_raw.dtype.kind <span class="kw">in</span> {<span class="st">"i"</span>, <span class="st">"u"</span>}:</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> y_raw.astype(<span class="bu">int</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> y_raw.astype(<span class="st">"category"</span>).cat.codes</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co"># X: wszystkie cechy liczbowe z wykluczeniem targetu</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>[<span class="st">"number"</span>]).drop(columns<span class="op">=</span>[target_col], errors<span class="op">=</span><span class="st">"ignore"</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.25</span>, random_state<span class="op">=</span><span class="dv">42</span>, stratify<span class="op">=</span>y</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Pipeline: skalowanie + SVC</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"scaler"</span>, StandardScaler()),</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"svc"</span>, SVC(kernel<span class="op">=</span><span class="st">"rbf"</span>))</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"svc__C"</span>: [<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>],</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="st">"svc__gamma"</span>: [<span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>]</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>search <span class="op">=</span> GridSearchCV(pipe, param_grid<span class="op">=</span>param_grid, scoring<span class="op">=</span><span class="st">"accuracy"</span>, cv<span class="op">=</span>cv, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>search.fit(X_train, y_train)</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>best <span class="op">=</span> search.best_estimator_</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Best params:"</span>, search.best_params_)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> best.predict(X_test)</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Test accuracy:"</span>, acc)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred))</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y_test, y_pred)</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(cm)</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="fl">4.5</span>,<span class="dv">4</span>))</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>disp.plot(values_format<span class="op">=</span><span class="st">"d"</span>)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"SVM (RBF): macierz pomyłek (Iris)"</span>)</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Best params: {'svc__C': 1, 'svc__gamma': 0.1}
+Test accuracy: 1.0
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        12
+           1       1.00      1.00      1.00        13
+           2       1.00      1.00      1.00        13
+
+    accuracy                           1.00        38
+   macro avg       1.00      1.00      1.00        38
+weighted avg       1.00      1.00      1.00        38
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Figure size 432x384 with 0 Axes&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="08-svm_files/figure-html/cell-3-output-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="08-svm_files/figure-html/cell-3-output-3.png" width="524" height="470" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="przykład-regresyjny" class="level2" data-number="9.10">
+<h2 data-number="9.10" class="anchored" data-anchor-id="przykład-regresyjny"><span class="header-section-number">9.10</span> Przykład regresyjny</h2>
+<p>W drugim przykładzie pokazujemy SVR na zbiorze <code>scikit-learn/Fish</code>. Ponownie stosujemy skalowanie i stroimy <span class="math inline">\(C\)</span>, <span class="math inline">\(\varepsilon\)</span> oraz <span class="math inline">\(\gamma\)</span> (dla RBF) przez walidację krzyżową.</p>
+<div id="2c33e8ac" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Kod</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> load_dataset</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split, KFold, GridSearchCV</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVR</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> r2_score, mean_squared_error</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Dane: tabular regression (masa ryby) z Hugging Face</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Dataset: scikit-learn/Fish</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>fish <span class="op">=</span> load_dataset(<span class="st">"scikit-learn/Fish"</span>, split<span class="op">=</span><span class="st">"train"</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> fish.to_pandas()</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Target i cechy</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Target: 'Weight' (waga w gramach). Kolumna 'Species' jest kategoryczna;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># dla prostoty przykładu SVR używamy wyłącznie cech liczbowych.</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">"Weight"</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> target <span class="kw">not</span> <span class="kw">in</span> df.columns:</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">ValueError</span>(</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nie znaleziono kolumny 'Weight'. Dostępne kolumny: "</span> <span class="op">+</span> <span class="st">", "</span>.join(df.columns)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[target].astype(<span class="bu">float</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>[<span class="st">"number"</span>]).drop(columns<span class="op">=</span>[target], errors<span class="op">=</span><span class="st">"ignore"</span>).copy()</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.25</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"scaler"</span>, StandardScaler()),</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"svr"</span>, SVR(kernel<span class="op">=</span><span class="st">"rbf"</span>))</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>param_grid <span class="op">=</span> {</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"svr__C"</span>: [<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">300</span>],</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"svr__epsilon"</span>: [<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>],</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"svr__gamma"</span>: [<span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>]</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>cv <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>search <span class="op">=</span> GridSearchCV(pipe, param_grid<span class="op">=</span>param_grid, scoring<span class="op">=</span><span class="st">"r2"</span>, cv<span class="op">=</span>cv, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>search.fit(X_train, y_train)</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>best <span class="op">=</span> search.best_estimator_</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Best params:"</span>, search.best_params_)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> best.predict(X_test)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Test R2:"</span>, r2_score(y_test, pred))</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Test RMSE:"</span>, np.sqrt(mean_squared_error(y_test, pred)))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Best params: {'svr__C': 300, 'svr__epsilon': 1, 'svr__gamma': 0.01}
+Test R2: 0.964401219567342
+Test RMSE: 68.12953630825862</code></pre>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -837,12 +1361,44 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Dariusz Majerek ©2025</p>
 </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
