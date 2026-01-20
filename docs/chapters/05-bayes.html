@@ -404,7 +404,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/08-svm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -557,7 +557,7 @@ window.Quarto = {
 <li>Szybkość uczenia i predykcji nawet dla dużych korpusów tekstowych</li>
 </ul>
 <p>Przygotujemy dane w trzech różnych reprezentacjach, aby zillustrować działanie trzech wariantów Naive Bayes:</p>
-<div id="4bb79a5e" class="cell" data-execution_count="1">
+<div id="b262d4cd" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -613,7 +613,7 @@ Rozkład klas: [4666 5362 1304 2159 1937  572]</code></pre>
 <h3 data-number="6.6.2" class="anchored" data-anchor-id="multinomialnb"><span class="header-section-number">6.6.2</span> MultinomialNB</h3>
 <p>MultinomialNB modeluje rozkład wielomianowy - zakłada, że dokumenty są generowane przez losowe wybieranie słów z rozkładu charakterystycznego dla danej klasy. Dla każdej klasy <span class="math inline">\(k\)</span> i słowa <span class="math inline">\(j\)</span> estymuje prawdopodobieństwo <span class="math inline">\(\mathbb{P}(słowo_j\mid klasa=k)\)</span> na podstawie proporcji wystąpień tego słowa w klasie. Wykorzystuje <em>zliczenia</em> słów - im częściej dane słowo występuje w dokumencie, tym silniej wpływa na klasyfikację.</p>
 <p><strong>Parametr alpha</strong> kontroluje wygładzanie Laplace’a (MAP z priorem Dirichleta): większe alpha = silniejsza regularyzacja, mniejsze prawdopodobieństwo zerowe dla niewidzianych słów.</p>
-<div id="24e43ccc" class="cell" data-execution_count="2">
+<div id="ef18ef4b" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> MultinomialNB</span>
@@ -676,7 +676,7 @@ Accuracy z alpha=0.1: 0.8260</code></pre>
 <li><span class="math inline">\(\mathbb{P}(słowo_j=0\mid klasa=k)\)</span> - prawdopodobieństwo braku słowa (również używane!)</li>
 </ul>
 <p>Jest to przydatne, gdy struktura dokumentu (które słowa występują) jest ważniejsza niż ich częstość.</p>
-<div id="cbe109b3" class="cell" data-execution_count="3">
+<div id="7426b893" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> BernoulliNB</span>
@@ -735,7 +735,7 @@ x_j \mid (y=k) \sim \mathcal{N}(\mu_{k,j}, \sigma_{k,j}^2).
 \hat\mu_{k,j}=\frac{1}{n_k}\sum_{i:y_i=k} x_{i,j},\qquad
 \hat\sigma^2_{k,j}=\frac{1}{n_k}\sum_{i:y_i=k}(x_{i,j}-\hat\mu_{k,j})^2
 \]</span></p>
-<div id="09d361d8" class="cell" data-execution_count="4">
+<div id="3c31a5b0" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> GaussianNB</span>

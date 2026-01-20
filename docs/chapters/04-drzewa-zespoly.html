@@ -427,7 +427,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/08-svm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -682,7 +682,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <p><span class="theorem-title"><strong>Przykład 5.1 (Przykład: drzewo klasyfikacyjne dla gatunku muzycznego (Spotify))</strong></span> Poniżej budujemy proste drzewo klasyfikacyjne przewidujące <strong>gatunek muzyczny</strong> na podstawie numerycznych cech akustycznych utworów (np. <em>danceability, energy, loudness, tempo</em>). Jest to typowy przypadek danych tablicowych, gdzie drzewa decyzyjne są dobrym modelem bazowym.</p>
 <p>W tym przykładzie <strong>nie wykonujemy klasycznego preprocessingu typu standaryzacja/normalizacja</strong>. Wynika to z faktu, że reguły w drzewach mają postać progów porównujących wartości cech (np. <span class="math inline">\(x_j \le t\)</span>), więc skala zmiennych nie wpływa na sens podziału w taki sposób jak w metodach opartych o iloczyny skalarne (np. regresja logistyczna, SVM). Innymi słowy: drzewo nie korzysta z odległości euklidesowej ani z norm współczynników, tylko z porównań i wyboru progów, dlatego <strong>skalowanie cech nie jest wymagane</strong>. W praktyce pozostają jedynie „minimalne” kroki porządkowe: wybór cech liczbowych i ewentualne uzupełnienie braków (jeśli występują).</p>
 <p>Uwaga dydaktyczna: zbiór Spotify zawiera wiele klas (gatunków). Aby uzyskać czytelny przykład (i sensowną macierz pomyłek), ograniczamy się do <span class="math inline">\(K=10\)</span> najczęstszych gatunków.</p>
-<div id="2f994e64" class="cell" data-execution_count="1">
+<div id="2a34f802" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -734,7 +734,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <pre><code>Braki danych (łącznie): 0</code></pre>
 </div>
 </div>
-<div id="22dfc7a1" class="cell" data-execution_count="2">
+<div id="c9bb50a4" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) Cechy: bierzemy tylko numeryczne (+ bool jako 0/1), bo DecisionTreeClassifier nie przyjmuje stringów</span></span>
@@ -764,7 +764,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># print(export_text(tree, feature_names=feature_names))</span></span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="e137d2dc" class="cell" data-execution_count="3">
+<div id="338cfae8" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 10) Predykcja i metryki</span></span>
@@ -826,7 +826,7 @@ progressive-house       0.63      0.61      0.62       200
 </div>
 </div>
 </div>
-<div id="64561962" class="cell" data-execution_count="4">
+<div id="54b44b68" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 12) Wizualizacja drzewa (okrojona)</span></span>
@@ -854,7 +854,7 @@ progressive-house       0.63      0.61      0.62       200
 </div>
 </div>
 <p>Spróbujemy teraz przyciąć drzewo w celu poprawy jego zdolności generalizacyjnych.</p>
-<div id="48052e83" class="cell" data-execution_count="5">
+<div id="48683f0a" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1065,7 +1065,7 @@ Metryki (test) po przycinaniu:
 </ul>
 <div id="exm-2" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 5.2</strong></span> Dla tych samych danych co w <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> przeprowadzimy trening modeli bagging i lasu losowego.</p>
-<div id="601091c7" class="cell" data-execution_count="6">
+<div id="b496b371" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> BaggingClassifier, RandomForestClassifier</span>
@@ -1466,7 +1466,7 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 </ul>
 <div id="exm-3" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 5.3</strong></span> Teraz dokonamy porównania dotychczasowych modeli (z <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> i <a href="#exm-2" class="quarto-xref">Przykład&nbsp;<span>5.2</span></a>) z modelami AdaBoost, XGBoost, CatBoost.</p>
-<div id="7d7a0b7d" class="cell" data-execution_count="7">
+<div id="c6cbd487" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> AdaBoostClassifier</span>
@@ -1556,37 +1556,102 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 <span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lightgbm <span class="im">import</span> LGBMClassifier</span>
 <span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a>lgbm <span class="op">=</span> LGBMClassifier(</span>
-<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">800</span>,</span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">500</span>,</span>
 <span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span><span class="fl">0.05</span>,</span>
-<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>    num_leaves<span class="op">=</span><span class="dv">63</span>,</span>
-<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=-</span><span class="dv">1</span>,</span>
-<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>    subsample<span class="op">=</span><span class="fl">0.8</span>,</span>
-<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>    colsample_bytree<span class="op">=</span><span class="fl">0.8</span>,</span>
-<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a>    objective<span class="op">=</span><span class="st">"multiclass"</span>,</span>
-<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a>    num_class<span class="op">=</span><span class="bu">len</span>(le.classes_),</span>
-<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">44</span>,</span>
-<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
-<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a>    verbosity<span class="op">=-</span><span class="dv">1</span></span>
-<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>lgbm.fit(X_train, y_train_enc)</span>
-<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>yhat_lgbm <span class="op">=</span> le.inverse_transform(lgbm.predict(X_test).astype(<span class="bu">int</span>))</span>
-<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>results.append(</span>
-<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a>        <span class="st">"model"</span>: <span class="st">"LightGBM"</span>,</span>
-<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a>        <span class="st">"accuracy"</span>: accuracy_score(y_test, yhat_lgbm),</span>
-<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>        <span class="st">"balanced_accuracy"</span>: balanced_accuracy_score(y_test, yhat_lgbm),</span>
-<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>        <span class="st">"f1_macro"</span>: f1_score(y_test, yhat_lgbm, average<span class="op">=</span><span class="st">"macro"</span>),</span>
-<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> pd.DataFrame(results).sort_values(<span class="st">"balanced_accuracy"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>    num_leaves<span class="op">=</span><span class="dv">31</span>,</span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">44</span>,</span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>    importance_type<span class="op">=</span><span class="st">"gain"</span>,</span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a>lgbm.fit(X_train, y_train_enc)</span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a>yhat_lgbm <span class="op">=</span> le.inverse_transform(lgbm.predict(X_test).astype(<span class="bu">int</span>))</span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a>results.append(</span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>        <span class="st">"model"</span>: <span class="st">"LightGBM"</span>,</span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a>        <span class="st">"accuracy"</span>: accuracy_score(y_test, yhat_lgbm),</span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>        <span class="st">"balanced_accuracy"</span>: balanced_accuracy_score(y_test, yhat_lgbm),</span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>        <span class="st">"f1_macro"</span>: f1_score(y_test, yhat_lgbm, average<span class="op">=</span><span class="st">"macro"</span>),</span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> pd.DataFrame(results).sort_values(<span class="st">"balanced_accuracy"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>             model  accuracy  balanced_accuracy  f1_macro
-          LightGBM    0.7920             0.7920    0.7930
+<pre><code>[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000554 seconds.
+You can set `force_row_wise=true` to remove the overhead.
+And if memory is not enough, you can set `force_col_wise=true`.
+[LightGBM] [Info] Total Bins 2654
+[LightGBM] [Info] Number of data points in the train set: 8000, number of used features: 15
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Info] Start training from score -2.302585
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+[LightGBM] [Warning] No further splits with positive gain, best gain: -inf
+             model  accuracy  balanced_accuracy  f1_macro
            XGBoost    0.7890             0.7890    0.7901
+          LightGBM    0.7855             0.7855    0.7865
           CatBoost    0.7805             0.7805    0.7809
      Random Forest    0.7705             0.7705    0.7697
            Bagging    0.7310             0.7310    0.7314

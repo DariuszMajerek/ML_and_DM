@@ -407,7 +407,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/08-svm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Metoda SVM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Support Vector Machines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -546,7 +546,7 @@ w_i(x)=\frac{1}{d(x,x_i)+\varepsilon},
 </section>
 <section id="wpływ-k-na-brzeg-decyzyjny" class="level3" data-number="7.1.5">
 <h3 data-number="7.1.5" class="anchored" data-anchor-id="wpływ-k-na-brzeg-decyzyjny"><span class="header-section-number">7.1.5</span> Wpływ <span class="math inline">\(k\)</span> na brzeg decyzyjny</h3>
-<div id="e8b7b917" class="cell" data-execution_count="1">
+<div id="0e4ba6a3" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -609,7 +609,7 @@ w_i(x)=\frac{1}{d(x,x_i)+\varepsilon},
 <section id="przykład" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="przykład"><span class="header-section-number">7.2</span> Przykład</h2>
 <p>Poniżej stosujemy k-NN na danych <code>mstz/breast</code> (konfiguracja <code>cancer</code>). Dobieramy <span class="math inline">\(k\)</span>, metrykę i ważenie przez walidację krzyżową, a następnie oceniamy model na zbiorze testowym (metryki + macierz pomyłek + ROC). Ponieważ k-NN opiera się na odległościach, w pipeline stosujemy standaryzację.</p>
-<div id="94b20f2c" class="cell" data-execution_count="2">
+<div id="b9667674" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
