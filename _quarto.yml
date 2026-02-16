@@ -34,7 +34,6 @@ book:
     - chapters/07-splajny-gam.qmd
     - chapters/08-svm.qmd
     - chapters/09-dalsze-zagadnienia.qmd
-    - chapters/10-podsumowanie.qmd
     - chapters/reference.qmd
 
 bibliography: references.bib

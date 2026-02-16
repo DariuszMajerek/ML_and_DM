@@ -418,12 +418,6 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/10-podsumowanie.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Podsumowanie</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../chapters/reference.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -507,7 +501,7 @@ window.Quarto = {
 \min_{w,b,\xi}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n\xi_i\quad\text{s.t.}\quad y_i(w^\top x_i + b)\ge 1-\xi_i,\ \xi_i\ge 0.
 \]</span></p>
 <p>Parametr <span class="math inline">\(C&gt;0\)</span> reguluje kompromis między szerokością marginesu a karą za naruszenia: duże <span class="math inline">\(C\)</span> prowadzi do silniejszego „ścigania” błędów treningowych, a małe <span class="math inline">\(C\)</span> do większej regularizacji i szerszego marginesu kosztem większej tolerancji błędów.</p>
-<div id="f3145dc7" class="cell" data-execution_count="1">
+<div id="1ec272c3" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -757,7 +751,7 @@ f(x)=\sum_{i=1}^n \alpha_i y_i K(x_i,x)+b,
 <section id="przykład-klasyfikacji-wieloklasowej" class="level2" data-number="9.9">
 <h2 data-number="9.9" class="anchored" data-anchor-id="przykład-klasyfikacji-wieloklasowej"><span class="header-section-number">9.9</span> Przykład klasyfikacji wieloklasowej</h2>
 <p>Poniżej wykorzystujemy zbiór <code>scikit-learn/iris</code> z Hugging Face i uczymy wieloklasowe SVM z jądrem RBF. Zwracamy uwagę na dwa elementy praktyczne: standaryzację oraz dobór hiperparametrów <span class="math inline">\(C\)</span> i <span class="math inline">\(\gamma\)</span> przez walidację krzyżową.</p>
-<div id="42363ea4" class="cell" data-execution_count="2">
+<div id="c0c21854" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -861,7 +855,7 @@ weighted avg       1.00      1.00      1.00        38
 <section id="przykład-regresyjny" class="level2" data-number="9.10">
 <h2 data-number="9.10" class="anchored" data-anchor-id="przykład-regresyjny"><span class="header-section-number">9.10</span> Przykład regresyjny</h2>
 <p>W drugim przykładzie pokazujemy SVR na zbiorze <code>scikit-learn/Fish</code>. Ponownie stosujemy skalowanie i stroimy <span class="math inline">\(C\)</span>, <span class="math inline">\(\varepsilon\)</span> oraz <span class="math inline">\(\gamma\)</span> (dla RBF) przez walidację krzyżową.</p>
-<div id="1fb57ff0" class="cell" data-execution_count="3">
+<div id="f644153f" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>

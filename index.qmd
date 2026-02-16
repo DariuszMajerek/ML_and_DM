@@ -33,4 +33,3 @@ Ostatecznie kurs ma umożliwić studentom wykształcenie umiejętności krytyczn
 -   Modele addytywne
 -   SVM
 -   Inne metody
--   Podsumowanie
