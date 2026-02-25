@@ -51,12 +51,12 @@ df.head()
 Po wczytaniu danych `pandas` automatycznie spróbuje rozpoznać typy zmiennych, jednak – podobnie jak w przypadku CSV – nie zawsze zrobi to zgodnie z oczekiwaniami analityka. W szczególności kolumny datowe są często wczytywane jako typ `object`, dlatego dobrą praktyką jest ich jawna konwersja:
 
 ```{python}
-df["signup_date"] = pd.to_datetime(df["signup_date"], errors="coerce")
-df["last_purchase_date"] = pd.to_datetime(df["last_purchase_date"], errors="coerce")
+df["signup_date"] = pd.to_datetime(df["signup_date"], unit="ms", errors="coerce")
+df["last_purchase_date"] = pd.to_datetime(df["last_purchase_date"], unit="ms", errors="coerce")
 df.head()
 ```
 
-Parametr `errors="coerce"` powoduje, że ewentualne niepoprawne formaty dat zostaną zamienione na `NaT`, co jest bezpieczniejsze niż przerwanie importu błędem. W kontekście eksploracji danych takie zachowanie pozwala szybko zidentyfikować problemy jakościowe bez utraty całego zbioru. Warto podkreślić, że format JSON nie posiada natywnego pojęcia braków danych w sensie znanym z analizy statystycznej. Braki mogą być reprezentowane jako `null`, brak klucza lub wartość tekstowa (np. `NA`). `pandas` zamienia `null` na `NaN`, ale nie rozpoznaje automatycznie tekstowych znaczników braków. Dlatego po imporcie zalecane jest jawne czyszczenie takich wartości:
+W tym pliku JSON daty są zapisane jako znaczniki czasu Unix w milisekundach, dlatego w `to_datetime` trzeba jawnie ustawić `unit="ms"`. Parametr `errors="coerce"` powoduje, że ewentualne niepoprawne formaty dat zostaną zamienione na `NaT`, co jest bezpieczniejsze niż przerwanie importu błędem. W kontekście eksploracji danych takie zachowanie pozwala szybko zidentyfikować problemy jakościowe bez utraty całego zbioru. Warto podkreślić, że format JSON nie posiada natywnego pojęcia braków danych w sensie znanym z analizy statystycznej. Braki mogą być reprezentowane jako `null`, brak klucza lub wartość tekstowa (np. `NA`). `pandas` zamienia `null` na `NaN`, ale nie rozpoznaje automatycznie tekstowych znaczników braków. Dlatego po imporcie zalecane jest jawne czyszczenie takich wartości:
 
 ```{python}
 df.replace(["NA", "N/A", ""], pd.NA, inplace=True)
