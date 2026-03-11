@@ -935,14 +935,6 @@ df["recency_bin"] = pd.cut(
 )
 ```
 
-### Kodowanie kategorii pod modele
-
-Najbardziej standardowym kodowaniem jest *one-hot encoding*. Możemy je zrobić w `pandas`, ale w modelowaniu lepszy jest pipeline w `sklearn`. W praktyce takie kodowanie jest potrzebne np. wtedy, gdy chcemy włączyć do modelu informację o segmencie klienta, typie urządzenia albo mieście, ale nie chcemy narzucać sztucznego porządku między kategoriami. Dla celów EDA i demonstracji:
-
-```{python}
-X_cat = pd.get_dummies(df[["segment", "device_type", "city_reduced"]], dummy_na=True)
-X_cat.head()
-```
 
 ### Składanie cech do macierzy modelowej
 
