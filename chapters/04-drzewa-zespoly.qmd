@@ -1,5 +1,5 @@
 ---
-title: "Drzewa decyzyjne i zespoly modeli"
+title: "Drzewa decyzyjne i zespoły modeli"
 ---
 
 ## Podstawowe drzewa decyzyjne
@@ -16,7 +16,7 @@ W literaturze i praktyce spotyka się kilka „rodzin” algorytmów drzew decyz
 
 **CART (Classification and Regression Trees)** [@breiman2017] ujednolica podejście do **klasyfikacji i regresji** w ramach jednego formalizmu. Charakterystyczne cechy CART są następujące: (i) podziały są zazwyczaj **binarne** (nawet dla cech kategorycznych – kategorie dzieli się na dwie grupy), (ii) w klasyfikacji stosuje się zwykle **indeks Giniego** (lub entropię), a w regresji kryterium oparte o **SSE/wariancję**, (iii) kluczowym elementem jest **przycinanie złożoności** (*cost-complexity pruning*), tj. wybór drzewa przez kompromis między dopasowaniem i złożonością, oraz (iv) mechanizm **reguł zastępczych (*surrogate splits*)** jako systematyczna odpowiedź na braki danych. CART jest dziś szczególnie ważne, bo stanowi bazę dla wielu metod zespołowych (*random forest, gradient boosting*) i jest najczęściej spotykaną „architekturą” drzew w ML.
 
-**Conditional inference trees (*conditional trees, ctree*)** [@hothorn2006] powstały jako odpowiedź na znane uprzedzenia klasycznych kryteriów podziału (Gini/entropia/SSE), które mogą faworyzować cechy o wielu możliwych podziałach (np. zmienne ciągłe lub kategoryczne o wielu poziomach). W ctree wybór podziału ma charakter **statystyczny** i opiera się na **testach permutacyjnych niezależności**. Procedura jest dwuetapowa: najpierw w danym węźle testuje się hipotezę globalną, że zmienna docelowa jest niezależna od wszystkich cech (jeśli brak podstaw do jej odrzucenia, węzeł staje się liściem), a następnie – w razie istotności – wykonuje się testy cząstkowe dla każdej cechy i wybiera tę o najsilniejszej zależności z odpowiednią korektą na wielokrotne porównania. Typ testu zależy od typu zmiennej docelowej i predyktora: dla klasyfikacji ($Y$ kategoryczne) stosuje się permutacyjne testy niezależności odpowiadające m.in. testom $\chi^2$ (gdy $X$ kategoryczne) lub testom porównania rozkładów/średnich typu ANOVA/F (gdy $X$ ciągłe), natomiast dla regresji ($Y$ ciągłe) stosuje się permutacyjne testy zależności odpowiadające testom korelacyjnym/regresyjnym (gdy $X$ ciągłe) albo testom różnic średnich typu ANOVA (gdy $X$ kategoryczne) – zawsze jednak w wersji permutacyjnej. Dzięki temu *conditional trees* redukują tendencyjność selekcji zmiennych, a kryterium stopu jest naturalnie powiązane z istotnością statystyczną, a nie wyłącznie z heurystycznymi parametrami złożoności.
+**Conditional inference trees (*conditional trees, ctree*)** [@hothorn2006] powstały jako odpowiedź na znane uprzedzenia klasycznych kryteriów podziału (Gini/entropia/SSE), które mogą faworyzować cechy o wielu możliwych podziałach (np. zmienne ciągłe lub kategoryczne o wielu poziomach). W ctree wybór podziału ma charakter **statystyczny** i opiera się na **testach permutacyjnych niezależności**. Procedura jest dwuetapowa: najpierw w danym węźle testuje się hipotezę globalną, że zmienna docelowa jest niezależna od wszystkich cech (jeśli brak podstaw do jej odrzucenia, węzeł staje się liściem), a następnie – w razie istotności – wykonuje się testy cząstkowe dla każdej cechy i wybiera tę o najsilniejszej zależności z odpowiednią korektą na wielokrotne porównania. Dokładna postać statystyki testowej zależy od typu zmiennej docelowej i predyktora, ale kluczowa idea pozostaje ta sama: podział jest wybierany na podstawie istotności zależności, a nie wyłącznie heurystycznej redukcji nieczystości. Dzięki temu *conditional trees* redukują tendencyjność selekcji zmiennych, a kryterium stopu jest naturalnie powiązane z istotnością statystyczną, a nie wyłącznie z heurystycznymi parametrami złożoności.
 
 **CHAID (Chi-squared Automatic Interaction Detection)** [@kass1980] to klasyczna metoda drzew wielogałęziowych, szczególnie popularna w analizie marketingowej i badaniach społecznych. Jej znakiem rozpoznawczym są: (i) podziały wybierane na podstawie **testów chi-kwadrat** (dla klasyfikacji) lub testów analogicznych dla zmiennych ciągłych, (ii) możliwość **łączenia kategorii** cech kategorycznych w większe grupy przed wykonaniem podziału, oraz (iii) częste stosowanie podziałów **wielogałęziowych** (niekoniecznie binarnych). CHAID jest ceniony za interpretowalność i naturalne traktowanie interakcji w kategoriach, ale w porównaniu do CART bywa mniej „ML-owy” w sensie typowych współczesnych pipeline’ów i częściej występuje w narzędziach statystycznych/BI.
 
@@ -35,7 +35,7 @@ Drzewo składa się z:
 -   **węzłów wewnętrznych (*internal nodes*)** – zawierają regułę podziału (cecha + warunek),
 -   **gałęzi (*branches*)** – odpowiadają wynikom reguły (np. „tak/nie” dla podziału binarnego),
 -   **liści (*leaves/terminal nodes*)** – węzłów końcowych przechowujących predykcję (klasę lub wartość),
--   (opcjonalnie) **wag/rozkładów w liściu** – np. częstości klas lub parametry prostej regresji w liściu.
+-   (opcjonalnie) **wag lub rozkładów w liściu** – np. częstości klas albo inne informacje pomocnicze używane do predykcji.
 
 ![](../images/cart.png)
 
@@ -118,33 +118,37 @@ Ponieważ strategia zachłanna łatwo prowadzi do bardzo głębokich drzew, w pr
     -   `max_leaf_nodes` – maksymalna liczba liści w całym drzewie. To bezpośrednia kontrola złożoności, bo liczba liści determinuje liczbę regionów decyzyjnych.
     -   `min_impurity_decrease` – minimalna wymagana redukcja nieczystości $\Delta I(s)$, aby zaakceptować podział. Jeśli najlepszy możliwy podział w węźle nie daje spadku nieczystości większego od progu, algorytm przerywa wzrost i tworzy liść.
 
--   **post-pruning** (przycinanie po zbudowaniu dużego drzewa) - w CART standardowo buduje się najpierw drzewo „maksymalne” (silnie dopasowane, często aż do spełnienia minimalnych ograniczeń liczności), a następnie usuwa się jego gałęzie, wybierając takie poddrzewo, które najlepiej równoważy **dopasowanie** i **złożoność**. Klasyczne podejście to *cost-complexity pruning* (znane też jako *weakest-link pruning*), w którym rozważa się rodzinę poddrzew $T_\alpha$ minimalizujących kompromis
+-   **post-pruning** (przycinanie po zbudowaniu dużego drzewa) – w CART najpierw buduje się drzewo „maksymalne" (silnie dopasowane do danych treningowych), a następnie stopniowo usuwa się jego gałęzie, szukając poddrzewa, które najlepiej równoważy **dopasowanie** i **złożoność**.
+
+    Standardową techniką jest *cost-complexity pruning* (zwane też *weakest-link pruning*). Dla rodziny poddrzew minimalizuje się kryterium:
 
     $$
-    R(T) + \alpha\,|T|,
+    R_\alpha(T) = R(T) + \alpha\,|T|,
     $$
 
     gdzie:
 
-    -   $R(T)$ jest miarą „błędu” lub „straty” drzewa (w CART często jest to błąd resubstytucji / suma nieczystości w liściach, np. suma SSE w regresji lub suma nieczystości Giniego ważona licznościami w klasyfikacji; w praktyce interesuje nas przede wszystkim zgodność tej miary z błędem generalizacji),
-    -   $|T|$ to liczba liści (*terminal nodes*) – prosta miara złożoności drzewa,
-    -   $\alpha \ge 0$ to parametr kary za złożoność: dla $\alpha \to 0$ preferowane jest drzewo duże (mały nacisk na prostotę), a dla dużych $\alpha$ otrzymujemy coraz płytsze drzewa.
+    -   $R(T)$ – miara straty drzewa $T$ (np. suma SSE w regresji lub ważona suma nieczystości Giniego w klasyfikacji),
+    -   $|T|$ – liczba liści (*terminal nodes*), czyli miara złożoności,
+    -   $\alpha \ge 0$ – parametr kary za złożoność: im większe $\alpha$, tym bardziej preferowane są drzewa proste.
 
-    **Jak przebiega przycinanie w CART (idea „najsłabszego ogniwa”).** Dla każdego węzła wewnętrznego $t$ rozważa się zastąpienie całego poddrzewa $T_t$ pojedynczym liściem i ocenia się, „jak dużo poprawy dopasowania” daje to poddrzewo w przeliczeniu na „ile dodatkowych liści kosztuje”. Formalnie wyznacza się wskaźnik krytyczny (tzw. wartość $\alpha$ dla węzła):
+    **Procedura przycinania (idea „najsłabszego ogniwa")** przebiega następująco:
 
+    1. Dla każdego węzła wewnętrznego $t$ oblicza się, ile zysku (redukcji straty) daje utrzymanie jego poddrzewa $T_t$ w przeliczeniu na każdy dodatkowy liść:
     $$
     g(t) = \frac{R(t) - R(T_t)}{|T_t| - 1},
     $$
-
-    gdzie $R(t)$ to strata, gdy $T_t$ zostanie zastąpione jednym liściem, a $R(T_t)$ to strata pełnego poddrzewa. W każdym kroku usuwa się to poddrzewo, które ma najmniejsze $g(t)$ (czyli „najmniej opłaca się” je utrzymywać) – stąd nazwa *weakest-link*. Powtarzając ten krok, otrzymuje się **skończoną sekwencję zagnieżdżonych poddrzew**
-
+    gdzie $R(t)$ to strata po zastąpieniu $T_t$ jednym liściem, a $R(T_t)$ to strata pełnego poddrzewa.
+    2. Węzeł o najniższym $g(t)$ to „najsłabsze ogniwo" – jego poddrzewo wnosi najmniej w stosunku do swojego kosztu, więc zostaje usunięte (zastąpione liściem).
+    3. Krok powtarza się, co daje **skończoną sekwencję zagnieżdżonych poddrzew**:
     $$
     T_0 \supset T_1 \supset \cdots \supset T_M,
     $$
+    odpowiadających rosnącym wartościom $\alpha$.
 
-    odpowiadających rosnącym wartościom $\alpha$. Dzięki temu zamiast przeszukiwać wszystkie możliwe drzewa, analizujemy tylko tę sekwencję kandydatów.
+    Dzięki temu zamiast przeszukiwać wszystkie możliwe poddrzewa, porównujemy tylko $M+1$ kandydatów.
 
-    Dobór $\alpha$ (czyli wybór końcowego drzewa) - parametr $\alpha$ dobiera się zwykle przez walidację krzyżową: dla każdego kandydata $T_m$ estymuje się błąd generalizacji i wybiera drzewo o najlepszej jakości. Często stosuje się też zasadę **1-SE**: wybiera się najmniejsze drzewo, którego błąd walidacyjny jest nie większy niż minimum powiększone o jedno odchylenie standardowe, aby preferować model prostszy i stabilniejszy.
+    **Dobór $\alpha$** (czyli wybór końcowego drzewa) odbywa się zwykle przez walidację krzyżową: dla każdego kandydata $T_m$ estymuje się błąd generalizacji i wybiera drzewo o najniższym błędzie. Popularną praktyką jest **reguła 1-SE** – wybiera się najprostsze drzewo, którego błąd walidacyjny mieści się w granicach jednego odchylenia standardowego od minimum.
 
 ### Reguły stopu (*stopping rules*)
 
@@ -200,11 +204,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from datasets import load_dataset
+from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
-from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import (
     accuracy_score,
     balanced_accuracy_score,
@@ -256,6 +258,12 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=44, stratify=y
 )
 
+# 7b) Minimalna imputacja braków - potrzebna, bo klasyczne drzewa w scikit-learn
+# nie obsługują NaN bezpośrednio.
+imputer = SimpleImputer(strategy="median")
+X_train = pd.DataFrame(imputer.fit_transform(X_train), columns=X.columns, index=X_train.index)
+X_test = pd.DataFrame(imputer.transform(X_test), columns=X.columns, index=X_test.index)
+
 # 8) Model: samo drzewo (bez pipeline/preprocessingu)
 tree = DecisionTreeClassifier(
     random_state=44,
@@ -266,8 +274,7 @@ tree.fit(X_train, y_train)
 
 # 9) Pełne drzewo tekstowo (cała struktura)
 feature_names = list(X.columns)
-# nie będę wyświetlał bo jest to bardzo duże drzewo
-# print(export_text(tree, feature_names=feature_names))
+# nie wyświetlamy całej struktury, bo dla tego zbioru jest mało czytelna
 ```
 
 ```{python}
@@ -391,7 +398,7 @@ print(f"  Balanced accuracy : {balanced_accuracy_score(y_test, y_pred_pruned):.4
 print(f"  F1 macro          : {f1_score(y_test, y_pred_pruned, average='macro'):.4f}")
 ```
 
-Przycinanie drzewa nie poprawiło znacząco jakości klasyfikacji, ale model został uproszczony, zatem otrzymaliśmy przy nieco mniejszym obciążeniu (*bias*) model o niższej wariancji. Głębokość drzewa się nie zmieniła ale liczba węzłów i liści. To samo w sobie jest wartością dodaną otrzymaną poprzez przycięcie drzewa.
+Przycinanie drzewa nie poprawiło znacząco jakości klasyfikacji, ale model został uproszczony. Tego typu uproszczenie zwykle oznacza wzrost biasu i spadek wariancji; w tym uruchomieniu zysk jakościowy na teście jest niewielki, ale liczba węzłów i liści maleje, co poprawia prostotę i interpretowalność modelu.
 :::
 
 ## Bagging i lasy losowe
@@ -496,12 +503,12 @@ Poniżej zebrano parametry typowe dla implementacji w stylu `scikit-learn` (nazw
 -   **Kiedy bagging wystarcza** - gdy liczba cech jest mała i drzewa i tak są zróżnicowane, zysk z losowania cech może być niewielki.
 -   **Kiedy RF jest lepszy** - gdy jest wiele cech i/lub część cech dominuje (silnie predykcyjnych) – losowanie cech zapobiega sytuacji, w której wszystkie drzewa w kółko wybierają te same pierwsze podziały.
 
-### Własności drzew i modeli typu *ensamble*
+### Własności drzew i modeli typu *ensemble*
 
--   **Brak potrzeby skalowania** - drzewom i ich zespołom zwykle nie przeszkadzają różne skale cech (dzielą według progów), więc standaryzacja nie jest wymagana.
+-   **Brak potrzeby skalowania** - drzewom i ich zespołom zwykle nie przeszkadzają różne skale cech (dzielą według progów), więc standaryzacja zazwyczaj nie jest wymagana.
 -   **Odporność na nieliniowości i interakcje** - RF i bagging drzew automatycznie modelują interakcje i nieliniowości, co czyni je mocnym baseline’em.
 -   **Interpretowalność** - pojedyncze drzewo jest czytelne, natomiast model bagging lub las losowy jest mniej przejrzysty. W praktyce stosuje się ważności cech, wykresy PDP czy SHAP do interpretacji.
--   **Nieregularne braki i kategorie** - w zależności od implementacji potrzebujemy imputacji/kodowania kategorii; część nowoczesnych bibliotek (np. `CatBoost`) rozwiązuje to natywnie, ale klasyczny RF często wymaga przygotowania danych.
+-   **Braki danych i kategorie** - w zależności od implementacji potrzebujemy imputacji lub kodowania kategorii; część nowoczesnych bibliotek (np. `CatBoost`) rozwiązuje to natywnie, ale klasyczny RF często wymaga przygotowania danych.
 
 ::: {#exm-2}
 Dla tych samych danych co w @exm-1 przeprowadzimy trening modeli bagging i lasu losowego.
@@ -572,12 +579,12 @@ res_df = pd.DataFrame(results).sort_values("balanced_accuracy", ascending=False)
 print(res_df.to_string(index=False, float_format=lambda x: f"{x:.4f}"))
 ```
 
-Jak widać z powyższych wyników las losowy okazał się najlepiej dopasowanym modelem. W większości przypadków (jak nie w każdym) modele *ensamble* będą przewyższać jakością pojedyncze drzewo decyzyjne.
+W tym uruchomieniu las losowy okazał się najlepszym modelem w tej grupie. Często modele zespołowe przewyższają pojedyncze drzewo, ale nie należy traktować tego jako reguły bez wyjątków: dużo zależy od danych, strojenia i sposobu walidacji.
 :::
 
 ## Boosting
 
-*Boosting* to druga fundamentalna rodzina metod zespołowych, w której modele buduje się **sekwencyjnie** - każdy kolejny model ma korygować błędy poprzednich. W odróżnieniu od baggingu, który przede wszystkim redukuje wariancję przez uśrednianie wielu podobnych modeli uczonych niezależnie, boosting jest projektowany tak, aby stopniowo zmniejszać **błąd systematyczny (*bias*)**, budując coraz lepszy predyktor addytywny. W praktyce boosting często daje bardzo wysoką jakość na danych tablicowych, ale wymaga ostrożnej kontroli złożoności, bo potrafi łatwiej niż bagging dopasować się nadmiernie do danych.
+*Boosting* to druga fundamentalna rodzina metod zespołowych, w której modele buduje się **sekwencyjnie** - każdy kolejny model ma korygować błędy poprzednich. W odróżnieniu od baggingu, który przede wszystkim redukuje wariancję przez uśrednianie wielu podobnych modeli uczonych niezależnie, boosting jest projektowany tak, aby budować coraz lepszy predyktor addytywny, często zmniejszając bias, ale w praktyce wpływając również na wariancję. W praktyce boosting często daje bardzo wysoką jakość na danych tablicowych, ale wymaga ostrożnej kontroli złożoności, bo potrafi łatwiej niż bagging dopasować się nadmiernie do danych.
 
 ### Rys historyczny
 
@@ -587,7 +594,7 @@ Rozwój boostingu można przedstawić jako przejście od idei teoretycznej do ba
 -   **AdaBoost** [@freund1997]- praktyczny algorytm boostingu, w którym kolejne klasyfikatory uczą się na danych z wagami, skupiając się na obserwacjach trudnych (wcześniej błędnie klasyfikowanych).
 -   **Gradient Boosting / Multiple Additive Regression Trees** [@friedman2001]- uogólnienie boostingu do postaci optymalizacji funkcji straty w przestrzeni funkcji, interpretowane jako „zejście gradientowe” w modelu addytywnym.
 -   **XGBoost** [@chen2016]- bardzo wydajna implementacja gradientowego boostingu drzew z regularizacją, obsługą braków i szeregiem optymalizacji obliczeniowych (m.in. przyspieszone wyznaczanie podziałów, równoległość, przycinanie przez ograniczenia).
--   **LightGMB** [@ke2017]- to wysoce wydajna i skalowalna implementacja gradientowego boostingu drzew (GBDT), wykorzystująca m.in. histogramowe wyznaczanie podziałów oraz strategię wzrostu *leaf-wise* (*best-first*) w celu przyspieszenia uczenia przy zachowaniu wysokiej jakości predykcji
+-   **LightGBM** [@ke2017]- to wysoce wydajna i skalowalna implementacja gradientowego boostingu drzew (GBDT), wykorzystująca m.in. histogramowe wyznaczanie podziałów oraz strategię wzrostu *leaf-wise* (*best-first*) w celu przyspieszenia uczenia przy zachowaniu wysokiej jakości predykcji.
 -   **CatBoost** [@singh2025] - boosting drzew z natywną obsługą zmiennych kategorycznych oraz mechanizmami ograniczającymi *target leakage* i przeuczenie (m.in. uporządkowane statystyki docelowe, *ordered boosting*).
 
 ### Koncepcja - model addytywny i uczenie „na błędach”
@@ -814,21 +821,27 @@ gdzie $\gamma$ jest kosztem utworzenia dodatkowego liścia (regularizacja strukt
 #### Braki danych i kategorie
 
 -   Braki (`NaN`) - LightGBM potrafi obsługiwać braki natywnie, ucząc „domyślny kierunek” dla braku w splitach (podobnie jak XGBoost). W praktyce często nie trzeba imputacji dla samych drzew boostingowych, choć bywa ona przydatna w spójnych pipeline’ach.
--   Zmienne kategoryczne - LightGBM potrafi traktować kategorie bez pełnego *one-hot encoding* (zależy od interfejsu i ustawień), zwykle przez wyznaczanie korzystnych podziałów kategorii na grupy. W wielu zadaniach daje to przewagę nad prostym *one-hot encoding*, ale wymaga świadomej kontroli nad typami danych i parametrami (np. `categorical_feature` w natywnym API). Podział zmiennych jakościowych jest wówczas oparty o $\tfrac{G_A}{H_A+\lambda}$, gdzie $G_A$, $H_A$ są odpowiednio sumami pierwszych i drugich pochodnych dla podziału na zbiory $A$ i $A^c$. Następnie wszystkie podziały są sortowane ze względu na te wartości co pozwala uzyskać optymalny podział.
+-   Zmienne kategoryczne - LightGBM potrafi traktować kategorie bez pełnego *one-hot encoding* (zależy od interfejsu i ustawień), zwykle przez wyznaczanie korzystnych podziałów kategorii na grupy. W wielu zadaniach daje to przewagę nad prostym *one-hot encoding*, ale wymaga świadomej kontroli nad typami danych i parametrami (np. `categorical_feature` w natywnym API). Na poziomie dydaktycznym najważniejsze jest to, że biblioteka wyszukuje takie grupowania kategorii, które poprawiają kryterium jakości splitu, bez konieczności ręcznego rozwijania wszystkich poziomów do osobnych kolumn.
 
 #### Najważniejsze hiperparametry
 
 1.  Liczba iteracji i shrinkage
 
-    • n_estimators ($M$) - liczba drzew. • learning_rate ($\nu$) - im mniejsza, tym zwykle lepsza generalizacja, ale potrzeba większego $M$.
+    -   `n_estimators` ($M$) - liczba drzew.
+    -   `learning_rate` ($\nu$) - im mniejsza, tym zwykle lepsza generalizacja, ale potrzeba większego $M$.
 
 2.  Złożoność drzew
 
-    • `num_leaves` - maksymalna liczba liści; kluczowy regulator złożoności dla wzrostu *leaf-wise*. • `max_depth` - ogranicza głębokość. • `min_data_in_leaf` (lub `min_child_samples`) - minimalna liczność liścia (stabilizacja, mniej przeuczenia). • `min_gain_to_split` - minimalny gain wymagany do wykonania splitu.
+    -   `num_leaves` - maksymalna liczba liści; kluczowy regulator złożoności dla wzrostu *leaf-wise*.
+    -   `max_depth` - ogranicza głębokość.
+    -   `min_data_in_leaf` (lub `min_child_samples`) - minimalna liczność liścia (stabilizacja, mniej przeuczenia).
+    -   `min_gain_to_split` - minimalny gain wymagany do wykonania splitu.
 
 3.  Losowość i regularizacja
 
-    • `subsample` i `subsample_freq` - losowanie obserwacji per iteracja (regularizacja). • `colsample_bytree` / `feature_fraction` - losowanie cech (regularizacja). • `lambda_l2`, `lambda_l1` - kary $L_2$/$L_1$ dla wag w liściach.
+    -   `subsample` i `subsample_freq` - losowanie obserwacji per iteracja (regularizacja).
+    -   `colsample_bytree` / `feature_fraction` - losowanie cech (regularizacja).
+    -   `lambda_l2`, `lambda_l1` - kary $L_2$/$L_1$ dla wag w liściach.
 
 4.  `max_bin` - liczba binów; wpływa na szybkość i (czasem) precyzję splitów.
 
@@ -837,8 +850,13 @@ W praktyce tuning LightGBM zaczyna się zwykle od sensownej kontroli złożonoś
 #### Szkic algorytmu
 
 1.  Ustal $F_0(x)$ (np. stała minimalizująca stratę).
-2.  Dla $m=1,\dots,M$: • oblicz $g_i$, $h_i$ dla każdej obserwacji, • (opcjonalnie) zastosuj GOSS / subsampling, • buduj drzewo, wybierając split maksymalizujący gain (histogramowo), • rozwiń drzewo leaf-wise do limitu `num_leaves`/`max_depth`, • zaktualizuj $F_m(x)=F_{m-1}(x)+\nu f_m(x)$.
-3.  Predykcja - suma wkładów drzew (w klasyfikacji zwykle z linkiem logistycznym/softmax).
+2.  Dla $m=1,\dots,M$:
+    -   oblicz $g_i$, $h_i$ dla każdej obserwacji,
+    -   opcjonalnie zastosuj GOSS lub subsampling,
+    -   buduj drzewo, wybierając split maksymalizujący gain (histogramowo),
+    -   rozwijaj drzewo *leaf-wise* do limitu `num_leaves` lub `max_depth`,
+    -   zaktualizuj $F_m(x)=F_{m-1}(x)+\nu f_m(x)$.
+3.  Predykcja - suma wkładów drzew (w klasyfikacji zwykle z linkiem logistycznym lub softmax).
 
 ### CatBoost
 
@@ -921,8 +939,8 @@ Wynik: model boostingowy, który korzysta z informacyjnych statystyk dla kategor
 
 Boosting ma wiele hiperparametrów ale najważniejsze to:
 
--   **`n_estimators` (**$M$) – liczba iteracji/drzew. Większa liczba zwiększa potencjał dopasowania; bez kontroli może prowadzić do przeuczenia.
--   **`learning_rate` (**$\nu$) – shrinkage. Mniejsze $\nu$ zwykle poprawia uogólnianie, ale wymaga większego $M$. W praktyce parę $(M,\nu)$ traktuje się łącznie.
+-   **`n_estimators`** ($M$) – liczba iteracji/drzew. Większa liczba zwiększa potencjał dopasowania; bez kontroli może prowadzić do przeuczenia.
+-   **`learning_rate`** ($\nu$) – shrinkage. Mniejsze $\nu$ zwykle poprawia uogólnianie, ale wymaga większego $M$. W praktyce parę $(M,\nu)$ traktuje się łącznie.
 -   **Złożoność drzew** - `max_depth`, `max_leaf_nodes`, `min_samples_leaf` (lub ich odpowiedniki). Płytkie drzewa (np. `max_depth` 2–6) są standardem w boosting.
 -   **Losowanie obserwacji i cech** - `subsample` (stochastic gradient boosting), `colsample_bytree`, `colsample_bylevel` (w XGBoost). Mniejsze wartości działają jak regularizacja i zmniejszają wariancję.
 -   **Regularizacja w XGBoost** - `reg_lambda` (L2), `reg_alpha` (L1), `gamma` (minimalna poprawa, by wykonać split), `min_child_weight` (minimalna „waga”/liczność w węźle). Te parametry ograniczają tworzenie zbyt szczegółowych podziałów.
@@ -931,12 +949,12 @@ Boosting ma wiele hiperparametrów ale najważniejsze to:
 ### Boosting vs bagging
 
 -   **Cel -** bagging redukuje wariancję (średnia wielu modeli), boosting redukuje bias (sekwencyjna korekta błędów).
--   **Zrównoleglanie obliczeń -** bagging łatwo zrównoleglić (drzewa niezależne); boosting jest z natury sekwencyjny (istnieją implementację zrównoleglające obliczenia pojedynczych drzew).
+-   **Zrównoleglanie obliczeń -** bagging łatwo zrównoleglić (drzewa niezależne); boosting jest z natury sekwencyjny, choć istnieją implementacje zrównoleglające część obliczeń wewnątrz pojedynczych drzew.
 -   **Wrażliwość na szum/outliery -** boosting bywa bardziej wrażliwy na szum i obserwacje odstające, ponieważ konstrukcja zespołu ma charakter sekwencyjny: kolejne modele są dopasowywane do reszt (lub gradientów funkcji straty) generowanych przez bieżący predyktor. W konsekwencji obserwacje o dużych błędach — w tym outliery oraz przypadki z błędnie przypisaną etykietą (*label noise*) — mogą otrzymywać relatywnie większą „wagę” w kolejnych iteracjach, co sprzyja ich nadmiernemu dopasowaniu i może pogarszać zdolność uogólniania, jeśli te błędy wynikają z losowego zakłócenia, a nie z rzeczywistej struktury danych. W metodach baggingowych (w tym w lasach losowych) poszczególne modele bazowe są uczone niezależnie na próbkach bootstrapowych, a predykcja jest agregowana przez uśrednianie lub głosowanie. Taka agregacja działa jak mechanizm tłumienia wpływu pojedynczych, nietypowych obserwacji: outliery trafiają tylko do części próbek, a ich efekt jest „rozmywany” przez średnią/większość. Z tego względu *bagging* zazwyczaj wykazuje większą odporność na szum i wartości odstające niż boosting, przy czym skala tej różnicy zależy od doboru funkcji straty oraz regularizacji (np. *shrinkage*, *subsampling*, ograniczenia głębokości) w modelach boostingowych.
 -   **Najczęstsze źródła przeuczenia w boosting** - zbyt duże $M$, zbyt głębokie drzewa, zbyt duży $\nu$ oraz brak regularizacji/losowania.
 
 ::: {#exm-3}
-Teraz dokonamy porównania dotychczasowych modeli (z @exm-1 i @exm-2) z modelami AdaBoost, XGBoost, CatBoost.
+Teraz dokonamy porównania dotychczasowych modeli (z @exm-1 i @exm-2) z modelami AdaBoost, XGBoost, CatBoost i LightGBM.
 
 ```{python}
 from sklearn.ensemble import AdaBoostClassifier
@@ -981,7 +999,6 @@ from sklearn.preprocessing import LabelEncoder
 
 le = LabelEncoder()
 y_train_enc = le.fit_transform(y_train)
-y_test_enc = le.transform(y_test)
 
 xgb = XGBClassifier(
     n_estimators=500,
@@ -1052,18 +1069,18 @@ print(res_df.to_string(index=False, float_format=lambda x: f"{x:.4f}"))
 
 ### Porównanie modeli z przykładów
 
-Wyniki porównania wskazują wyraźną hierarchię jakości w tym zadaniu wieloklasowym (klasy gatunków), przy czym w zaktualizowanej konfiguracji najlepszy okazał się **LightGBM** (accuracy = 0.7920, balanced_accuracy = 0.7920, F1_macro = 0.7930), bardzo blisko za nim plasuje się **XGBoost** (0.7890 / 0.7890 / 0.7901), a następnie **CatBoost** (0.7805 / 0.7805 / 0.7809) i **Random Forest** (0.7705 / 0.7705 / 0.7697). Dalej znajdują się **Bagging** (0.7310 / 0.7310 / 0.7314) oraz pojedyncze drzewa (**przycięte**: 0.6930 / 0.6930 / 0.6936, **surowe**: 0.6910 / 0.6910 / 0.6913). **AdaBoost** osiąga wynik wyraźnie lepszy niż w poprzednim zestawieniu (0.6560 / 0.6560 / 0.6513), ale nadal pozostaje istotnie słabszy od metod opartych o gradient boosting drzew.
+Wyniki porównania w tym konkretnym uruchomieniu wskazują wyraźną hierarchię jakości w tym zadaniu wieloklasowym. Najlepsze okazały się nowoczesne metody gradient boostingu drzew, a za nimi uplasował się las losowy. Jednocześnie trzeba pamiętać, że jest to porównanie oparte na jednym podziale train/test i pojedynczych konfiguracjach modeli, więc nie należy interpretować tej kolejności jako uniwersalnego rankingu algorytmów.
 
-Po pierwsze, w tym konkretnym zbiorze (po selekcji cech numerycznych) przewagę mają metody z rodziny **gradient boosting drzew**. Zwycięstwo LightGBM jest spójne z jego charakterystyką: histogramowe wyznaczanie podziałów i strategia wzrostu *leaf-wise* często pozwalają uzyskać bardzo dobrą jakość przy tej samej (lub mniejszej) liczbie iteracji, zwłaszcza gdy relacje między cechami a klasami są nieliniowe, a jednocześnie model korzysta z regularizacji (np. `num_leaves`, `min_data_in_leaf`, `feature_fraction`, `subsample`). Różnica względem XGBoost jest niewielka, co w praktyce oznacza, że oba algorytmy uchwyciły podobną strukturę danych; przy tak małym odstępie jakości o kolejności mogą decydować szczegóły strojenia hiperparametrów oraz sposób budowy drzew (leaf-wise vs bardziej „klasyczne” strategie, histogramy, ustawienia regularizacji).
+Po pierwsze, w tym konkretnym zbiorze (po selekcji cech numerycznych) przewagę mają metody z rodziny **gradient boosting drzew**. Jeśli LightGBM wypada nieco lepiej od XGBoost, jest to spójne z jego charakterystyką: histogramowe wyznaczanie podziałów i strategia wzrostu *leaf-wise* często pozwalają uzyskać bardzo dobrą jakość przy tej samej liczbie iteracji. Różnica względem XGBoost jest jednak niewielka, więc o kolejności mogą decydować szczegóły strojenia hiperparametrów, wersje bibliotek i sam podział danych.
 
-XGBoost pozostaje bardzo mocnym punktem odniesienia: oferuje bogaty zestaw mechanizmów regularizacyjnych (m.in. `gamma`, `min_child_weight`, `reg_alpha`, `reg_lambda`, `subsample`, `colsample_*`) i często jest konkurencyjny nawet przy prostych ustawieniach. W tym porównaniu różnica na korzyść LightGBM jest jednak na tyle mała, że z dydaktycznego punktu widzenia warto ją interpretować jako przykład: w nowoczesnym boostingu drzew **wybór implementacji** (LightGBM vs XGBoost) bywa mniej istotny niż **świadome strojenie** i kontrola złożoności.
+XGBoost pozostaje bardzo mocnym punktem odniesienia: oferuje bogaty zestaw mechanizmów regularizacyjnych (m.in. `gamma`, `min_child_weight`, `reg_alpha`, `reg_lambda`, `subsample`, `colsample_*`) i często jest konkurencyjny nawet przy prostych ustawieniach. W tym porównaniu różnica względem LightGBM jest mała, więc z dydaktycznego punktu widzenia warto ją interpretować raczej jako przykład tego, że w nowoczesnym boostingu drzew **wybór implementacji** bywa mniej istotny niż **świadome strojenie** i kontrola złożoności.
 
-CatBoost uzyskał wynik nieco słabszy od dwóch powyższych metod. Jest to zgodne z intuicją: jego największa przewaga ujawnia się w danych z licznymi zmiennymi kategorycznymi (mechanizmy *ordered target statistics* i *ordered boosting*), natomiast w naszym pipeline’ie dominują cechy liczbowe. Mimo to CatBoost pozostaje bardzo konkurencyjny, a różnica jakości może wynikać zarówno z hiperparametrów, jak i z tego, że w tym zadaniu optymalne granice decyzyjne lepiej zostały uchwycone przez konfiguracje LightGBM/XGBoost.
+CatBoost uzyskał wynik nieco słabszy od dwóch powyższych metod. Jest to zgodne z intuicją: jego największa przewaga ujawnia się zwykle w danych z licznymi zmiennymi kategorycznymi, natomiast w naszym pipeline'ie pozostawiliśmy głównie cechy liczbowe. Mimo to CatBoost nadal jest konkurencyjny, a różnica jakości może wynikać zarówno z hiperparametrów, jak i z charakteru danych.
 
 Random Forest jest najlepszą metodą „baggingową” w zestawieniu i (zgodnie z teorią) przewyższa Bagging dzięki dodatkowej randomizacji cech w węzłach, co **dekoruluje drzewa** i silniej redukuje wariancję. Jednocześnie RF zwykle nie redukuje biasu tak skutecznie jak boosting, dlatego w zadaniach o bardziej złożonej strukturze klas często ustępuje dobrze nastrojonym metodom gradient boosting.
 
-Bagging poprawia pojedyncze drzewo głównie przez redukcję wariancji (uśrednianie wielu modeli uczonych na próbkach bootstrapowych), co widać w przeskoku z okolic 0.69 (pojedyncze drzewo) do okolic 0.73 (bagging). Różnica między drzewem surowym a przyciętym jest mała, co sugeruje, że przycinanie zmniejsza złożoność i poprawia stabilność/interpretowalność, ale w tym problemie nie zmienia istotnie granic decyzyjnych w obszarach kluczowych dla wyniku testowego.
+Bagging poprawia pojedyncze drzewo głównie przez redukcję wariancji (uśrednianie wielu modeli uczonych na próbkach bootstrapowych). Różnica między drzewem surowym a przyciętym jest mała, co sugeruje, że przycinanie zmniejsza złożoność i poprawia prostotę modelu, ale w tym problemie nie zmienia istotnie jakości predykcji na teście.
 
-Zaktualizowany wynik AdaBoost jest istotnie lepszy niż wcześniej, co może wynikać z innej konfiguracji (np. liczby estymatorów, głębokości *weak learner* lub domyślnego algorytmu wieloklasowego), jednak nadal widać typową cechę: w zadaniach tablicowych wieloklasowych nowocześniejsze warianty gradient boostingu drzew (XGBoost/LightGBM/CatBoost) zwykle zapewniają lepszy kompromis między bias i wariancją oraz lepszą kontrolę złożoności.
+AdaBoost wypada słabiej od nowszych wariantów gradient boostingu drzew, co jest częstą obserwacją w zadaniach tablicowych wieloklasowych. Nadal pozostaje jednak cennym przykładem metody historycznie ważnej i interpretowalnej.
 
-Warto zauważyć, że w tym porównaniu **accuracy**, **balanced_accuracy** i **F1_macro** są bardzo zbliżone dla najlepszych modeli. To oznacza, że (po ograniczeniu do 10 najczęstszych gatunków) nie obserwujemy silnego problemu dominacji jednej klasy; w takich warunkach macro-F1 jest szczególnie użyteczne jako miara „sprawiedliwości” względem klas, bo każdej klasie przypisuje podobną wagę.
+Warto zauważyć, że w tym porównaniu **accuracy**, **balanced_accuracy** i **F1_macro** są do siebie dość zbliżone. To sugeruje, że po ograniczeniu do 10 najczęstszych gatunków problem silnej nierównowagi klas nie dominuje oceny modeli; mimo to macro-F1 pozostaje użyteczne, bo każdej klasie przypisuje podobną wagę.
