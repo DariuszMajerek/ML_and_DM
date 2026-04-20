@@ -1,22 +1,747 @@
 ---
-title: "Inne metody"
+title: "Dalsze zagadnienia"
 ---
 
-## Reinforcement learning
+## Wprowadzenie
 
-- Uczenie ze wzmocnieniem: agent uczy sie przez interakcje ze srodowiskiem, maksymalizujac sume przyszlych nagrod.
-- Elementy: agent, srodowisko, stan, akcja, nagroda, polityka i funkcja wartosci; modelowane jako zadanie Markowa.
-- Szczegolowe algorytmy (Q-learning, SARSA, aktor-krytyk) omawiane sa w innym kursie.
+W poprzednich rozdziałach koncentrowaliśmy się głównie na klasycznych metodach uczenia nadzorowanego dla danych tablicowych: modelach liniowych, drzewach i zespołach, metodach bayesowskich, k-NN, splajnach oraz SVM. W praktyce ekosystem metod eksploracji danych i uczenia maszynowego jest jednak znacznie szerszy. W tym rozdziale zamykającym kurs omawiamy trzy ważne obszary, które często pojawiają się w zastosowaniach przemysłowych, ale mają odmienną strukturę problemu niż typowa klasyfikacja lub regresja.
 
-## Modele koszykowe (market basket analysis)
+Pierwszym z nich jest **uczenie ze wzmocnieniem** (*reinforcement learning, RL*), w którym agent nie dostaje gotowej etykiety dla każdej obserwacji, lecz uczy się przez sekwencyjną interakcję ze środowiskiem. Drugim jest **analiza koszykowa** (*market basket analysis*), czyli odkrywanie częstych współwystąpień produktów i reguł asocjacyjnych w danych transakcyjnych. Trzecim jest **wykrywanie anomalii**, którego celem nie jest predykcja klasy większościowej, lecz odnalezienie obserwacji nietypowych, podejrzanych albo rzadkich.
 
-- Analiza koszykowa wykrywa wzorce zakupowe i produkty kupowane razem.
-- Reguly asocjacyjne "jezeli-to": antecedent i consequent.
-- Miary: support, confidence i lift.
-- Algorytmy: Apriori, FP-Growth.
+W każdym z tych obszarów ważniejsze niż sama „nazwa algorytmu” jest zrozumienie formalizacji problemu, rodzaju danych, założeń oraz sposobu interpretacji wyniku. Dlatego potraktujemy te tematy jako rozszerzenie perspektywy: nie wyczerpują one całej dziedziny, ale pokazują, jak różnorodne mogą być zadania eksploracji danych.
 
-## Wykrywanie anomalii (ponowne)
+## Uczenie ze wzmocnieniem
 
-- Przypomnienie definicji anomalii w kontekście oszustw, awarii i bezpieczenstwa.
-- Typy anomalii: punktowe, kontekstowe, zbiorowe.
-- Metody detekcji omawiane sa szczegolowo w innych kursach.
+### Intuicja i rys historyczny
+
+Uczenie ze wzmocnieniem rozwijało się na styku dynamicznego programowania, teorii sterowania, psychologii uczenia i sztucznej inteligencji. W nowoczesnym ujęciu klasyczną syntezę tej dziedziny przedstawiają Sutton i Barto [@sutton2018]. Z punktu widzenia algorytmicznego szczególnie wpływowa była praca Watkinsa i Dayana o **Q-learningu** [@watkins1992], która pokazała, że agent może uczyć się optymalnych wartości akcji bez jawnego modelu przejść środowiska.
+
+W klasycznym uczeniu nadzorowanym dostajemy zbiór par $(x_i,y_i)$ i minimalizujemy błąd predykcji. W RL sytuacja jest inna: agent obserwuje stan środowiska, wybiera akcję, otrzymuje nagrodę i przechodzi do nowego stanu. Oznacza to, że dane nie są dane „z góry”, lecz są współtworzone przez samą politykę działania agenta. Problem ma więc naturę **sekwencyjną**, a decyzja podjęta teraz wpływa na to, jakie dane pojawią się później.
+
+### Formalizacja: proces decyzyjny Markowa
+
+Standardową formalizacją RL jest **proces decyzyjny Markowa** (*Markov Decision Process, MDP*):
+
+$$
+\mathcal{M}=(\mathcal{S}, \mathcal{A}, P, R, \gamma),
+$$
+
+gdzie:
+
+- $\mathcal{S}$ to zbiór stanów,
+- $\mathcal{A}$ to zbiór akcji,
+- $P(s' \mid s,a)$ to prawdopodobieństwo przejścia do stanu $s'$ po wykonaniu akcji $a$ w stanie $s$,
+- $R(s,a,s')$ to nagroda,
+- $\gamma \in [0,1)$ to współczynnik dyskonta.
+
+Agent działa według polityki $\pi(a\mid s)$, czyli reguły określającej, jaką akcję wybrać w stanie $s$. Celem jest maksymalizacja oczekiwanego skumulowanego zwrotu:
+
+$$
+G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}.
+$$
+
+Interpretacja jest kluczowa: nagroda natychmiastowa może być niewielka lub nawet ujemna, ale ważny jest **łączny** efekt przyszłych decyzji. Właśnie dlatego RL nadaje się do problemów sterowania, planowania, optymalizacji sekwencyjnej czy alokacji zasobów.
+
+### Funkcje wartości i równania Bellmana
+
+Podstawowe obiekty w RL to funkcje wartości. Dla ustalonej polityki $\pi$ definiujemy:
+
+$$
+V^\pi(s)=\mathbb{E}_\pi[G_t \mid S_t=s],
+$$
+
+czyli oczekiwany zdyskontowany zwrot od stanu $s$, oraz
+
+$$
+Q^\pi(s,a)=\mathbb{E}_\pi[G_t \mid S_t=s,\ A_t=a],
+$$
+
+czyli oczekiwany zwrot po wykonaniu akcji $a$ w stanie $s$ i dalszym postępowaniu zgodnie z polityką $\pi$.
+
+Własność Markowa prowadzi do równań Bellmana. Dla funkcji wartości akcji otrzymujemy:
+
+$$
+Q^\pi(s,a)=\sum_{s'} P(s' \mid s,a)\left[R(s,a,s')+\gamma \sum_{a'} \pi(a' \mid s') Q^\pi(s',a')\right].
+$$
+
+W wersji optymalnej:
+
+$$
+Q^*(s,a)=\sum_{s'} P(s' \mid s,a)\left[R(s,a,s')+\gamma \max_{a'} Q^*(s',a')\right].
+$$
+
+To równanie ma ogromne znaczenie: mówi, że optymalna wartość akcji składa się z nagrody natychmiastowej i najlepszego możliwego zdyskontowanego zysku w następnym stanie.
+
+### Q-learning
+
+Q-learning [@watkins1992] jest algorytmem **off-policy**, który aproksymuje $Q^*(s,a)$ bez znajomości modelu przejść $P$. Aktualizacja ma postać:
+
+$$
+Q_{t+1}(s_t,a_t)
+=
+Q_t(s_t,a_t)
++
+\alpha\left[
+r_{t+1}+\gamma \max_a Q_t(s_{t+1},a)-Q_t(s_t,a_t)
+\right],
+$$
+
+gdzie $\alpha$ to współczynnik uczenia. W nawiasie kwadratowym znajduje się **błąd TD** (*temporal difference error*): porównujemy starą estymację z „celem” złożonym z nagrody natychmiastowej i najlepszej przewidywanej wartości przyszłej.
+
+To równanie można rozumieć jako stochastyczne przybliżenie równania Bellmana. Jeżeli wielokrotnie odwiedzamy pary stan-akcja i odpowiednio kontrolujemy eksplorację, tablica $Q$ zbiega do optimum w przypadku dyskretnego MDP.
+
+### Elementarne kroki postępowania
+
+Najprostszy schemat tablicowego RL wygląda następująco:
+
+1. Zainicjalizuj funkcję wartości akcji $Q(s,a)$.
+2. Ustal strategię eksploracji, np. $\varepsilon$-greedy.
+3. Obserwuj aktualny stan $s_t$.
+4. Wybierz akcję $a_t$.
+5. Wykonaj akcję, odbierz nagrodę $r_{t+1}$ i nowy stan $s_{t+1}$.
+6. Zaktualizuj $Q(s_t,a_t)$ na podstawie błędu TD.
+7. Powtarzaj procedurę przez wiele epizodów.
+
+W praktyce różnice między algorytmami RL dotyczą głównie tego, czy uczymy funkcję wartości stanu, wartości akcji czy samą politykę, czy aktualizacja jest *on-policy* (np. SARSA), czy *off-policy* (np. Q-learning), oraz czy używamy tablicy, aproksymatora liniowego czy sieci neuronowej.
+
+### Zalety i wady
+
+**Zalety**
+
+- RL dobrze modeluje problemy sekwencyjne, w których decyzje wpływają na przyszłe dane.
+- Naturalnie uwzględnia kompromis między zyskiem natychmiastowym i długoterminowym.
+- Pozwala optymalizować politykę działania bez etykiet w klasycznym sensie.
+
+**Wady**
+
+- Uczenie bywa niestabilne i kosztowne obliczeniowo.
+- Dane są zależne od polityki, więc eksploracja i eksploatacja muszą być wyważone.
+- Funkcja nagrody jest często trudna do poprawnego zaprojektowania.
+- W dużych lub ciągłych przestrzeniach stanów i akcji tablicowe podejścia szybko przestają wystarczać.
+
+### Przykład: Q-learning w prostym gridworldzie
+
+Poniższy przykład nie korzysta z gotowych środowisk typu Gym, lecz buduje minimalny świat siatki, aby zachować pełną przejrzystość matematyki i implementacji. Agent startuje w lewym górnym rogu, ma dotrzeć do celu, a każdy krok kosztuje niewielką ujemną nagrodę. Dzięki temu agent uczy się nie tylko „dojść do celu”, ale dojść **możliwie szybko**.
+
+```{python}
+#| code-fold: true
+import numpy as np
+import matplotlib.pyplot as plt
+
+rng = np.random.default_rng(42)
+
+n_rows, n_cols = 4, 4
+start = (0, 0)
+goal = (3, 3)
+blocked = {(1, 1), (2, 1)}
+actions = ["up", "down", "left", "right"]
+action_delta = {
+    0: (-1, 0),
+    1: (1, 0),
+    2: (0, -1),
+    3: (0, 1),
+}
+
+states = [
+    (r, c)
+    for r in range(n_rows)
+    for c in range(n_cols)
+    if (r, c) not in blocked
+]
+state_to_idx = {s: i for i, s in enumerate(states)}
+idx_to_state = {i: s for s, i in state_to_idx.items()}
+
+def step(state, action):
+    if state == goal:
+        return state, 0.0, True
+
+    dr, dc = action_delta[action]
+    nr = min(max(state[0] + dr, 0), n_rows - 1)
+    nc = min(max(state[1] + dc, 0), n_cols - 1)
+    next_state = (nr, nc)
+
+    if next_state in blocked:
+        next_state = state
+
+    reward = -0.04
+    done = next_state == goal
+    if done:
+        reward = 1.0
+
+    return next_state, reward, done
+
+alpha = 0.2
+gamma = 0.95
+epsilon = 0.25
+epsilon_decay = 0.995
+epsilon_min = 0.02
+episodes = 700
+max_steps = 60
+
+Q = np.zeros((len(states), len(actions)))
+episode_returns = []
+
+for _ in range(episodes):
+    state = start
+    total_reward = 0.0
+
+    for _ in range(max_steps):
+        s_idx = state_to_idx[state]
+
+        if rng.random() < epsilon:
+            action = rng.integers(len(actions))
+        else:
+            action = int(np.argmax(Q[s_idx]))
+
+        next_state, reward, done = step(state, action)
+        ns_idx = state_to_idx[next_state]
+
+        td_target = reward + gamma * np.max(Q[ns_idx]) * (not done)
+        td_error = td_target - Q[s_idx, action]
+        Q[s_idx, action] += alpha * td_error
+
+        state = next_state
+        total_reward += reward
+
+        if done:
+            break
+
+    epsilon = max(epsilon_min, epsilon * epsilon_decay)
+    episode_returns.append(total_reward)
+
+# polityka zachłanna i wartości stanów
+best_actions = np.argmax(Q, axis=1)
+state_values = np.max(Q, axis=1)
+
+arrow_map = {
+    0: "↑",
+    1: "↓",
+    2: "←",
+    3: "→",
+}
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+
+# 1) uczenie w czasie
+window = 25
+rolling = np.convolve(
+    episode_returns,
+    np.ones(window) / window,
+    mode="valid"
+)
+axes[0].plot(episode_returns, alpha=0.35, label="zwrot epizodu")
+axes[0].plot(
+    np.arange(window - 1, episodes),
+    rolling,
+    linewidth=2,
+    label=f"średnia krocząca ({window})"
+)
+axes[0].set_title("Q-learning: zwrot w kolejnych epizodach")
+axes[0].set_xlabel("epizod")
+axes[0].set_ylabel("zwrot")
+axes[0].legend()
+axes[0].grid(alpha=0.3)
+
+# 2) polityka i wartości
+grid = np.full((n_rows, n_cols), np.nan)
+for idx, (r, c) in idx_to_state.items():
+    grid[r, c] = state_values[idx]
+
+im = axes[1].imshow(grid, cmap="YlGn", origin="upper")
+for r in range(n_rows):
+    for c in range(n_cols):
+        if (r, c) in blocked:
+            axes[1].text(c, r, "X", ha="center", va="center", fontsize=14, color="black")
+        elif (r, c) == goal:
+            axes[1].text(c, r, "G", ha="center", va="center", fontsize=14, color="black")
+        else:
+            idx = state_to_idx[(r, c)]
+            axes[1].text(
+                c,
+                r - 0.15,
+                f"{state_values[idx]:.2f}",
+                ha="center",
+                va="center",
+                fontsize=9,
+                color="black",
+            )
+            axes[1].text(
+                c,
+                r + 0.22,
+                arrow_map[best_actions[idx]],
+                ha="center",
+                va="center",
+                fontsize=14,
+                color="black",
+            )
+
+axes[1].set_title("Wyuczona wartość stanów i polityka zachłanna")
+axes[1].set_xticks(range(n_cols))
+axes[1].set_yticks(range(n_rows))
+axes[1].grid(which="both", color="white", linewidth=1)
+plt.colorbar(im, ax=axes[1], shrink=0.85)
+
+plt.tight_layout()
+plt.show()
+```
+
+Wykres po lewej pokazuje, że średni zwrot rośnie w miarę uczenia, co oznacza, że agent coraz częściej znajduje krótką ścieżkę do celu. Po prawej stronie widzimy stanową funkcję wartości oraz wynikającą z niej politykę zachłanną. Jest to dobry przykład sytuacji, w której etykiety klas nie istnieją, ale sensowne decyzje można mimo to wyuczyć.
+
+## Modele koszykowe i reguły asocjacyjne
+
+### Problem i rys historyczny
+
+Analiza koszykowa wyrosła z potrzeb handlu detalicznego i hurtowni danych. Klasyczna praca Agrawala, Imielińskiego i Swamiego [@agrawal1993] sformalizowała problem odkrywania reguł asocjacyjnych w bazach transakcyjnych. Następnie Agrawal i Srikant zaproponowali rodzinę algorytmów **Apriori** [@agrawal1994], które przez lata były standardem uczenia frequent itemsets. Kolejnym ważnym krokiem był **FP-Growth** Hana, Peia i Yina [@han2000], który ograniczył koszt generowania kandydatów przez wykorzystanie skompresowanej struktury FP-tree.
+
+W praktyce analiza koszykowa służy nie tylko do badania produktów kupowanych razem. Ten sam formalizm stosuje się także do:
+
+- rekomendacji współwystępujących usług,
+- wykrywania często współpojawiających się zdarzeń w logach,
+- analizy współchorobowości w danych medycznych,
+- analizy zachowań użytkowników w systemach internetowych.
+
+### Formalizacja danych transakcyjnych
+
+Załóżmy, że mamy zbiór transakcji
+
+$$
+\mathcal{D}=\{T_1,T_2,\dots,T_n\},
+$$
+
+gdzie każda transakcja $T_i \subseteq \mathcal{I}$ jest podzbiorem zbioru wszystkich produktów (lub obiektów) $\mathcal{I}$. Dla itemsetu $X \subseteq \mathcal{I}$ definiujemy **wsparcie**:
+
+$$
+\operatorname{support}(X)
+=
+\frac{1}{n}\sum_{i=1}^{n}\mathbf{1}\{X \subseteq T_i\}.
+$$
+
+Support mówi, w jakim odsetku transakcji występuje jednocześnie cały zbiór $X$.
+
+Reguła asocjacyjna ma postać:
+
+$$
+X \Rightarrow Y,
+\qquad
+X \cap Y = \varnothing,
+$$
+
+gdzie $X$ jest poprzednikiem (*antecedent*), a $Y$ następnikiem (*consequent*). Dla takiej reguły najczęściej mierzymy:
+
+$$
+\operatorname{confidence}(X \Rightarrow Y)
+=
+\frac{\operatorname{support}(X \cup Y)}{\operatorname{support}(X)},
+$$
+
+oraz
+
+$$
+\operatorname{lift}(X \Rightarrow Y)
+=
+\frac{\operatorname{support}(X \cup Y)}
+{\operatorname{support}(X)\operatorname{support}(Y)}.
+$$
+
+Interpretacja jest następująca:
+
+- **support** mówi, jak częsta jest wspólna obserwacja,
+- **confidence** mówi, jak często po zajściu $X$ obserwujemy też $Y$,
+- **lift** porównuje tę zależność z sytuacją niezależności.
+
+Jeżeli $\operatorname{lift}>1$, to współwystępowanie jest częstsze niż oczekiwalibyśmy przy niezależności.
+
+### Własność antymonotoniczności i Apriori
+
+Fundamentalna własność, na której opiera się Apriori, brzmi:
+
+$$
+X \subseteq Y \quad \Longrightarrow \quad \operatorname{support}(Y)\le \operatorname{support}(X).
+$$
+
+Dowód intuicyjny jest prosty: jeśli większy zbiór $Y$ pojawia się w danej transakcji, to wszystkie jego podzbiory, w tym $X$, też się w niej pojawiają. Zatem każda transakcja licząca się do supportu $Y$ liczy się także do supportu $X$, ale nie odwrotnie.
+
+Stąd wynika reguła przycinania:
+
+- jeżeli itemset jest **rzadki**, to wszystkie jego nadzbiory też będą rzadkie,
+- więc nie trzeba ich już dalej rozważać.
+
+To właśnie serce Apriori: generujemy kandydatów poziomami, a potem odrzucamy tych, których podzbiory nie są częste.
+
+### Apriori i FP-Growth
+
+**Apriori** działa poziomowo:
+
+1. znajdź wszystkie częste 1-itemsety,
+2. wygeneruj kandydatów 2-elementowych,
+3. odrzuć tych, których podzbiory są nieczęste,
+4. policz support pozostałych,
+5. powtarzaj dla coraz większych długości itemsetów.
+
+Zaletą Apriori jest prostota i duża interpretowalność. Wadą jest koszt obliczeniowy: przy dużej liczbie produktów liczba kandydatów eksploduje.
+
+**FP-Growth** [@han2000] rozwiązuje ten problem inaczej. Zamiast jawnie generować wielkie zbiory kandydatów:
+
+- kompresuje bazę do struktury **FP-tree**,
+- wydobywa wzorce przez rekurencyjne budowanie baz warunkowych,
+- często znacznie ogranicza liczbę skanów i obiektów pośrednich.
+
+W sensie matematycznym oba podejścia celują w te same frequent itemsets, ale ich koszt obliczeniowy i reprezentacja danych są różne.
+
+### Zalety i wady analizy koszykowej
+
+**Zalety**
+
+- bardzo naturalna interpretacja biznesowa,
+- brak potrzeby jawnej zmiennej celu,
+- łatwość budowania rekomendacji i kampanii cross-sellingowych,
+- możliwość stosowania również poza handlem detalicznym.
+
+**Wady**
+
+- ogromna liczba pozornie interesujących reguł,
+- wrażliwość na progi `min_support` i `min_confidence`,
+- ryzyko mylenia korelacji z relacją przyczynową,
+- słabsza użyteczność dla bardzo rzadkich, ale istotnych wzorców.
+
+### Przykład: prosta implementacja Apriori i reguł asocjacyjnych
+
+W przykładzie zbudujemy małą bazę transakcji i pokażemy, jak z niej wydobyć frequent itemsets oraz reguły. Ponieważ w projekcie nie ma zainstalowanej biblioteki `mlxtend`, implementujemy najważniejsze elementy samodzielnie. Dzięki temu dokładnie widać, co liczą support, confidence i lift.
+
+```{python}
+#| code-fold: true
+from itertools import combinations
+import pandas as pd
+
+transactions = [
+    {"chleb", "maslo", "mleko"},
+    {"chleb", "maslo"},
+    {"chleb", "pieluchy", "piwo", "mleko"},
+    {"chleb", "maslo", "pieluchy", "piwo"},
+    {"mleko", "pieluchy", "piwo", "cola"},
+    {"chleb", "mleko", "pieluchy", "piwo"},
+    {"chleb", "mleko", "maslo"},
+    {"chleb", "mleko", "piwo"},
+    {"maslo", "mleko"},
+    {"chleb", "maslo", "mleko", "piwo"},
+]
+
+items = sorted(set().union(*transactions))
+
+def support(itemset, transactions):
+    itemset = set(itemset)
+    return sum(itemset.issubset(t) for t in transactions) / len(transactions)
+
+def apriori(transactions, min_support=0.3, max_len=3):
+    frequent = {}
+
+    current = {
+        frozenset([item])
+        for item in items
+        if support([item], transactions) >= min_support
+    }
+
+    k = 1
+    while current and k <= max_len:
+        level = {}
+        for cand in sorted(current, key=lambda x: (len(x), tuple(sorted(x)))):
+            sup = support(cand, transactions)
+            if sup >= min_support:
+                level[cand] = sup
+
+        if not level:
+            break
+
+        frequent.update(level)
+        k += 1
+
+        prev = list(level.keys())
+        candidates = set()
+        for i in range(len(prev)):
+            for j in range(i + 1, len(prev)):
+                union = prev[i] | prev[j]
+                if len(union) != k:
+                    continue
+
+                all_subsets_frequent = all(
+                    frozenset(subset) in level
+                    for subset in combinations(union, k - 1)
+                )
+                if all_subsets_frequent:
+                    candidates.add(union)
+
+        current = candidates
+
+    return frequent
+
+def generate_rules(frequent_itemsets, transactions, min_conf=0.7):
+    rules = []
+    for itemset, sup_xy in frequent_itemsets.items():
+        if len(itemset) < 2:
+            continue
+
+        for r in range(1, len(itemset)):
+            for antecedent in combinations(itemset, r):
+                antecedent = frozenset(antecedent)
+                consequent = itemset - antecedent
+
+                sup_x = frequent_itemsets.get(antecedent, support(antecedent, transactions))
+                sup_y = frequent_itemsets.get(consequent, support(consequent, transactions))
+
+                conf = sup_xy / sup_x
+                lift = conf / sup_y
+
+                if conf >= min_conf:
+                    rules.append(
+                        {
+                            "antecedent": ", ".join(sorted(antecedent)),
+                            "consequent": ", ".join(sorted(consequent)),
+                            "support": round(sup_xy, 3),
+                            "confidence": round(conf, 3),
+                            "lift": round(lift, 3),
+                        }
+                    )
+    return pd.DataFrame(rules).sort_values(
+        ["lift", "confidence", "support"],
+        ascending=False
+    )
+
+frequent_itemsets = apriori(transactions, min_support=0.3, max_len=3)
+
+freq_df = pd.DataFrame(
+    [
+        {
+            "itemset": ", ".join(sorted(itemset)),
+            "length": len(itemset),
+            "support": round(sup, 3),
+        }
+        for itemset, sup in frequent_itemsets.items()
+    ]
+).sort_values(["length", "support", "itemset"], ascending=[True, False, True])
+
+rules_df = generate_rules(frequent_itemsets, transactions, min_conf=0.7)
+
+print("Częste itemsety:")
+print(freq_df.to_string(index=False))
+
+print("\nNajsilniejsze reguły:")
+print(rules_df.head(10).to_string(index=False))
+```
+
+Wynik zwykle pokaże, że takie produkty jak `chleb`, `mleko` i `masło` występują często razem, a dla części reguł lift przekracza 1. To oznacza, że współwystępowanie jest silniejsze niż przewidywałaby sama częstość marginalna produktów. W realnych danych detalicznych analiza jest oczywiście znacznie większa, ale logika pozostaje taka sama.
+
+## Wykrywanie anomalii
+
+### Dlaczego anomalia to trudny obiekt statystyczny
+
+W klasycznej klasyfikacji chcemy możliwie dobrze odróżniać znane klasy. W wykrywaniu anomalii sytuacja jest trudniejsza: często umiemy dobrze opisać to, co **normalne**, ale nie wiemy z góry, jak będzie wyglądać rzadkie odstępstwo. Dlatego w literaturze spotyka się zarówno nazwę *outlier detection*, jak i *anomaly detection*. Przegląd tej dziedziny przedstawiają Chandola, Banerjee i Kumar [@chandola2009].
+
+W praktyce anomalia może oznaczać:
+
+- oszustwo finansowe,
+- awarię maszyny,
+- podejrzany ruch sieciowy,
+- błędny odczyt sensora,
+- nietypowe zachowanie użytkownika.
+
+Wspólny rdzeń problemu jest taki sam: obserwacja jest „zbyt odmienna” od typowej struktury danych.
+
+### Typy anomalii
+
+W klasycznym podziale [@chandola2009] rozróżnia się:
+
+- **anomalię punktową** – pojedyncza obserwacja jest nietypowa względem reszty,
+- **anomalię kontekstową** – obserwacja jest nietypowa tylko w danym kontekście, np. sezonie lub porze dnia,
+- **anomalię zbiorową** – pojedyncze punkty mogą wyglądać zwyczajnie, ale ich grupa tworzy nietypowy wzorzec.
+
+To rozróżnienie jest ważne, bo różne algorytmy wykrywają różne typy odstępstw. Prosty model odległościowy może być dobry do anomalii punktowych, ale słaby dla anomalii kontekstowych i sekwencyjnych.
+
+### Formalizacja i funkcja skoringowa
+
+W wielu zadaniach anomalia nie jest wynikiem binarnym, lecz **wynikiem skoringowym**. Algorytm przypisuje obserwacji wartość:
+
+$$
+s(x)\in\mathbb{R},
+$$
+
+gdzie większa wartość oznacza większą „podejrzaność”. Dopiero potem wprowadza się próg:
+
+$$
+\hat y(x)=
+\begin{cases}
+1, & s(x)>\tau,\\
+0, & s(x)\le \tau.
+\end{cases}
+$$
+
+To bardzo praktyczne ujęcie, bo pozwala sterować kompromisem między fałszywymi alarmami a przeoczeniami.
+
+### LOF: lokalna gęstość zamiast globalnej odległości
+
+Jedną z najważniejszych idei w tej dziedzinie była koncepcja **Local Outlier Factor** (LOF) Breuniga i współautorów [@breunig2000]. Zamiast patrzeć tylko na odległość punktu od środka chmury, LOF porównuje **lokalną gęstość** punktu z gęstością jego sąsiedztwa.
+
+Intuicja jest bardzo cenna: punkt może być daleko od głównego skupiska, ale nadal być normalny, jeśli wokół niego istnieje lokalna grupa punktów o podobnej gęstości. Odwrotnie, punkt może wyglądać podejrzanie, jeśli jest „luźno osadzony” względem najbliższych sąsiadów.
+
+Formalnie, dla ustalonego $k$ definiujemy zasięg osiągalności i lokalną gęstość osiągalności, a następnie:
+
+$$
+\operatorname{LOF}_k(x)
+=
+\frac{
+\frac{1}{|N_k(x)|}\sum_{o\in N_k(x)} \operatorname{lrd}_k(o)
+}
+{\operatorname{lrd}_k(x)},
+$$
+
+gdzie $\operatorname{lrd}_k(x)$ oznacza lokalną gęstość osiągalności punktu $x$. Jeśli $\operatorname{LOF}_k(x)\approx 1$, punkt ma gęstość podobną do otoczenia; jeśli jest wyraźnie większa od 1, punkt jest lokalnie odstający.
+
+### Isolation Forest
+
+Drugim bardzo praktycznym podejściem jest **Isolation Forest** Liu, Tinga i Zhou [@liu2008]. Tutaj intuicja jest inna niż w LOF. Zamiast estymować gęstość, algorytm buduje losowe drzewa podziałów i sprawdza, jak szybko dany punkt zostaje odizolowany. Punkty anomalne są zwykle łatwe do wyizolowania, więc ich średnia długość ścieżki w drzewie jest mała.
+
+W uproszczeniu: jeżeli obserwacja leży „na uboczu”, kilka losowych przecięć osi często wystarcza, aby trafić do liścia zawierającego tylko ten punkt. Dla obserwacji typowych ścieżki są dłuższe, bo punktów podobnych jest więcej.
+
+Isolation Forest jest szczególnie atrakcyjny praktycznie, ponieważ:
+
+- działa bez etykiet,
+- skaluje się dobrze na większych zbiorach,
+- nie wymaga jawnej estymacji gęstości w wysokich wymiarach.
+
+### Typowy workflow detekcji anomalii
+
+Niezależnie od konkretnego algorytmu sensowna procedura analityczna wygląda podobnie:
+
+1. Zdefiniuj, co w danej domenie oznacza „anomalia”.
+2. Oczyść dane i uwzględnij skalowanie lub konstrukcję cech.
+3. Wybierz rodzinę metod: odległościową, gęstościową, izolacyjną albo modelową.
+4. Policz score anomalii.
+5. Ustal próg alarmowy zgodny z kosztami błędów.
+6. Zweryfikuj wyniki ekspercko, bo część anomalii może być artefaktem danych.
+
+### Zalety i wady
+
+**Zalety**
+
+- bardzo szerokie zastosowania praktyczne,
+- możliwość pracy bez pełnego zestawu etykiet,
+- użyteczność w bezpieczeństwie, finansach, medycynie i monitoringu przemysłowym.
+
+**Wady**
+
+- brak jednej uniwersalnej definicji „anomalii”,
+- duża wrażliwość na konstrukcję cech i skalę,
+- trudność w doborze progu alarmowego,
+- wysokie ryzyko fałszywych alarmów przy niestabilnych danych.
+
+### Przykład: LOF i Isolation Forest na danych syntetycznych
+
+Zbudujemy dwa gęste skupiska punktów oraz kilka ręcznie dodanych obserwacji odstających. Następnie porównamy wyniki LOF i Isolation Forest. To dobry scenariusz dydaktyczny: LOF pokazuje myślenie „lokalną gęstością”, a Isolation Forest – myślenie „łatwością izolacji”.
+
+```{python}
+#| code-fold: true
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
+
+rng = np.random.default_rng(42)
+
+X1 = rng.normal(loc=[0.0, 0.0], scale=[0.55, 0.55], size=(160, 2))
+X2 = rng.normal(loc=[4.2, 4.4], scale=[0.45, 0.45], size=(120, 2))
+X_out = np.array([
+    [7.0, 0.5],
+    [6.5, 1.2],
+    [-2.4, 3.2],
+    [3.4, -2.0],
+    [8.0, 7.8],
+    [-2.5, -2.3],
+])
+
+X = np.vstack([X1, X2, X_out])
+y_true = np.hstack([
+    np.zeros(len(X1) + len(X2), dtype=int),
+    np.ones(len(X_out), dtype=int),
+])
+
+contamination = len(X_out) / len(X)
+
+lof = LocalOutlierFactor(n_neighbors=20, contamination=contamination)
+y_pred_lof = lof.fit_predict(X)
+score_lof = -lof.negative_outlier_factor_
+
+iso = IsolationForest(
+    n_estimators=250,
+    contamination=contamination,
+    random_state=42
+)
+y_pred_iso = iso.fit_predict(X)
+score_iso = -iso.score_samples(X)
+
+result = pd.DataFrame({
+    "x1": X[:, 0],
+    "x2": X[:, 1],
+    "czy_prawdziwa_anomalia": y_true,
+    "LOF_score": score_lof,
+    "LOF_pred": (y_pred_lof == -1).astype(int),
+    "iForest_score": score_iso,
+    "iForest_pred": (y_pred_iso == -1).astype(int),
+})
+
+print("Najbardziej podejrzane obserwacje wg LOF:")
+print(
+    result.sort_values("LOF_score", ascending=False)
+          .head(8)[["x1", "x2", "czy_prawdziwa_anomalia", "LOF_score", "LOF_pred"]]
+          .to_string(index=False)
+)
+
+print("\nNajbardziej podejrzane obserwacje wg Isolation Forest:")
+print(
+    result.sort_values("iForest_score", ascending=False)
+          .head(8)[["x1", "x2", "czy_prawdziwa_anomalia", "iForest_score", "iForest_pred"]]
+          .to_string(index=False)
+)
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5), constrained_layout=True)
+
+axes[0].scatter(X[:, 0], X[:, 1], c=score_lof, cmap="viridis", s=35)
+axes[0].scatter(
+    X[y_pred_lof == -1, 0],
+    X[y_pred_lof == -1, 1],
+    facecolors="none",
+    edgecolors="red",
+    s=140,
+    linewidths=1.5,
+    label="anomalia wg LOF",
+)
+axes[0].set_title("Local Outlier Factor")
+axes[0].set_xlabel("x1")
+axes[0].set_ylabel("x2")
+axes[0].legend()
+
+axes[1].scatter(X[:, 0], X[:, 1], c=score_iso, cmap="magma", s=35)
+axes[1].scatter(
+    X[y_pred_iso == -1, 0],
+    X[y_pred_iso == -1, 1],
+    facecolors="none",
+    edgecolors="cyan",
+    s=140,
+    linewidths=1.5,
+    label="anomalia wg iForest",
+)
+axes[1].set_title("Isolation Forest")
+axes[1].set_xlabel("x1")
+axes[1].set_ylabel("x2")
+axes[1].legend()
+
+plt.show()
+```
+
+Na takim zbiorze obie metody zwykle poprawnie wskazują sztucznie dodane odstępstwa. Jednocześnie ich logika jest inna: LOF jest szczególnie czuły na **lokalną rzadkość**, podczas gdy Isolation Forest faworyzuje punkty łatwe do odizolowania przez losowe podziały. W prawdziwych danych warto zestawiać kilka metod i porównywać stabilność ich wskazań.
+
+## Podsumowanie
+
+Trzy omówione obszary pokazują, że „uczenie maszynowe” nie sprowadza się do dopasowania klasyfikatora do etykiet. W **uczeniu ze wzmocnieniem** problem ma charakter sekwencyjny i decyzyjny: agent uczy się polityki maksymalizującej długookresowy zwrot. W **analizie koszykowej** szukamy współwystąpień i reguł w danych transakcyjnych, a kluczowe stają się support, confidence i lift. W **wykrywaniu anomalii** zamiast modelować klasę większościową próbujemy wychwycić to, co odstaje od normy.
+
+Z dydaktycznego punktu widzenia warto zapamiętać trzy rzeczy. Po pierwsze, formalizacja problemu decyduje o wyborze narzędzia: inne metody stosujemy do sekwencji decyzji, inne do transakcji, a inne do obserwacji rzadkich. Po drugie, interpretacja wyniku jest równie ważna jak sam algorytm. Po trzecie, te obszary bardzo często pojawiają się razem w praktyce, np. system rekomendacyjny może korzystać z reguł asocjacyjnych, system sterowania z RL, a monitoring bezpieczeństwa z detekcji anomalii.
