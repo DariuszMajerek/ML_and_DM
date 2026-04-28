@@ -645,6 +645,107 @@ $$
 
 Interpretacyjnie AdaBoost minimalizuje wykładniczą stratę $\sum_i \exp(-y_i F(x_i))$, a $\alpha_m$ rośnie, gdy $h_m$ jest lepszy (ma mniejszy $\varepsilon_m$). W praktyce jako $h_m$ stosuje się często bardzo proste modele, np. *decision stumps* (drzewa głębokości 1), co wzmacnia efekt „uczenia na błędach”.
 
+#### Przykład jednej iteracji AdaBoost
+
+Załóżmy, że mamy $n=5$ obserwacji w klasyfikacji binarnej, gdzie etykiety są kodowane jako $y_i\in\{-1,+1\}$:
+
+| $i$ | $y_i$ | $w_i^{(1)}$ | $h_1(x_i)$ | czy błąd? |
+|---:|---:|---:|---:|:---|
+| 1 | $+1$ | $0.20$ | $+1$ | nie |
+| 2 | $+1$ | $0.20$ | $+1$ | nie |
+| 3 | $-1$ | $0.20$ | $+1$ | tak |
+| 4 | $-1$ | $0.20$ | $-1$ | nie |
+| 5 | $+1$ | $0.20$ | $+1$ | nie |
+
+Na początku wszystkie obserwacje mają takie same wagi, bo:
+
+$$
+w_i^{(1)}=\frac{1}{5}=0.20.
+$$
+
+Pierwszy słaby klasyfikator $h_1$ pomylił tylko obserwację $i=3$. Błąd ważony wynosi więc:
+
+$$
+\varepsilon_1
+=
+\frac{\sum_{i=1}^5 w_i^{(1)}\mathbb{1}\{h_1(x_i)\neq y_i\}}
+{\sum_{i=1}^5 w_i^{(1)}}
+=
+\frac{0.20}{1}
+=0.20.
+$$
+
+Waga klasyfikatora w zespole to:
+
+$$
+\alpha_1
+=
+\frac{1}{2}\log\frac{1-\varepsilon_1}{\varepsilon_1}
+=
+\frac{1}{2}\log\frac{0.80}{0.20}
+=
+\frac{1}{2}\log 4
+\approx 0.693.
+$$
+
+Ponieważ $\varepsilon_1<0.5$, klasyfikator jest lepszy niż losowy i dostaje dodatnią wagę. Gdyby $\varepsilon_1$ było bliskie zera, $\alpha_1$ byłoby duże; gdyby $\varepsilon_1=0.5$, wtedy $\alpha_1=0$, czyli klasyfikator nie wnosiłby informacji.
+Teraz aktualizujemy wagi obserwacji. Dla poprawnie sklasyfikowanych przykładów mamy $y_i h_1(x_i)=+1$, więc:
+$$
+w_i^{(2)} \propto w_i^{(1)}\exp(-\alpha_1)
+=0.20\cdot \exp(-0.693)
+\approx 0.20\cdot 0.50
+=0.10.
+$$
+
+Dla błędnie sklasyfikowanego przykładu $i=3$ mamy $y_i h_1(x_i)=-1$, więc:
+
+$$
+w_3^{(2)} \propto w_3^{(1)}\exp(\alpha_1)
+=0.20\cdot \exp(0.693)
+\approx 0.20\cdot 2
+=0.40.
+$$
+
+Wagi nieznormalizowane wynoszą:
+
+| $i$ | czy błąd? | waga nieznormalizowana |
+|---:|:---|---:|
+| 1 | nie | $0.10$ |
+| 2 | nie | $0.10$ |
+| 3 | tak | $0.40$ |
+| 4 | nie | $0.10$ |
+| 5 | nie | $0.10$ |
+
+Suma wag nieznormalizowanych to:
+
+$$
+Z_1=0.10+0.10+0.40+0.10+0.10=0.80.
+$$
+
+Po normalizacji otrzymujemy wagi na następną iterację:
+
+| $i$ | $w_i^{(2)}$ |
+|---:|---:|
+| 1 | $0.10/0.80=0.125$ |
+| 2 | $0.10/0.80=0.125$ |
+| 3 | $0.40/0.80=0.500$ |
+| 4 | $0.10/0.80=0.125$ |
+| 5 | $0.10/0.80=0.125$ |
+
+Najważniejszy efekt: obserwacja błędnie sklasyfikowana ma teraz wagę $0.50$, czyli w kolejnej iteracji będzie znacznie ważniejsza niż pozostałe. Następny słaby klasyfikator $h_2$ będzie więc uczony tak, aby mocniej uwzględnić właśnie ten trudny przypadek.
+Po pierwszej iteracji model addytywny ma postać:
+
+$$
+F_1(x)=\alpha_1 h_1(x)\approx 0.693\,h_1(x),
+$$
+
+a klasyfikator zespołowy po tej jednej iteracji to:
+
+$$
+H_1(x)=\mathrm{sign}(F_1(x)).
+$$
+
+
 ### Gradient Boosting - minimalizacja straty w przestrzeni funkcji
 
 Gradient boosting uogólnia ideę „poprawiania błędów” na dowolną funkcję straty $\mathcal{L}$. Model addytywny jest budowany iteracyjnie:
@@ -706,32 +807,132 @@ Tutaj $T$ oznacza liczbę liści w drzewie, $w_j$ to wartość predykcji w $j$-t
 
 #### Uczenie kolejnego drzewa: przybliżenie II rzędu (Newton boosting)
 
-Kluczową cechą XGBoost jest wykorzystanie rozwinięcia Taylora do drugiego rzędu dla straty w bieżącym kroku. Dla iteracji $m$ definiuje się:
+Kluczową cechą XGBoost jest wykorzystanie rozwinięcia Taylora do drugiego rzędu dla straty w bieżącym kroku. Załóżmy, że po $m-1$ iteracjach model daje predykcję $\hat y_i^{(m-1)}=F_{m-1}(x_i)$. W iteracji $m$ dokładamy nowe drzewo $f_m$, więc nowa predykcja ma postać:
+
+$$
+\hat y_i^{(m)}=\hat y_i^{(m-1)}+f_m(x_i).
+$$
+
+Chcemy dobrać $f_m$ tak, aby zmniejszyć zregularizowaną funkcję celu:
+
+$$
+\mathcal{Obj}^{(m)}
+=\sum_{i=1}^n \mathcal{L}\left(y_i,\hat y_i^{(m-1)}+f_m(x_i)\right)
++\Omega(f_m).
+$$
+
+Bezpośrednia optymalizacja po wszystkich możliwych strukturach drzewa jest trudna. XGBoost upraszcza problem lokalnie: przybliża stratę wokół bieżącej predykcji $\hat y_i^{(m-1)}$ za pomocą rozwinięcia Taylora do drugiego rzędu. Dla małej zmiany $f_m(x_i)$ mamy:
+
+$$
+\mathcal{L}\left(y_i,\hat y_i^{(m-1)}+f_m(x_i)\right)
+\approx
+\mathcal{L}\left(y_i,\hat y_i^{(m-1)}\right)
++g_i f_m(x_i)
++\frac{1}{2}h_i f_m(x_i)^2,
+$$
+
+gdzie:
 
 $$
 g_i = \left.\frac{\partial\,\mathcal{L}(y_i, \hat y)}{\partial \hat y}\right|_{\hat y=\hat y_i^{(m-1)}},\qquad
 h_i = \left.\frac{\partial^2\,\mathcal{L}(y_i, \hat y)}{\partial \hat y^2}\right|_{\hat y=\hat y_i^{(m-1)}},
 $$
 
-czyli gradient i „krzywiznę” straty względem predykcji. Następnie dopasowuje się drzewo $f_m$ tak, aby minimalizowało przybliżoną funkcję celu opartą o sumy $g_i$ i $h_i$ w liściach. Jeżeli liść zawiera zbiór obserwacji $S$, to oznaczamy:
+czyli $g_i$ jest lokalnym nachyleniem straty, a $h_i$ jej lokalną krzywizną względem predykcji. Składnik $\mathcal{L}(y_i,\hat y_i^{(m-1)})$ nie zależy od nowego drzewa, więc przy wyborze $f_m$ można go pominąć. Otrzymujemy przybliżony problem:
+
+$$
+\widetilde{\mathcal{Obj}}^{(m)}
+=
+\sum_{i=1}^n
+\left[
+g_i f_m(x_i)+\frac{1}{2}h_i f_m(x_i)^2
+\right]
++\Omega(f_m).
+$$
+
+Drzewo dzieli przestrzeń cech na $T$ liści. Jeśli obserwacja $i$ trafia do liścia $q(x_i)$, to predykcja drzewa jest wartością tego liścia:
+
+$$
+f_m(x_i)=w_{q(x_i)}.
+$$
+
+Dla uproszczenia najpierw rozważmy wersję z karą $L_2$ na wartościach liści, czyli:
+
+$$
+\Omega(f_m)=\gamma T+\frac{1}{2}\lambda\sum_{j=1}^{T}w_j^2.
+$$
+
+Jeżeli $S_j=\{i:q(x_i)=j\}$ oznacza zbiór obserwacji w liściu $j$, to przybliżona funkcja celu rozkłada się na niezależne wkłady poszczególnych liści:
+
+$$
+\widetilde{\mathcal{Obj}}^{(m)}
+=
+\sum_{j=1}^{T}
+\left[
+\sum_{i\in S_j}
+\left(g_i w_j+\frac{1}{2}h_i w_j^2\right)
++\frac{1}{2}\lambda w_j^2
+\right]
++\gamma T.
+$$
+
+Zbieramy wyrazy zależne od jednego liścia. Dla liścia zawierającego zbiór obserwacji $S$ oznaczamy:
 
 $$
 G_S=\sum_{i\in S} g_i,\qquad H_S=\sum_{i\in S} h_i.
 $$
 
-Wtedy optymalna wartość liścia ma postać:
+Wkład tego liścia do przybliżonej funkcji celu, jako funkcja jego wartości $w$, wynosi:
+
+$$
+\phi_S(w)=G_S w+\frac{1}{2}(H_S+\lambda)w^2.
+$$
+
+To jest jednowymiarowa funkcja kwadratowa. Jej minimum znajdujemy przez wyzerowanie pochodnej po $w$:
+
+$$
+\frac{\partial \phi_S(w)}{\partial w}
+=G_S+(H_S+\lambda)w=0.
+$$
+
+Stąd optymalna wartość liścia ma postać:
 
 $$
 w_S^* = -\frac{G_S}{H_S+\lambda},
 $$
 
-a wkład tego liścia do poprawy funkcji celu jest proporcjonalny do:
+czyli jest to krok Newtona zagregowany w obrębie liścia: suma gradientów mówi, w którą stronę należy przesunąć predykcję, a suma hessianów skaluje ten ruch przez lokalną krzywiznę straty. Parametr $\lambda$ powiększa mianownik, więc zmniejsza bezwzględną wartość $w_S^*$ i stabilizuje liście.
+
+Aby wyznaczyć wkład liścia do funkcji celu, podstawiamy $w_S^*$ do $\phi_S(w)$:
 
 $$
--\frac{1}{2}\,\frac{G_S^2}{H_S+\lambda}.
+\phi_S(w_S^*)
+=
+G_S\left(-\frac{G_S}{H_S+\lambda}\right)
++\frac{1}{2}(H_S+\lambda)
+\left(\frac{G_S^2}{(H_S+\lambda)^2}\right).
 $$
 
-To prowadzi do praktycznej reguły wyboru podziału: split jest korzystny, jeśli zwiększa „zysk” (gain).
+Po uproszczeniu:
+
+$$
+\phi_S(w_S^*)=
+-\frac{1}{2}\frac{G_S^2}{H_S+\lambda}.
+$$
+
+Wartość jest ujemna, ponieważ oznacza spadek przybliżonej funkcji celu względem sytuacji, w której liść miałby wartość $w=0$ (czyli nowe drzewo nic by nie poprawiało w tym regionie). Im większe $\frac{G_S^2}{H_S+\lambda}$, tym większa potencjalna poprawa. Jeżeli uwzględnimy koszt utworzenia liścia, pełny wkład liścia do przybliżonego celu to:
+
+$$
+-\frac{1}{2}\frac{G_S^2}{H_S+\lambda}+\gamma.
+$$
+
+W standardowym zapisie XGBoost z karą $L_1$ pojawia się dodatkowo składnik $\alpha |w|$. Wtedy optymalna wartość liścia ma postać „progowania miękkiego”:
+
+$$
+w_S^*=-\frac{\operatorname{sgn}(G_S)\max(|G_S|-\alpha,0)}{H_S+\lambda}.
+$$
+
+W wielu wyprowadzeniach dydaktycznych pomija się $\alpha$, aby pokazać główną ideę Newton boostingu; wtedy otrzymujemy prosty wzór $-G_S/(H_S+\lambda)$.
 
 #### Kryterium splitu (gain) i rola parametrów `gamma` oraz `min_child_weight`
 
@@ -740,6 +941,31 @@ Dla kandydata podziału liścia $S$ na $S_L$ i $S_R$ typowy *gain* ma postać:
 $$
 \mathrm{Gain} = \frac{1}{2}\left(\frac{G_{S_L}^2}{H_{S_L}+\lambda}+\frac{G_{S_R}^2}{H_{S_R}+\lambda}-\frac{G_S^2}{H_S+\lambda}\right)-\gamma.
 $$
+
+Ten wzór wynika bezpośrednio z porównania dwóch sytuacji. Przed podziałem mamy jeden liść $S$, którego najlepszy wkład do przybliżonej funkcji celu wynosi:
+
+$$
+\mathrm{Score}(S)=-\frac{1}{2}\frac{G_S^2}{H_S+\lambda}.
+$$
+
+Po podziale mamy dwa liście, więc najlepszy łączny wkład wynosi:
+
+$$
+\mathrm{Score}(S_L)+\mathrm{Score}(S_R)
+=
+-\frac{1}{2}\frac{G_{S_L}^2}{H_{S_L}+\lambda}
+-\frac{1}{2}\frac{G_{S_R}^2}{H_{S_R}+\lambda}.
+$$
+
+Poprawa to „cel przed podziałem minus cel po podziale”. Ponieważ wartości $\mathrm{Score}$ są ujemne, po przekształceniu dostajemy dodatni zapis:
+
+$$
+\frac{1}{2}\left(\frac{G_{S_L}^2}{H_{S_L}+\lambda}
++\frac{G_{S_R}^2}{H_{S_R}+\lambda}
+-\frac{G_S^2}{H_S+\lambda}\right).
+$$
+
+Podział zamienia jeden liść na dwa, czyli zwiększa liczbę liści o jeden. Dlatego w funkcji celu pojawia się dodatkowy koszt strukturalny $\gamma$, który odejmujemy od poprawy. Ostatecznie split jest akceptowany tylko wtedy, gdy dodatkowa poprawa dopasowania przewyższa koszt większej złożoności drzewa.
 
 Parametr `gamma` wprost wprowadza próg opłacalności: jeśli najlepszy możliwy podział nie daje gainu większego od zera (po odjęciu $\gamma$), węzeł nie jest dzielony. Z kolei `min_child_weight` ogranicza tworzenie liści o zbyt małej „wadze” (w praktyce: zbyt małym $H_S$), co stabilizuje model i jest istotne zwłaszcza przy danych zaszumionych.
 
@@ -815,8 +1041,21 @@ gdzie $\gamma$ jest kosztem utworzenia dodatkowego liścia (regularizacja strukt
 
 1.  Wzrost *leaf-wise* zamiast *level-wise* - klasyczne implementacje często budują drzewo poziomami (*level-wise*): rozdzielają wszystkie liście (tymczasowe) na danym poziomie. LightGBM stosuje strategię *leaf-wise* (*best-first*): w każdym kroku rozdziela ten liść, który daje największy przyrost $\mathrm{Gain}$. To zwykle daje lepszą jakość przy tej samej liczbie liści, ale zwiększa ryzyko przeuczenia, jeśli nie ograniczysz złożoności. Dlatego w LightGBM parametry kontrolujące złożoność, takie jak `num_leaves` i `max_depth`, są krytyczne.
 2.  *Histogram-based splitting* (przyspieszenie selekcji splitów) - dla cech ciągłych LightGBM nie analizuje wszystkich możliwych progów (jak w prostym CART), tylko bucketuje wartości do ograniczonej liczby koszyków (*binów*). Dzięki temu liczenie gainów jest szybsze i bardziej pamięciooszczędne, a jakość zwykle pozostaje bardzo dobra. Konieczne jest zatem ustawienie odpowiedniego `max_bin` (liczba binów).
-3.  GOSS (*Gradient-based One-Side Sampling*) - w dużych zbiorach LightGBM może przyspieszać uczenie przez selekcję obserwacji na podstawie gradientów: zachowuje większość obserwacji o dużych $|g_i|$ (trudne przypadki), a próbuje losowo zredukować te o małych $|g_i|$, korygując wagi tak, aby estymacja gainów pozostała sensowna.
-4.  EFB (*Exclusive Feature Bundling*) - dla danych wysokowymiarowych LightGBM może łączyć cechy, które rzadko są jednocześnie niezerowe (cechy „ekskluzywne”), ograniczając koszt obliczeń bez dużej straty jakości. To ma znaczenie np. w problemach z wieloma rzadkimi zmiennymi.
+3.  GOSS (*Gradient-based One-Side Sampling*) - mechanizm przyspiesza liczenie splitów przez pracę na wybranej części obserwacji. Punktem wyjścia jest obserwacja, że duża wartość $|g_i|$ oznacza przykład, na którym aktualny model nadal mocno się myli albo dla którego strata silnie reaguje na zmianę predykcji. Takie obserwacje są bardzo informatywne przy wyborze kolejnego podziału. LightGBM:
+    -   sortuje obserwacje według $|g_i|$,
+    -   zachowuje wszystkie (lub dużą część) obserwacji o największych gradientach,
+    -   z obserwacji o małych gradientach losuje tylko podzbiór,
+    -   zwiększa wagi wylosowanych obserwacji z małymi gradientami, aby nie zaniżyć ich łącznego wpływu na obliczany gain.
+
+    Intuicyjnie: trudne przypadki zostają w całości, a łatwe przypadki są reprezentowane przez próbkę z korektą wag. Dzięki temu split nadal jest oceniany na podstawie informacji o całym rozkładzie danych, ale koszt obliczeniowy jest mniejszy. Korekta wag jest ważna: bez niej algorytm przeceniałby obserwacje o dużych gradientach i wybierałby podziały zbyt agresywnie dopasowane do trudnych przypadków.
+
+    Przykładowo, jeśli zachowujemy frakcję $a$ obserwacji o największych $|g_i|$ oraz losujemy frakcję $b$ spośród pozostałych, to obserwacje z małymi gradientami, które trafiły do próbki, dostają wagę około $(1-a)/b$. W efekcie ich suma gradientów i hessianów w węzłach ma przybliżać wkład całej grupy małych gradientów, a nie tylko wylosowanej próbki.
+
+4.  EFB (*Exclusive Feature Bundling*) - mechanizm zmniejsza liczbę cech, które trzeba analizować przy wyborze splitów. Jest szczególnie użyteczny po kodowaniu *one-hot* albo w danych rzadkich, gdzie wiele kolumn ma prawie same zera. Dwie cechy są „ekskluzywne”, jeśli rzadko przyjmują wartości niezerowe w tych samych obserwacjach. Przykład: po *one-hot encoding* jednej zmiennej kategorycznej kolumny `kolor_czerwony`, `kolor_zielony`, `kolor_niebieski` są wzajemnie wykluczające się, bo jedna obserwacja zwykle należy tylko do jednej kategorii.
+
+    LightGBM może spakować kilka takich cech do jednej „wiązki” (*bundle*). Nie chodzi o zwykłe dodanie kolumn, bo wtedy wartości różnych cech mogłyby się pomieszać. Zamiast tego algorytm przesuwa zakresy binów poszczególnych cech tak, aby w jednej skompresowanej kolumnie dało się odróżnić, z której oryginalnej cechy pochodzi wartość. Dzięki temu wiele rzadkich cech jest reprezentowanych jako jedna cecha techniczna, a histogramy splitów liczy się dla mniejszej liczby kolumn.
+
+    Jeśli cechy są idealnie ekskluzywne, *bundling* nie traci informacji. W praktyce LightGBM dopuszcza niewielką liczbę konfliktów, czyli sytuacji, gdy dwie łączone cechy są jednocześnie niezerowe. Algorytm dobiera wiązki tak, aby liczba takich konfliktów była mała, bo konflikty mogą pogarszać dokładność oceny splitów. Zysk jest obliczeniowy: mniej cech do skanowania oznacza szybsze uczenie i niższe zużycie pamięci.
 
 #### Braki danych i kategorie
 
@@ -891,6 +1130,50 @@ $$
 
 gdzie $\mu$ jest średnią globalną (np. $\mu=\mathbb{E}[Y]$), a $a>0$ jest parametrem prioru/wygładzania. Kluczowe jest to, że w liczniku nie ma $y_{\pi_t}$, bo używamy tylko obserwacji wcześniejszych. Oznacza to, że kodowanie nie „widzi” własnej etykiety i nie przenosi jej do cechy.
 
+Przykład liczbowy pokazuje sens tego mechanizmu. Załóżmy jedną cechę kategoryczną `city`, target binarny `clicked` oraz globalną średnią $\mu=0.50$. Przyjmijmy prior $a=1$ i następującą permutację obserwacji:
+
+| pozycja $t$ | obserwacja $\pi_t$ | `city` | $y$ |
+|---:|---:|:---|---:|
+| 1 | 4 | Lublin | 0 |
+| 2 | 1 | Warsaw | 1 |
+| 3 | 5 | Lublin | 1 |
+| 4 | 2 | Warsaw | 0 |
+| 5 | 3 | Warsaw | 1 |
+
+Dla pierwszej obserwacji z kategorii `Lublin` nie ma jeszcze wcześniejszych obserwacji z tą kategorią, więc:
+
+$$
+\text{TE}_{\pi}(\text{Lublin, }t=1)
+=\frac{0+1\cdot 0.50}{0+1}
+=0.50.
+$$
+
+Dla obserwacji na pozycji $t=3$ (`Lublin`, $y=1$) w prefiksie jest już wcześniejszy `Lublin` z targetem $0$. Kodowanie wynosi:
+
+$$
+\text{TE}_{\pi}(\text{Lublin, }t=3)
+=\frac{0+1\cdot 0.50}{1+1}
+=0.25.
+$$
+
+Ważne: target aktualnej obserwacji, czyli $y=1$ z pozycji $t=3$, nie został użyty do zakodowania tej samej obserwacji. Zostanie użyty dopiero dla przyszłych obserwacji z kategorią `Lublin`.
+
+Dla obserwacji na pozycji $t=5$ (`Warsaw`, $y=1$) wcześniejsze obserwacje `Warsaw` mają targety $1$ i $0$, więc:
+
+$$
+\text{TE}_{\pi}(\text{Warsaw, }t=5)
+=\frac{1+0+1\cdot 0.50}{2+1}
+=0.50.
+$$
+
+Dla porównania, naiwne target encoding dla `Warsaw` policzone na całym zbiorze użyłoby trzech targetów tej kategorii, także targetu aktualnej obserwacji:
+
+$$
+\text{TE}(\text{Warsaw})=\frac{1+0+1}{3}=0.667.
+$$
+
+Ta wartość jest bardziej „optymistyczna”, bo częściowo zawiera informację o obserwacji, którą właśnie kodujemy. Ordered target statistics usuwa ten problem przez zasadę: dla obserwacji na pozycji $t$ wolno używać tylko pozycji wcześniejszych niż $t$.
+
 **Wiele permutacji i stabilizacja.** W praktyce CatBoost wykorzystuje wiele permutacji oraz (w zależności od ustawień) uśrednianie/kompozycję statystyk, aby zmniejszyć wariancję kodowania dla rzadkich kategorii (szczególnie na początku permutacji, gdy $N_t(c)$ jest małe).
 
 **Interakcje kategorii.** Dodatkowo CatBoost może tworzyć statystyki docelowe nie tylko dla pojedynczych zmiennych kategorycznych, ale również dla ich kombinacji (np. $\text{city}\times\text{device}$), co pozwala uchwycić istotne interakcje bez eksplozji wymiaru typowej dla pełnego one-hot.
@@ -912,6 +1195,24 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 $$
 
 W implementacji CatBoost nie trenuje dosłownie $n$ pełnych modeli prefiksowych (to byłoby zbyt kosztowne), ale algorytmicznie to właśnie ta idea – „gradienty z przeszłości” – stoi za ograniczeniem wycieku i poprawą uogólniania.
+
+Można to rozumieć przez analogię do kodowania kategorii:
+
+-   w zwykłym boostingu predykcja $\hat y_i$ używana do policzenia gradientu dla obserwacji $i$ pochodzi z modelu, który wcześniej uczył się również na obserwacji $i$;
+-   w ordered boosting predykcja dla obserwacji $\pi_t$ ma pochodzić z modelu zbudowanego na wcześniejszych elementach permutacji, więc obserwacja $\pi_t$ nie „pomagała” wcześniej w stworzeniu predykcji, na podstawie której liczony jest jej gradient.
+
+To ma znaczenie, bo gradient jest sygnałem mówiącym kolejnemu drzewu, co poprawić. Jeśli gradient jest liczony z predykcji zbyt dobrze dopasowanej do tej samej obserwacji, może być zbyt mały albo zbyt optymistyczny. Ordered boosting daje bardziej realistyczny sygnał błędu, podobny do sytuacji, w której predykcja dla obserwacji treningowej jest liczona w sposób out-of-sample.
+
+Schematycznie, dla permutacji $\pi=(\pi_1,\pi_2,\pi_3,\pi_4)$:
+
+| obserwacja | model użyty do predykcji w ordered boosting |
+|:---|:---|
+| $\pi_1$ | tylko prior/model początkowy |
+| $\pi_2$ | model uczony na $\pi_1$ |
+| $\pi_3$ | model uczony na $\pi_1,\pi_2$ |
+| $\pi_4$ | model uczony na $\pi_1,\pi_2,\pi_3$ |
+
+W praktycznej implementacji CatBoost robi to efektywnie, bez budowania osobnego pełnego modelu dla każdej pozycji. Z perspektywy interpretacji wystarczy zapamiętać zasadę: przy liczeniu kodowań kategorii i gradientów obserwacja nie powinna korzystać z informacji pochodzącej z niej samej ani z „przyszłości” w permutacji.
 
 #### CatBoost (pseudokod)
 

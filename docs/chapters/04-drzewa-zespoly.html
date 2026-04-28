@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pl" xml:lang="pl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>5&nbsp; Drzewa decyzyjne i zespoły modeli – Eksploracja danych i uczenie maszynowe</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -59,7 +62,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -78,7 +80,7 @@ div.csl-indent {
 }</style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -94,14 +96,14 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2d449610c6da6b3fd31ed0a9984c1b47.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-f7ccbded210020a5533f6fd86e3f20c2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-2d449610c6da6b3fd31ed0a9984c1b47.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-666135433cace59c5973edf2e2f39c5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-c84f4249ebe5bde6a406a74c1334a68b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-666135433cace59c5973edf2e2f39c5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -132,13 +134,9 @@ div.csl-indent {
     "search-label": "Szukaj"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -151,7 +149,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -355,7 +353,8 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../index.html" class="sidebar-logo-link">
-      <img src="../images/logo.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="../images/logo.jpg" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../images/logo.jpg" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Eksploracja danych i uczenie maszynowe</a> 
@@ -515,11 +514,11 @@ window.Quarto = {
 <section id="klasyczne-rodziny-algorytmów-drzew-i-ich-różnice" class="level3" data-number="5.1.1">
 <h3 data-number="5.1.1" class="anchored" data-anchor-id="klasyczne-rodziny-algorytmów-drzew-i-ich-różnice"><span class="header-section-number">5.1.1</span> Klasyczne rodziny algorytmów drzew i ich różnice</h3>
 <p>W literaturze i praktyce spotyka się kilka „rodzin” algorytmów drzew decyzyjnych. Różnią się one m.in. sposobem doboru podziału (kryterium jakości), dopuszczalną liczbą gałęzi w węźle, obsługą braków danych, strategią przycinania oraz tym, czy wnioski statystyczne są wbudowane w procedurę uczenia.</p>
-<p><strong>ID3 (Iterative Dichotomiser 3)</strong> <span class="citation" data-cites="quinlan1986">(<a href="reference.html#ref-quinlan1986" role="doc-biblioref">J. R. Quinlan 1986</a>)</span> to jeden z najwcześniejszych, wpływowych algorytmów drzew klasyfikacyjnych. Uczy drzewo <em>wielogałęziowe</em> (tzn. węzeł może mieć tyle gałęzi, ile kategorii ma dana cecha) i wybiera podział na podstawie <strong>zysku informacji</strong> (<em>information gain</em>), który jest redukcją entropii po podziale. W klasycznej postaci ID3 był projektowany głównie dla cech kategorycznych, nie posiadał pełnego, ustandaryzowanego mechanizmu przycinania i jest wrażliwy na cechy o dużej liczbie kategorii (mogą sztucznie „wygrywać” kryterium entropijne). Z perspektywy ogólnego spojrzenia na drzewa decyzyjne ważne jest to, że ID3 ustanowił wzorzec: <em>rekurencyjne dzielenie + entropia/zysk informacji</em>.</p>
-<p><strong>C4.5</strong> <span class="citation" data-cites="quinlan1993">(<a href="reference.html#ref-quinlan1993" role="doc-biblioref">J. Ross Quinlan 1993</a>)</span> jest rozwinięciem ID3 i przez wiele lat był stosowanym standardem. Wprowadza on m.in. (i) obsługę <strong>zmiennych ciągłych</strong> przez poszukiwanie progu i podziały binarne dla cech liczbowych, (ii) modyfikację kryterium jakości podziału w postaci <strong>współczynnika zysku informacji</strong> (<em>gain ratio</em>), który koryguje preferencję dla cech o wielu kategoriach, (iii) obsługę <strong>braków danych</strong> przez rozdzielanie obserwacji z brakami „miękko” (z wagami) między gałęzie lub przez dopasowane heurystyki, oraz (iv) przycinanie oparte o oszacowania błędu (tzw. <em>error-based pruning</em>). W praktyce C4.5 produkuje drzewa, które są zwykle mniejsze i bardziej uogólniające niż ID3.</p>
+<p><strong>ID3 (Iterative Dichotomiser 3)</strong> <span class="citation" data-cites="quinlan1986">(<a href="reference.html#ref-quinlan1986" role="doc-biblioref">Quinlan 1986</a>)</span> to jeden z najwcześniejszych, wpływowych algorytmów drzew klasyfikacyjnych. Uczy drzewo <em>wielogałęziowe</em> (tzn. węzeł może mieć tyle gałęzi, ile kategorii ma dana cecha) i wybiera podział na podstawie <strong>zysku informacji</strong> (<em>information gain</em>), który jest redukcją entropii po podziale. W klasycznej postaci ID3 był projektowany głównie dla cech kategorycznych, nie posiadał pełnego, ustandaryzowanego mechanizmu przycinania i jest wrażliwy na cechy o dużej liczbie kategorii (mogą sztucznie „wygrywać” kryterium entropijne). Z perspektywy ogólnego spojrzenia na drzewa decyzyjne ważne jest to, że ID3 ustanowił wzorzec: <em>rekurencyjne dzielenie + entropia/zysk informacji</em>.</p>
+<p><strong>C4.5</strong> <span class="citation" data-cites="quinlan1993">(<a href="reference.html#ref-quinlan1993" role="doc-biblioref">Quinlan 1993</a>)</span> jest rozwinięciem ID3 i przez wiele lat był stosowanym standardem. Wprowadza on m.in. (i) obsługę <strong>zmiennych ciągłych</strong> przez poszukiwanie progu i podziały binarne dla cech liczbowych, (ii) modyfikację kryterium jakości podziału w postaci <strong>współczynnika zysku informacji</strong> (<em>gain ratio</em>), który koryguje preferencję dla cech o wielu kategoriach, (iii) obsługę <strong>braków danych</strong> przez rozdzielanie obserwacji z brakami „miękko” (z wagami) między gałęzie lub przez dopasowane heurystyki, oraz (iv) przycinanie oparte o oszacowania błędu (tzw. <em>error-based pruning</em>). W praktyce C4.5 produkuje drzewa, które są zwykle mniejsze i bardziej uogólniające niż ID3.</p>
 <p><strong>C5.0</strong> to następca C4.5 <span class="citation" data-cites="kuhn2018">(<a href="reference.html#ref-kuhn2018" role="doc-biblioref">Kuhn i Quinlan 2018</a>)</span>, zaprojektowany jako szybszy i bardziej skalowalny, z licznymi usprawnieniami inżynieryjnymi i heurystycznymi. Typowo oferuje lepszą wydajność obliczeniową, mniejsze zużycie pamięci oraz dodatkowe możliwości praktyczne (np. kosztowną klasyfikację, mechanizmy „wzmocnienia” w stylu <em>boosting/committee</em> w niektórych implementacjach). Koncepcyjnie nadal jest to drzewo „w duchu Quinlana”: kryteria entropijne, sprawna obsługa cech ciągłych i braków oraz silny nacisk na praktyczne uogólnianie.</p>
-<p><strong>CART (Classification and Regression Trees)</strong> <span class="citation" data-cites="breiman2017">(<a href="reference.html#ref-breiman2017" role="doc-biblioref">Breiman i in. 2017</a>)</span> ujednolica podejście do <strong>klasyfikacji i regresji</strong> w ramach jednego formalizmu. Charakterystyczne cechy CART są następujące: (i) podziały są zazwyczaj <strong>binarne</strong> (nawet dla cech kategorycznych – kategorie dzieli się na dwie grupy), (ii) w klasyfikacji stosuje się zwykle <strong>indeks Giniego</strong> (lub entropię), a w regresji kryterium oparte o <strong>SSE/wariancję</strong>, (iii) kluczowym elementem jest <strong>przycinanie złożoności</strong> (<em>cost-complexity pruning</em>), tj. wybór drzewa przez kompromis między dopasowaniem i złożonością, oraz (iv) mechanizm <strong>reguł zastępczych (<em>surrogate splits</em>)</strong> jako systematyczna odpowiedź na braki danych. CART jest dziś szczególnie ważne, bo stanowi bazę dla wielu metod zespołowych (<em>random forest, gradient boosting</em>) i jest najczęściej spotykaną „architekturą” drzew w ML.</p>
-<p><strong>Conditional inference trees (<em>conditional trees, ctree</em>)</strong> <span class="citation" data-cites="hothorn2006">(<a href="reference.html#ref-hothorn2006" role="doc-biblioref">Hothorn, Hornik, i Zeileis 2006</a>)</span> powstały jako odpowiedź na znane uprzedzenia klasycznych kryteriów podziału (Gini/entropia/SSE), które mogą faworyzować cechy o wielu możliwych podziałach (np. zmienne ciągłe lub kategoryczne o wielu poziomach). W ctree wybór podziału ma charakter <strong>statystyczny</strong> i opiera się na <strong>testach permutacyjnych niezależności</strong>. Procedura jest dwuetapowa: najpierw w danym węźle testuje się hipotezę globalną, że zmienna docelowa jest niezależna od wszystkich cech (jeśli brak podstaw do jej odrzucenia, węzeł staje się liściem), a następnie – w razie istotności – wykonuje się testy cząstkowe dla każdej cechy i wybiera tę o najsilniejszej zależności z odpowiednią korektą na wielokrotne porównania. Dokładna postać statystyki testowej zależy od typu zmiennej docelowej i predyktora, ale kluczowa idea pozostaje ta sama: podział jest wybierany na podstawie istotności zależności, a nie wyłącznie heurystycznej redukcji nieczystości. Dzięki temu <em>conditional trees</em> redukują tendencyjność selekcji zmiennych, a kryterium stopu jest naturalnie powiązane z istotnością statystyczną, a nie wyłącznie z heurystycznymi parametrami złożoności.</p>
+<p><strong>CART (Classification and Regression Trees)</strong> <span class="citation" data-cites="breiman2017">(<a href="reference.html#ref-breiman2017" role="doc-biblioref">Breiman et al. 2017</a>)</span> ujednolica podejście do <strong>klasyfikacji i regresji</strong> w ramach jednego formalizmu. Charakterystyczne cechy CART są następujące: (i) podziały są zazwyczaj <strong>binarne</strong> (nawet dla cech kategorycznych – kategorie dzieli się na dwie grupy), (ii) w klasyfikacji stosuje się zwykle <strong>indeks Giniego</strong> (lub entropię), a w regresji kryterium oparte o <strong>SSE/wariancję</strong>, (iii) kluczowym elementem jest <strong>przycinanie złożoności</strong> (<em>cost-complexity pruning</em>), tj. wybór drzewa przez kompromis między dopasowaniem i złożonością, oraz (iv) mechanizm <strong>reguł zastępczych (<em>surrogate splits</em>)</strong> jako systematyczna odpowiedź na braki danych. CART jest dziś szczególnie ważne, bo stanowi bazę dla wielu metod zespołowych (<em>random forest, gradient boosting</em>) i jest najczęściej spotykaną „architekturą” drzew w ML.</p>
+<p><strong>Conditional inference trees (<em>conditional trees, ctree</em>)</strong> <span class="citation" data-cites="hothorn2006">(<a href="reference.html#ref-hothorn2006" role="doc-biblioref">Hothorn et al. 2006</a>)</span> powstały jako odpowiedź na znane uprzedzenia klasycznych kryteriów podziału (Gini/entropia/SSE), które mogą faworyzować cechy o wielu możliwych podziałach (np. zmienne ciągłe lub kategoryczne o wielu poziomach). W ctree wybór podziału ma charakter <strong>statystyczny</strong> i opiera się na <strong>testach permutacyjnych niezależności</strong>. Procedura jest dwuetapowa: najpierw w danym węźle testuje się hipotezę globalną, że zmienna docelowa jest niezależna od wszystkich cech (jeśli brak podstaw do jej odrzucenia, węzeł staje się liściem), a następnie – w razie istotności – wykonuje się testy cząstkowe dla każdej cechy i wybiera tę o najsilniejszej zależności z odpowiednią korektą na wielokrotne porównania. Dokładna postać statystyki testowej zależy od typu zmiennej docelowej i predyktora, ale kluczowa idea pozostaje ta sama: podział jest wybierany na podstawie istotności zależności, a nie wyłącznie heurystycznej redukcji nieczystości. Dzięki temu <em>conditional trees</em> redukują tendencyjność selekcji zmiennych, a kryterium stopu jest naturalnie powiązane z istotnością statystyczną, a nie wyłącznie z heurystycznymi parametrami złożoności.</p>
 <p><strong>CHAID (Chi-squared Automatic Interaction Detection)</strong> <span class="citation" data-cites="kass1980">(<a href="reference.html#ref-kass1980" role="doc-biblioref">Kass 1980</a>)</span> to klasyczna metoda drzew wielogałęziowych, szczególnie popularna w analizie marketingowej i badaniach społecznych. Jej znakiem rozpoznawczym są: (i) podziały wybierane na podstawie <strong>testów chi-kwadrat</strong> (dla klasyfikacji) lub testów analogicznych dla zmiennych ciągłych, (ii) możliwość <strong>łączenia kategorii</strong> cech kategorycznych w większe grupy przed wykonaniem podziału, oraz (iii) częste stosowanie podziałów <strong>wielogałęziowych</strong> (niekoniecznie binarnych). CHAID jest ceniony za interpretowalność i naturalne traktowanie interakcji w kategoriach, ale w porównaniu do CART bywa mniej „ML-owy” w sensie typowych współczesnych pipeline’ów i częściej występuje w narzędziach statystycznych/BI.</p>
 </section>
 <section id="rodzaje-drzew-i-podstawowe-elementy-konstrukcji" class="level3" data-number="5.1.2">
@@ -681,10 +680,10 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <p><span class="theorem-title"><strong>Przykład 5.1 (Przykład: drzewo klasyfikacyjne dla gatunku muzycznego (Spotify))</strong></span> Poniżej budujemy proste drzewo klasyfikacyjne przewidujące <strong>gatunek muzyczny</strong> na podstawie numerycznych cech akustycznych utworów (np. <em>danceability, energy, loudness, tempo</em>). Jest to typowy przypadek danych tablicowych, gdzie drzewa decyzyjne są dobrym modelem bazowym.</p>
 <p>W tym przykładzie <strong>nie wykonujemy klasycznego preprocessingu typu standaryzacja/normalizacja</strong>. Wynika to z faktu, że reguły w drzewach mają postać progów porównujących wartości cech (np. <span class="math inline">\(x_j \le t\)</span>), więc skala zmiennych nie wpływa na sens podziału w taki sposób jak w metodach opartych o iloczyny skalarne (np. regresja logistyczna, SVM). Innymi słowy: drzewo nie korzysta z odległości euklidesowej ani z norm współczynników, tylko z porównań i wyboru progów, dlatego <strong>skalowanie cech nie jest wymagane</strong>. W praktyce pozostają jedynie „minimalne” kroki porządkowe: wybór cech liczbowych i ewentualne uzupełnienie braków (jeśli występują).</p>
 <p>Uwaga dydaktyczna: zbiór Spotify zawiera wiele klas (gatunków). Aby uzyskać czytelny przykład (i sensowną macierz pomyłek), ograniczamy się do <span class="math inline">\(K=10\)</span> najczęstszych gatunków.</p>
-<div id="2164e61b" class="cell" data-execution_count="1">
+<div id="40d24549" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> load_dataset</span>
@@ -725,31 +724,16 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 5) Braki danych (po filtracji i czyszczeniu)</span></span>
 <span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>missing_by_col <span class="op">=</span> df.isna().<span class="bu">sum</span>()</span>
 <span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>missing_total <span class="op">=</span> <span class="bu">int</span>(missing_by_col.<span class="bu">sum</span>())</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Braki danych (łącznie): </span><span class="sc">{</span>missing_total<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Braki danych (łącznie): </span><span class="sc">{</span>missing_total<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"baf50d5cad294933b9352ffd70a3efbd","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"03e9912d77064877b909c0a1af45f293","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"ead6a8e064db47fbb3c09fbe5d430f0a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
-</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Braki danych (łącznie): 0</code></pre>
 </div>
 </div>
-<div id="33950c51" class="cell" data-execution_count="2">
+<div id="bec7bb09" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) Cechy: bierzemy tylko numeryczne (+ bool jako 0/1), bo DecisionTreeClassifier nie przyjmuje stringów</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) Cechy: bierzemy tylko numeryczne (+ bool jako 0/1), bo DecisionTreeClassifier nie przyjmuje stringów</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>[<span class="st">"number"</span>, <span class="st">"bool"</span>, <span class="st">"boolean"</span>]).drop(columns<span class="op">=</span>[target], errors<span class="op">=</span><span class="st">"ignore"</span>).copy()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> X.columns:</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">str</span>(X[col].dtype) <span class="kw">in</span> (<span class="st">"bool"</span>, <span class="st">"boolean"</span>):</span>
@@ -778,13 +762,13 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># 9) Pełne drzewo tekstowo (cała struktura)</span></span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>feature_names <span class="op">=</span> <span class="bu">list</span>(X.columns)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># nie wyświetlamy całej struktury, bo dla tego zbioru jest mało czytelna</span></span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># nie wyświetlamy całej struktury, bo dla tego zbioru jest mało czytelna</span></span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="033340bf" class="cell" data-execution_count="3">
+<div id="2af9a864" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 10) Predykcja i metryki</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 10) Predykcja i metryki</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> tree.predict(X_test)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
@@ -808,7 +792,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>disp.plot(ax<span class="op">=</span>ax, xticks_rotation<span class="op">=</span><span class="dv">45</span>, values_format<span class="op">=</span><span class="st">"d"</span>, colorbar<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Drzewo decyzyjne: macierz pomyłek (test)"</span>)</span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Metryki (test):
@@ -838,15 +822,15 @@ progressive-house       0.63      0.61      0.62       200
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="04-drzewa-zespoly_files/figure-html/cell-4-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="04-drzewa-zespoly_files/figure-html/cell-4-output-2.png" class="img-fluid figure-img"></a></p>
+<p><a href="04-drzewa-zespoly_files/figure-html/cell-4-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="04-drzewa-zespoly_files/figure-html/cell-4-output-2.png" width="764" height="758" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="91389a77" class="cell" data-execution_count="4">
+<div id="0e899f35" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 12) Wizualizacja drzewa (okrojona)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 12) Wizualizacja drzewa (okrojona)</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">10</span>))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plot_tree(</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    tree,</span>
@@ -860,21 +844,21 @@ progressive-house       0.63      0.61      0.62       200
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a> )</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Drzewo klasyfikacyjne (podgląd pierwszych trzech poziomów)"</span>)</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="04-drzewa-zespoly_files/figure-html/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="04-drzewa-zespoly_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></a></p>
+<p><a href="04-drzewa-zespoly_files/figure-html/cell-5-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="04-drzewa-zespoly_files/figure-html/cell-5-output-1.png" width="1323" height="950" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Spróbujemy teraz przyciąć drzewo w celu poprawy jego zdolności generalizacyjnych.</p>
-<div id="f7b470c3" class="cell" data-execution_count="5">
+<div id="f41314ba" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> StratifiedKFold, cross_val_score</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Post-pruning (CART): cost-complexity pruning sterowane parametrem ccp_alpha.</span></span>
@@ -943,7 +927,7 @@ progressive-house       0.63      0.61      0.62       200
 <span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Metryki (test) po przycinaniu:"</span>)</span>
 <span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Accuracy          : </span><span class="sc">{</span>accuracy_score(y_test, y_pred_pruned)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
 <span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Balanced accuracy : </span><span class="sc">{</span>balanced_accuracy_score(y_test, y_pred_pruned)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  F1 macro          : </span><span class="sc">{</span>f1_score(y_test, y_pred_pruned, average<span class="op">=</span><span class="st">'macro'</span>)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  F1 macro          : </span><span class="sc">{</span>f1_score(y_test, y_pred_pruned, average<span class="op">=</span><span class="st">'macro'</span>)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Liczba kandydatów ccp_alpha: 160
@@ -954,7 +938,7 @@ Najlepszy balanced_accuracy (CV): 0.6794</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="04-drzewa-zespoly_files/figure-html/cell-6-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="04-drzewa-zespoly_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></a></p>
+<p><a href="04-drzewa-zespoly_files/figure-html/cell-6-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="04-drzewa-zespoly_files/figure-html/cell-6-output-2.png" width="758" height="374" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
@@ -983,7 +967,7 @@ Metryki (test) po przycinaniu:
 <li><strong>Bagging</strong> <span class="citation" data-cites="breiman1996">(<a href="reference.html#ref-breiman1996" role="doc-biblioref">Breiman 1996</a>)</span>- pomysł, aby trenować ten sam algorytm na wielu próbkach bootstrapowych i agregować wyniki. Breiman pokazał, że bagging szczególnie dobrze stabilizuje metody niestabilne (jak drzewa).</li>
 <li><strong>Random subspace / losowanie cech</strong> <span class="citation" data-cites="tinkamho1998">(<a href="reference.html#ref-tinkamho1998" role="doc-biblioref">Tin Kam Ho 1998</a>)</span>- idea, aby dodatkowo losować podzbiór cech, na których uczony jest model. To zmniejsza korelację między modelami w zespole.</li>
 <li><strong>Random Forest</strong> <span class="citation" data-cites="breiman2001">(<a href="reference.html#ref-breiman2001" role="doc-biblioref">Breiman 2001</a>)</span>- połączenie baggingu drzew z losowaniem cech <em>w każdym węźle</em> drzewa (a nie tylko raz na drzewo). To okazało się bardzo skutecznym i prostym „domyślnym” modelem dla danych tablicowych.</li>
-<li><strong>Extremely Randomized Trees</strong> <span class="citation" data-cites="geurts2006">(<a href="reference.html#ref-geurts2006" role="doc-biblioref">Geurts, Ernst, i Wehenkel 2006</a>)</span> - dalsza randomizacja poprzez losowanie progów podziału, co jeszcze bardziej dekoreluje drzewa, czasem poprawiając wynik kosztem większego bias.</li>
+<li><strong>Extremely Randomized Trees</strong> <span class="citation" data-cites="geurts2006">(<a href="reference.html#ref-geurts2006" role="doc-biblioref">Geurts et al. 2006</a>)</span> - dalsza randomizacja poprzez losowanie progów podziału, co jeszcze bardziej dekoreluje drzewa, czasem poprawiając wynik kosztem większego bias.</li>
 </ul>
 </section>
 <section id="koncepcja-baggingu" class="level3" data-number="5.2.2">
@@ -1082,10 +1066,10 @@ Metryki (test) po przycinaniu:
 </ul>
 <div id="exm-2" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 5.2</strong></span> Dla tych samych danych co w <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> przeprowadzimy trening modeli bagging i lasu losowego.</p>
-<div id="37a43050" class="cell" data-execution_count="6">
+<div id="63c74a0d" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> BaggingClassifier, RandomForestClassifier</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> BaggingClassifier, RandomForestClassifier</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bagging i Random Forest na tych samych danych (X_train/X_test, y_train/y_test)</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1147,7 +1131,7 @@ Metryki (test) po przycinaniu:
 <span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>]</span>
 <span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> pd.DataFrame(results).sort_values(<span class="st">"balanced_accuracy"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>             model  accuracy  balanced_accuracy  f1_macro
@@ -1172,7 +1156,7 @@ Drzewo (przycięte)    0.6930             0.6930    0.6936
 <li><strong>AdaBoost</strong> <span class="citation" data-cites="freund1997">(<a href="reference.html#ref-freund1997" role="doc-biblioref">Freund i Schapire 1997</a>)</span>- praktyczny algorytm boostingu, w którym kolejne klasyfikatory uczą się na danych z wagami, skupiając się na obserwacjach trudnych (wcześniej błędnie klasyfikowanych).</li>
 <li><strong>Gradient Boosting / Multiple Additive Regression Trees</strong> <span class="citation" data-cites="friedman2001">(<a href="reference.html#ref-friedman2001" role="doc-biblioref">Friedman 2001</a>)</span>- uogólnienie boostingu do postaci optymalizacji funkcji straty w przestrzeni funkcji, interpretowane jako „zejście gradientowe” w modelu addytywnym.</li>
 <li><strong>XGBoost</strong> <span class="citation" data-cites="chen2016">(<a href="reference.html#ref-chen2016" role="doc-biblioref">Chen i Guestrin 2016</a>)</span>- bardzo wydajna implementacja gradientowego boostingu drzew z regularizacją, obsługą braków i szeregiem optymalizacji obliczeniowych (m.in. przyspieszone wyznaczanie podziałów, równoległość, przycinanie przez ograniczenia).</li>
-<li><strong>LightGBM</strong> <span class="citation" data-cites="ke2017">(<a href="reference.html#ref-ke2017" role="doc-biblioref">Ke i in. 2017</a>)</span>- to wysoce wydajna i skalowalna implementacja gradientowego boostingu drzew (GBDT), wykorzystująca m.in. histogramowe wyznaczanie podziałów oraz strategię wzrostu <em>leaf-wise</em> (<em>best-first</em>) w celu przyspieszenia uczenia przy zachowaniu wysokiej jakości predykcji.</li>
+<li><strong>LightGBM</strong> <span class="citation" data-cites="ke2017">(<a href="reference.html#ref-ke2017" role="doc-biblioref">Ke et al. 2017</a>)</span>- to wysoce wydajna i skalowalna implementacja gradientowego boostingu drzew (GBDT), wykorzystująca m.in. histogramowe wyznaczanie podziałów oraz strategię wzrostu <em>leaf-wise</em> (<em>best-first</em>) w celu przyspieszenia uczenia przy zachowaniu wysokiej jakości predykcji.</li>
 <li><strong>CatBoost</strong> <span class="citation" data-cites="singh2025">(<a href="reference.html#ref-singh2025" role="doc-biblioref">Singh i Susan 2025</a>)</span> - boosting drzew z natywną obsługą zmiennych kategorycznych oraz mechanizmami ograniczającymi <em>target leakage</em> i przeuczenie (m.in. uporządkowane statystyki docelowe, <em>ordered boosting</em>).</li>
 </ul>
 </section>
@@ -1212,6 +1196,174 @@ w_i^{(m+1)} \propto w_i^{(m)}\,\exp\big(-\alpha_m\,y_i\,h_m(x_i)\big),
 H(x)=\mathrm{sign}\Big(\sum_{m=1}^M \alpha_m h_m(x)\Big).
 \]</span></p>
 <p>Interpretacyjnie AdaBoost minimalizuje wykładniczą stratę <span class="math inline">\(\sum_i \exp(-y_i F(x_i))\)</span>, a <span class="math inline">\(\alpha_m\)</span> rośnie, gdy <span class="math inline">\(h_m\)</span> jest lepszy (ma mniejszy <span class="math inline">\(\varepsilon_m\)</span>). W praktyce jako <span class="math inline">\(h_m\)</span> stosuje się często bardzo proste modele, np. <em>decision stumps</em> (drzewa głębokości 1), co wzmacnia efekt „uczenia na błędach”.</p>
+<section id="przykład-jednej-iteracji-adaboost" class="level4" data-number="5.3.3.1">
+<h4 data-number="5.3.3.1" class="anchored" data-anchor-id="przykład-jednej-iteracji-adaboost"><span class="header-section-number">5.3.3.1</span> Przykład jednej iteracji AdaBoost</h4>
+<p>Załóżmy, że mamy <span class="math inline">\(n=5\)</span> obserwacji w klasyfikacji binarnej, gdzie etykiety są kodowane jako <span class="math inline">\(y_i\in\{-1,+1\}\)</span>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;"><span class="math inline">\(i\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(y_i\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(w_i^{(1)}\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(h_1(x_i)\)</span></th>
+<th style="text-align: left;">czy błąd?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;"><span class="math inline">\(+1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.20\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(+1\)</span></td>
+<td style="text-align: left;">nie</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;"><span class="math inline">\(+1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.20\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(+1\)</span></td>
+<td style="text-align: left;">nie</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;"><span class="math inline">\(-1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.20\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(+1\)</span></td>
+<td style="text-align: left;">tak</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;"><span class="math inline">\(-1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.20\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(-1\)</span></td>
+<td style="text-align: left;">nie</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;"><span class="math inline">\(+1\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(0.20\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(+1\)</span></td>
+<td style="text-align: left;">nie</td>
+</tr>
+</tbody>
+</table>
+<p>Na początku wszystkie obserwacje mają takie same wagi, bo:</p>
+<p><span class="math display">\[
+w_i^{(1)}=\frac{1}{5}=0.20.
+\]</span></p>
+<p>Pierwszy słaby klasyfikator <span class="math inline">\(h_1\)</span> pomylił tylko obserwację <span class="math inline">\(i=3\)</span>. Błąd ważony wynosi więc:</p>
+<p><span class="math display">\[
+\varepsilon_1
+=
+\frac{\sum_{i=1}^5 w_i^{(1)}\mathbb{1}\{h_1(x_i)\neq y_i\}}
+{\sum_{i=1}^5 w_i^{(1)}}
+=
+\frac{0.20}{1}
+=0.20.
+\]</span></p>
+<p>Waga klasyfikatora w zespole to:</p>
+<p><span class="math display">\[
+\alpha_1
+=
+\frac{1}{2}\log\frac{1-\varepsilon_1}{\varepsilon_1}
+=
+\frac{1}{2}\log\frac{0.80}{0.20}
+=
+\frac{1}{2}\log 4
+\approx 0.693.
+\]</span></p>
+<p>Ponieważ <span class="math inline">\(\varepsilon_1&lt;0.5\)</span>, klasyfikator jest lepszy niż losowy i dostaje dodatnią wagę. Gdyby <span class="math inline">\(\varepsilon_1\)</span> było bliskie zera, <span class="math inline">\(\alpha_1\)</span> byłoby duże; gdyby <span class="math inline">\(\varepsilon_1=0.5\)</span>, wtedy <span class="math inline">\(\alpha_1=0\)</span>, czyli klasyfikator nie wnosiłby informacji. Teraz aktualizujemy wagi obserwacji. Dla poprawnie sklasyfikowanych przykładów mamy <span class="math inline">\(y_i h_1(x_i)=+1\)</span>, więc: <span class="math display">\[
+w_i^{(2)} \propto w_i^{(1)}\exp(-\alpha_1)
+=0.20\cdot \exp(-0.693)
+\approx 0.20\cdot 0.50
+=0.10.
+\]</span></p>
+<p>Dla błędnie sklasyfikowanego przykładu <span class="math inline">\(i=3\)</span> mamy <span class="math inline">\(y_i h_1(x_i)=-1\)</span>, więc:</p>
+<p><span class="math display">\[
+w_3^{(2)} \propto w_3^{(1)}\exp(\alpha_1)
+=0.20\cdot \exp(0.693)
+\approx 0.20\cdot 2
+=0.40.
+\]</span></p>
+<p>Wagi nieznormalizowane wynoszą:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;"><span class="math inline">\(i\)</span></th>
+<th style="text-align: left;">czy błąd?</th>
+<th style="text-align: right;">waga nieznormalizowana</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">nie</td>
+<td style="text-align: right;"><span class="math inline">\(0.10\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">nie</td>
+<td style="text-align: right;"><span class="math inline">\(0.10\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">tak</td>
+<td style="text-align: right;"><span class="math inline">\(0.40\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">nie</td>
+<td style="text-align: right;"><span class="math inline">\(0.10\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">nie</td>
+<td style="text-align: right;"><span class="math inline">\(0.10\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Suma wag nieznormalizowanych to: <span class="math display">\[
+Z_1=0.10+0.10+0.40+0.10+0.10=0.80.
+\]</span></p>
+<p>Po normalizacji otrzymujemy wagi na następną iterację:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;"><span class="math inline">\(i\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(w_i^{(2)}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;"><span class="math inline">\(0.10/0.80=0.125\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;"><span class="math inline">\(0.10/0.80=0.125\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;"><span class="math inline">\(0.40/0.80=0.500\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;"><span class="math inline">\(0.10/0.80=0.125\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;"><span class="math inline">\(0.10/0.80=0.125\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Najważniejszy efekt: obserwacja błędnie sklasyfikowana ma teraz wagę <span class="math inline">\(0.50\)</span>, czyli w kolejnej iteracji będzie znacznie ważniejsza niż pozostałe. Następny słaby klasyfikator <span class="math inline">\(h_2\)</span> będzie więc uczony tak, aby mocniej uwzględnić właśnie ten trudny przypadek. Po pierwszej iteracji model addytywny ma postać:</p>
+<p><span class="math display">\[
+F_1(x)=\alpha_1 h_1(x)\approx 0.693\,h_1(x),
+\]</span></p>
+<p>a klasyfikator zespołowy po tej jednej iteracji to: <span class="math display">\[
+H_1(x)=\mathrm{sign}(F_1(x)).
+\]</span></p>
+</section>
 </section>
 <section id="gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji" class="level3" data-number="5.3.4">
 <h3 data-number="5.3.4" class="anchored" data-anchor-id="gradient-boosting---minimalizacja-straty-w-przestrzeni-funkcji"><span class="header-section-number">5.3.4</span> Gradient Boosting - minimalizacja straty w przestrzeni funkcji</h3>
@@ -1264,24 +1416,99 @@ F_M(x)=\sum_{m=1}^{M} f_m(x),
 </section>
 <section id="uczenie-kolejnego-drzewa-przybliżenie-ii-rzędu-newton-boosting" class="level4" data-number="5.3.5.2">
 <h4 data-number="5.3.5.2" class="anchored" data-anchor-id="uczenie-kolejnego-drzewa-przybliżenie-ii-rzędu-newton-boosting"><span class="header-section-number">5.3.5.2</span> Uczenie kolejnego drzewa: przybliżenie II rzędu (Newton boosting)</h4>
-<p>Kluczową cechą XGBoost jest wykorzystanie rozwinięcia Taylora do drugiego rzędu dla straty w bieżącym kroku. Dla iteracji <span class="math inline">\(m\)</span> definiuje się:</p>
+<p>Kluczową cechą XGBoost jest wykorzystanie rozwinięcia Taylora do drugiego rzędu dla straty w bieżącym kroku. Załóżmy, że po <span class="math inline">\(m-1\)</span> iteracjach model daje predykcję <span class="math inline">\(\hat y_i^{(m-1)}=F_{m-1}(x_i)\)</span>. W iteracji <span class="math inline">\(m\)</span> dokładamy nowe drzewo <span class="math inline">\(f_m\)</span>, więc nowa predykcja ma postać:</p>
+<p><span class="math display">\[
+\hat y_i^{(m)}=\hat y_i^{(m-1)}+f_m(x_i).
+\]</span></p>
+<p>Chcemy dobrać <span class="math inline">\(f_m\)</span> tak, aby zmniejszyć zregularizowaną funkcję celu:</p>
+<p><span class="math display">\[
+\mathcal{Obj}^{(m)}
+=\sum_{i=1}^n \mathcal{L}\left(y_i,\hat y_i^{(m-1)}+f_m(x_i)\right)
++\Omega(f_m).
+\]</span></p>
+<p>Bezpośrednia optymalizacja po wszystkich możliwych strukturach drzewa jest trudna. XGBoost upraszcza problem lokalnie: przybliża stratę wokół bieżącej predykcji <span class="math inline">\(\hat y_i^{(m-1)}\)</span> za pomocą rozwinięcia Taylora do drugiego rzędu. Dla małej zmiany <span class="math inline">\(f_m(x_i)\)</span> mamy:</p>
+<p><span class="math display">\[
+\mathcal{L}\left(y_i,\hat y_i^{(m-1)}+f_m(x_i)\right)
+\approx
+\mathcal{L}\left(y_i,\hat y_i^{(m-1)}\right)
++g_i f_m(x_i)
++\frac{1}{2}h_i f_m(x_i)^2,
+\]</span></p>
+<p>gdzie:</p>
 <p><span class="math display">\[
 g_i = \left.\frac{\partial\,\mathcal{L}(y_i, \hat y)}{\partial \hat y}\right|_{\hat y=\hat y_i^{(m-1)}},\qquad
 h_i = \left.\frac{\partial^2\,\mathcal{L}(y_i, \hat y)}{\partial \hat y^2}\right|_{\hat y=\hat y_i^{(m-1)}},
 \]</span></p>
-<p>czyli gradient i „krzywiznę” straty względem predykcji. Następnie dopasowuje się drzewo <span class="math inline">\(f_m\)</span> tak, aby minimalizowało przybliżoną funkcję celu opartą o sumy <span class="math inline">\(g_i\)</span> i <span class="math inline">\(h_i\)</span> w liściach. Jeżeli liść zawiera zbiór obserwacji <span class="math inline">\(S\)</span>, to oznaczamy:</p>
+<p>czyli <span class="math inline">\(g_i\)</span> jest lokalnym nachyleniem straty, a <span class="math inline">\(h_i\)</span> jej lokalną krzywizną względem predykcji. Składnik <span class="math inline">\(\mathcal{L}(y_i,\hat y_i^{(m-1)})\)</span> nie zależy od nowego drzewa, więc przy wyborze <span class="math inline">\(f_m\)</span> można go pominąć. Otrzymujemy przybliżony problem:</p>
+<p><span class="math display">\[
+\widetilde{\mathcal{Obj}}^{(m)}
+=
+\sum_{i=1}^n
+\left[
+g_i f_m(x_i)+\frac{1}{2}h_i f_m(x_i)^2
+\right]
++\Omega(f_m).
+\]</span></p>
+<p>Drzewo dzieli przestrzeń cech na <span class="math inline">\(T\)</span> liści. Jeśli obserwacja <span class="math inline">\(i\)</span> trafia do liścia <span class="math inline">\(q(x_i)\)</span>, to predykcja drzewa jest wartością tego liścia:</p>
+<p><span class="math display">\[
+f_m(x_i)=w_{q(x_i)}.
+\]</span></p>
+<p>Dla uproszczenia najpierw rozważmy wersję z karą <span class="math inline">\(L_2\)</span> na wartościach liści, czyli:</p>
+<p><span class="math display">\[
+\Omega(f_m)=\gamma T+\frac{1}{2}\lambda\sum_{j=1}^{T}w_j^2.
+\]</span></p>
+<p>Jeżeli <span class="math inline">\(S_j=\{i:q(x_i)=j\}\)</span> oznacza zbiór obserwacji w liściu <span class="math inline">\(j\)</span>, to przybliżona funkcja celu rozkłada się na niezależne wkłady poszczególnych liści:</p>
+<p><span class="math display">\[
+\widetilde{\mathcal{Obj}}^{(m)}
+=
+\sum_{j=1}^{T}
+\left[
+\sum_{i\in S_j}
+\left(g_i w_j+\frac{1}{2}h_i w_j^2\right)
++\frac{1}{2}\lambda w_j^2
+\right]
++\gamma T.
+\]</span></p>
+<p>Zbieramy wyrazy zależne od jednego liścia. Dla liścia zawierającego zbiór obserwacji <span class="math inline">\(S\)</span> oznaczamy:</p>
 <p><span class="math display">\[
 G_S=\sum_{i\in S} g_i,\qquad H_S=\sum_{i\in S} h_i.
 \]</span></p>
-<p>Wtedy optymalna wartość liścia ma postać:</p>
+<p>Wkład tego liścia do przybliżonej funkcji celu, jako funkcja jego wartości <span class="math inline">\(w\)</span>, wynosi:</p>
+<p><span class="math display">\[
+\phi_S(w)=G_S w+\frac{1}{2}(H_S+\lambda)w^2.
+\]</span></p>
+<p>To jest jednowymiarowa funkcja kwadratowa. Jej minimum znajdujemy przez wyzerowanie pochodnej po <span class="math inline">\(w\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial \phi_S(w)}{\partial w}
+=G_S+(H_S+\lambda)w=0.
+\]</span></p>
+<p>Stąd optymalna wartość liścia ma postać:</p>
 <p><span class="math display">\[
 w_S^* = -\frac{G_S}{H_S+\lambda},
 \]</span></p>
-<p>a wkład tego liścia do poprawy funkcji celu jest proporcjonalny do:</p>
+<p>czyli jest to krok Newtona zagregowany w obrębie liścia: suma gradientów mówi, w którą stronę należy przesunąć predykcję, a suma hessianów skaluje ten ruch przez lokalną krzywiznę straty. Parametr <span class="math inline">\(\lambda\)</span> powiększa mianownik, więc zmniejsza bezwzględną wartość <span class="math inline">\(w_S^*\)</span> i stabilizuje liście.</p>
+<p>Aby wyznaczyć wkład liścia do funkcji celu, podstawiamy <span class="math inline">\(w_S^*\)</span> do <span class="math inline">\(\phi_S(w)\)</span>:</p>
 <p><span class="math display">\[
--\frac{1}{2}\,\frac{G_S^2}{H_S+\lambda}.
+\phi_S(w_S^*)
+=
+G_S\left(-\frac{G_S}{H_S+\lambda}\right)
++\frac{1}{2}(H_S+\lambda)
+\left(\frac{G_S^2}{(H_S+\lambda)^2}\right).
 \]</span></p>
-<p>To prowadzi do praktycznej reguły wyboru podziału: split jest korzystny, jeśli zwiększa „zysk” (gain).</p>
+<p>Po uproszczeniu:</p>
+<p><span class="math display">\[
+\phi_S(w_S^*)=
+-\frac{1}{2}\frac{G_S^2}{H_S+\lambda}.
+\]</span></p>
+<p>Wartość jest ujemna, ponieważ oznacza spadek przybliżonej funkcji celu względem sytuacji, w której liść miałby wartość <span class="math inline">\(w=0\)</span> (czyli nowe drzewo nic by nie poprawiało w tym regionie). Im większe <span class="math inline">\(\frac{G_S^2}{H_S+\lambda}\)</span>, tym większa potencjalna poprawa. Jeżeli uwzględnimy koszt utworzenia liścia, pełny wkład liścia do przybliżonego celu to:</p>
+<p><span class="math display">\[
+-\frac{1}{2}\frac{G_S^2}{H_S+\lambda}+\gamma.
+\]</span></p>
+<p>W standardowym zapisie XGBoost z karą <span class="math inline">\(L_1\)</span> pojawia się dodatkowo składnik <span class="math inline">\(\alpha |w|\)</span>. Wtedy optymalna wartość liścia ma postać „progowania miękkiego”:</p>
+<p><span class="math display">\[
+w_S^*=-\frac{\operatorname{sgn}(G_S)\max(|G_S|-\alpha,0)}{H_S+\lambda}.
+\]</span></p>
+<p>W wielu wyprowadzeniach dydaktycznych pomija się <span class="math inline">\(\alpha\)</span>, aby pokazać główną ideę Newton boostingu; wtedy otrzymujemy prosty wzór <span class="math inline">\(-G_S/(H_S+\lambda)\)</span>.</p>
 </section>
 <section id="kryterium-splitu-gain-i-rola-parametrów-gamma-oraz-min_child_weight" class="level4" data-number="5.3.5.3">
 <h4 data-number="5.3.5.3" class="anchored" data-anchor-id="kryterium-splitu-gain-i-rola-parametrów-gamma-oraz-min_child_weight"><span class="header-section-number">5.3.5.3</span> Kryterium splitu (gain) i rola parametrów <code>gamma</code> oraz <code>min_child_weight</code></h4>
@@ -1289,6 +1516,24 @@ w_S^* = -\frac{G_S}{H_S+\lambda},
 <p><span class="math display">\[
 \mathrm{Gain} = \frac{1}{2}\left(\frac{G_{S_L}^2}{H_{S_L}+\lambda}+\frac{G_{S_R}^2}{H_{S_R}+\lambda}-\frac{G_S^2}{H_S+\lambda}\right)-\gamma.
 \]</span></p>
+<p>Ten wzór wynika bezpośrednio z porównania dwóch sytuacji. Przed podziałem mamy jeden liść <span class="math inline">\(S\)</span>, którego najlepszy wkład do przybliżonej funkcji celu wynosi:</p>
+<p><span class="math display">\[
+\mathrm{Score}(S)=-\frac{1}{2}\frac{G_S^2}{H_S+\lambda}.
+\]</span></p>
+<p>Po podziale mamy dwa liście, więc najlepszy łączny wkład wynosi:</p>
+<p><span class="math display">\[
+\mathrm{Score}(S_L)+\mathrm{Score}(S_R)
+=
+-\frac{1}{2}\frac{G_{S_L}^2}{H_{S_L}+\lambda}
+-\frac{1}{2}\frac{G_{S_R}^2}{H_{S_R}+\lambda}.
+\]</span></p>
+<p>Poprawa to „cel przed podziałem minus cel po podziale”. Ponieważ wartości <span class="math inline">\(\mathrm{Score}\)</span> są ujemne, po przekształceniu dostajemy dodatni zapis:</p>
+<p><span class="math display">\[
+\frac{1}{2}\left(\frac{G_{S_L}^2}{H_{S_L}+\lambda}
++\frac{G_{S_R}^2}{H_{S_R}+\lambda}
+-\frac{G_S^2}{H_S+\lambda}\right).
+\]</span></p>
+<p>Podział zamienia jeden liść na dwa, czyli zwiększa liczbę liści o jeden. Dlatego w funkcji celu pojawia się dodatkowy koszt strukturalny <span class="math inline">\(\gamma\)</span>, który odejmujemy od poprawy. Ostatecznie split jest akceptowany tylko wtedy, gdy dodatkowa poprawa dopasowania przewyższa koszt większej złożoności drzewa.</p>
 <p>Parametr <code>gamma</code> wprost wprowadza próg opłacalności: jeśli najlepszy możliwy podział nie daje gainu większego od zera (po odjęciu <span class="math inline">\(\gamma\)</span>), węzeł nie jest dzielony. Z kolei <code>min_child_weight</code> ogranicza tworzenie liści o zbyt małej „wadze” (w praktyce: zbyt małym <span class="math inline">\(H_S\)</span>), co stabilizuje model i jest istotne zwłaszcza przy danych zaszumionych.</p>
 </section>
 <section id="obsługa-braków-i-danych-rzadkich-sparsity-aware" class="level4" data-number="5.3.5.4">
@@ -1354,10 +1599,20 @@ h_i=\frac{\partial^2 \mathcal{L}(y_i, F(x_i))}{\partial F(x_i)^2},
 <section id="co-wyróżnia-lightgbm-na-tle-innych-boostingów-drzew" class="level4" data-number="5.3.6.2">
 <h4 data-number="5.3.6.2" class="anchored" data-anchor-id="co-wyróżnia-lightgbm-na-tle-innych-boostingów-drzew"><span class="header-section-number">5.3.6.2</span> Co wyróżnia LightGBM na tle innych boostingów drzew</h4>
 <ol type="1">
-<li>Wzrost <em>leaf-wise</em> zamiast <em>level-wise</em> - klasyczne implementacje często budują drzewo poziomami (<em>level-wise</em>): rozdzielają wszystkie liście (tymczasowe) na danym poziomie. LightGBM stosuje strategię <em>leaf-wise</em> (<em>best-first</em>): w każdym kroku rozdziela ten liść, który daje największy przyrost <span class="math inline">\(\mathrm{Gain}\)</span>. To zwykle daje lepszą jakość przy tej samej liczbie liści, ale zwiększa ryzyko przeuczenia, jeśli nie ograniczysz złożoności. Dlatego w LightGBM parametry kontrolujące złożoność, takie jak <code>num_leaves</code> i <code>max_depth</code>, są krytyczne.</li>
-<li><em>Histogram-based splitting</em> (przyspieszenie selekcji splitów) - dla cech ciągłych LightGBM nie analizuje wszystkich możliwych progów (jak w prostym CART), tylko bucketuje wartości do ograniczonej liczby koszyków (<em>binów</em>). Dzięki temu liczenie gainów jest szybsze i bardziej pamięciooszczędne, a jakość zwykle pozostaje bardzo dobra. Konieczne jest zatem ustawienie odpowiedniego <code>max_bin</code> (liczba binów).</li>
-<li>GOSS (<em>Gradient-based One-Side Sampling</em>) - w dużych zbiorach LightGBM może przyspieszać uczenie przez selekcję obserwacji na podstawie gradientów: zachowuje większość obserwacji o dużych <span class="math inline">\(|g_i|\)</span> (trudne przypadki), a próbuje losowo zredukować te o małych <span class="math inline">\(|g_i|\)</span>, korygując wagi tak, aby estymacja gainów pozostała sensowna.</li>
-<li>EFB (<em>Exclusive Feature Bundling</em>) - dla danych wysokowymiarowych LightGBM może łączyć cechy, które rzadko są jednocześnie niezerowe (cechy „ekskluzywne”), ograniczając koszt obliczeń bez dużej straty jakości. To ma znaczenie np. w problemach z wieloma rzadkimi zmiennymi.</li>
+<li><p>Wzrost <em>leaf-wise</em> zamiast <em>level-wise</em> - klasyczne implementacje często budują drzewo poziomami (<em>level-wise</em>): rozdzielają wszystkie liście (tymczasowe) na danym poziomie. LightGBM stosuje strategię <em>leaf-wise</em> (<em>best-first</em>): w każdym kroku rozdziela ten liść, który daje największy przyrost <span class="math inline">\(\mathrm{Gain}\)</span>. To zwykle daje lepszą jakość przy tej samej liczbie liści, ale zwiększa ryzyko przeuczenia, jeśli nie ograniczysz złożoności. Dlatego w LightGBM parametry kontrolujące złożoność, takie jak <code>num_leaves</code> i <code>max_depth</code>, są krytyczne.</p></li>
+<li><p><em>Histogram-based splitting</em> (przyspieszenie selekcji splitów) - dla cech ciągłych LightGBM nie analizuje wszystkich możliwych progów (jak w prostym CART), tylko bucketuje wartości do ograniczonej liczby koszyków (<em>binów</em>). Dzięki temu liczenie gainów jest szybsze i bardziej pamięciooszczędne, a jakość zwykle pozostaje bardzo dobra. Konieczne jest zatem ustawienie odpowiedniego <code>max_bin</code> (liczba binów).</p></li>
+<li><p>GOSS (<em>Gradient-based One-Side Sampling</em>) - mechanizm przyspiesza liczenie splitów przez pracę na wybranej części obserwacji. Punktem wyjścia jest obserwacja, że duża wartość <span class="math inline">\(|g_i|\)</span> oznacza przykład, na którym aktualny model nadal mocno się myli albo dla którego strata silnie reaguje na zmianę predykcji. Takie obserwacje są bardzo informatywne przy wyborze kolejnego podziału. LightGBM:</p>
+<ul>
+<li>sortuje obserwacje według <span class="math inline">\(|g_i|\)</span>,</li>
+<li>zachowuje wszystkie (lub dużą część) obserwacji o największych gradientach,</li>
+<li>z obserwacji o małych gradientach losuje tylko podzbiór,</li>
+<li>zwiększa wagi wylosowanych obserwacji z małymi gradientami, aby nie zaniżyć ich łącznego wpływu na obliczany gain.</li>
+</ul>
+<p>Intuicyjnie: trudne przypadki zostają w całości, a łatwe przypadki są reprezentowane przez próbkę z korektą wag. Dzięki temu split nadal jest oceniany na podstawie informacji o całym rozkładzie danych, ale koszt obliczeniowy jest mniejszy. Korekta wag jest ważna: bez niej algorytm przeceniałby obserwacje o dużych gradientach i wybierałby podziały zbyt agresywnie dopasowane do trudnych przypadków.</p>
+<p>Przykładowo, jeśli zachowujemy frakcję <span class="math inline">\(a\)</span> obserwacji o największych <span class="math inline">\(|g_i|\)</span> oraz losujemy frakcję <span class="math inline">\(b\)</span> spośród pozostałych, to obserwacje z małymi gradientami, które trafiły do próbki, dostają wagę około <span class="math inline">\((1-a)/b\)</span>. W efekcie ich suma gradientów i hessianów w węzłach ma przybliżać wkład całej grupy małych gradientów, a nie tylko wylosowanej próbki.</p></li>
+<li><p>EFB (<em>Exclusive Feature Bundling</em>) - mechanizm zmniejsza liczbę cech, które trzeba analizować przy wyborze splitów. Jest szczególnie użyteczny po kodowaniu <em>one-hot</em> albo w danych rzadkich, gdzie wiele kolumn ma prawie same zera. Dwie cechy są „ekskluzywne”, jeśli rzadko przyjmują wartości niezerowe w tych samych obserwacjach. Przykład: po <em>one-hot encoding</em> jednej zmiennej kategorycznej kolumny <code>kolor_czerwony</code>, <code>kolor_zielony</code>, <code>kolor_niebieski</code> są wzajemnie wykluczające się, bo jedna obserwacja zwykle należy tylko do jednej kategorii.</p>
+<p>LightGBM może spakować kilka takich cech do jednej „wiązki” (<em>bundle</em>). Nie chodzi o zwykłe dodanie kolumn, bo wtedy wartości różnych cech mogłyby się pomieszać. Zamiast tego algorytm przesuwa zakresy binów poszczególnych cech tak, aby w jednej skompresowanej kolumnie dało się odróżnić, z której oryginalnej cechy pochodzi wartość. Dzięki temu wiele rzadkich cech jest reprezentowanych jako jedna cecha techniczna, a histogramy splitów liczy się dla mniejszej liczby kolumn.</p>
+<p>Jeśli cechy są idealnie ekskluzywne, <em>bundling</em> nie traci informacji. W praktyce LightGBM dopuszcza niewielką liczbę konfliktów, czyli sytuacji, gdy dwie łączone cechy są jednocześnie niezerowe. Algorytm dobiera wiązki tak, aby liczba takich konfliktów była mała, bo konflikty mogą pogarszać dokładność oceny splitów. Zysk jest obliczeniowy: mniej cech do skanowania oznacza szybsze uczenie i niższe zużycie pamięci.</p></li>
 </ol>
 </section>
 <section id="braki-danych-i-kategorie" class="level4" data-number="5.3.6.3">
@@ -1435,6 +1690,73 @@ h_i=\frac{\partial^2 \mathcal{L}(y_i, F(x_i))}{\partial F(x_i)^2},
 \text{TE}_{\pi}(x_{\pi_t})=\frac{S_t(c)+a\,\mu}{N_t(c)+a},
 \]</span></p>
 <p>gdzie <span class="math inline">\(\mu\)</span> jest średnią globalną (np. <span class="math inline">\(\mu=\mathbb{E}[Y]\)</span>), a <span class="math inline">\(a&gt;0\)</span> jest parametrem prioru/wygładzania. Kluczowe jest to, że w liczniku nie ma <span class="math inline">\(y_{\pi_t}\)</span>, bo używamy tylko obserwacji wcześniejszych. Oznacza to, że kodowanie nie „widzi” własnej etykiety i nie przenosi jej do cechy.</p>
+<p>Przykład liczbowy pokazuje sens tego mechanizmu. Załóżmy jedną cechę kategoryczną <code>city</code>, target binarny <code>clicked</code> oraz globalną średnią <span class="math inline">\(\mu=0.50\)</span>. Przyjmijmy prior <span class="math inline">\(a=1\)</span> i następującą permutację obserwacji:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">pozycja <span class="math inline">\(t\)</span></th>
+<th style="text-align: right;">obserwacja <span class="math inline">\(\pi_t\)</span></th>
+<th style="text-align: left;"><code>city</code></th>
+<th style="text-align: right;"><span class="math inline">\(y\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Lublin</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Warsaw</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Lublin</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Warsaw</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Warsaw</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+<p>Dla pierwszej obserwacji z kategorii <code>Lublin</code> nie ma jeszcze wcześniejszych obserwacji z tą kategorią, więc:</p>
+<p><span class="math display">\[
+\text{TE}_{\pi}(\text{Lublin, }t=1)
+=\frac{0+1\cdot 0.50}{0+1}
+=0.50.
+\]</span></p>
+<p>Dla obserwacji na pozycji <span class="math inline">\(t=3\)</span> (<code>Lublin</code>, <span class="math inline">\(y=1\)</span>) w prefiksie jest już wcześniejszy <code>Lublin</code> z targetem <span class="math inline">\(0\)</span>. Kodowanie wynosi:</p>
+<p><span class="math display">\[
+\text{TE}_{\pi}(\text{Lublin, }t=3)
+=\frac{0+1\cdot 0.50}{1+1}
+=0.25.
+\]</span></p>
+<p>Ważne: target aktualnej obserwacji, czyli <span class="math inline">\(y=1\)</span> z pozycji <span class="math inline">\(t=3\)</span>, nie został użyty do zakodowania tej samej obserwacji. Zostanie użyty dopiero dla przyszłych obserwacji z kategorią <code>Lublin</code>.</p>
+<p>Dla obserwacji na pozycji <span class="math inline">\(t=5\)</span> (<code>Warsaw</code>, <span class="math inline">\(y=1\)</span>) wcześniejsze obserwacje <code>Warsaw</code> mają targety <span class="math inline">\(1\)</span> i <span class="math inline">\(0\)</span>, więc:</p>
+<p><span class="math display">\[
+\text{TE}_{\pi}(\text{Warsaw, }t=5)
+=\frac{1+0+1\cdot 0.50}{2+1}
+=0.50.
+\]</span></p>
+<p>Dla porównania, naiwne target encoding dla <code>Warsaw</code> policzone na całym zbiorze użyłoby trzech targetów tej kategorii, także targetu aktualnej obserwacji:</p>
+<p><span class="math display">\[
+\text{TE}(\text{Warsaw})=\frac{1+0+1}{3}=0.667.
+\]</span></p>
+<p>Ta wartość jest bardziej „optymistyczna”, bo częściowo zawiera informację o obserwacji, którą właśnie kodujemy. Ordered target statistics usuwa ten problem przez zasadę: dla obserwacji na pozycji <span class="math inline">\(t\)</span> wolno używać tylko pozycji wcześniejszych niż <span class="math inline">\(t\)</span>.</p>
 <p><strong>Wiele permutacji i stabilizacja.</strong> W praktyce CatBoost wykorzystuje wiele permutacji oraz (w zależności od ustawień) uśrednianie/kompozycję statystyk, aby zmniejszyć wariancję kodowania dla rzadkich kategorii (szczególnie na początku permutacji, gdy <span class="math inline">\(N_t(c)\)</span> jest małe).</p>
 <p><strong>Interakcje kategorii.</strong> Dodatkowo CatBoost może tworzyć statystyki docelowe nie tylko dla pojedynczych zmiennych kategorycznych, ale również dla ich kombinacji (np. <span class="math inline">\(\text{city}\times\text{device}\)</span>), co pozwala uchwycić istotne interakcje bez eksplozji wymiaru typowej dla pełnego one-hot.</p>
 </section>
@@ -1450,6 +1772,40 @@ r_{im} = -\left.\frac{\partial\,\mathcal{L}(y_i, F(x_i))}{\partial F(x_i)}\right
 r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\partial F(x_{\pi_t})}\right|_{F=F^{(m-1)}_{t-1}}.
 \]</span></p>
 <p>W implementacji CatBoost nie trenuje dosłownie <span class="math inline">\(n\)</span> pełnych modeli prefiksowych (to byłoby zbyt kosztowne), ale algorytmicznie to właśnie ta idea – „gradienty z przeszłości” – stoi za ograniczeniem wycieku i poprawą uogólniania.</p>
+<p>Można to rozumieć przez analogię do kodowania kategorii:</p>
+<ul>
+<li>w zwykłym boostingu predykcja <span class="math inline">\(\hat y_i\)</span> używana do policzenia gradientu dla obserwacji <span class="math inline">\(i\)</span> pochodzi z modelu, który wcześniej uczył się również na obserwacji <span class="math inline">\(i\)</span>;</li>
+<li>w ordered boosting predykcja dla obserwacji <span class="math inline">\(\pi_t\)</span> ma pochodzić z modelu zbudowanego na wcześniejszych elementach permutacji, więc obserwacja <span class="math inline">\(\pi_t\)</span> nie „pomagała” wcześniej w stworzeniu predykcji, na podstawie której liczony jest jej gradient.</li>
+</ul>
+<p>To ma znaczenie, bo gradient jest sygnałem mówiącym kolejnemu drzewu, co poprawić. Jeśli gradient jest liczony z predykcji zbyt dobrze dopasowanej do tej samej obserwacji, może być zbyt mały albo zbyt optymistyczny. Ordered boosting daje bardziej realistyczny sygnał błędu, podobny do sytuacji, w której predykcja dla obserwacji treningowej jest liczona w sposób out-of-sample.</p>
+<p>Schematycznie, dla permutacji <span class="math inline">\(\pi=(\pi_1,\pi_2,\pi_3,\pi_4)\)</span>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">obserwacja</th>
+<th style="text-align: left;">model użyty do predykcji w ordered boosting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\pi_1\)</span></td>
+<td style="text-align: left;">tylko prior/model początkowy</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\pi_2\)</span></td>
+<td style="text-align: left;">model uczony na <span class="math inline">\(\pi_1\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(\pi_3\)</span></td>
+<td style="text-align: left;">model uczony na <span class="math inline">\(\pi_1,\pi_2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(\pi_4\)</span></td>
+<td style="text-align: left;">model uczony na <span class="math inline">\(\pi_1,\pi_2,\pi_3\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>W praktycznej implementacji CatBoost robi to efektywnie, bez budowania osobnego pełnego modelu dla każdej pozycji. Z perspektywy interpretacji wystarczy zapamiętać zasadę: przy liczeniu kodowań kategorii i gradientów obserwacja nie powinna korzystać z informacji pochodzącej z niej samej ani z „przyszłości” w permutacji.</p>
 </section>
 <section id="catboost-pseudokod" class="level4" data-number="5.3.7.3">
 <h4 data-number="5.3.7.3" class="anchored" data-anchor-id="catboost-pseudokod"><span class="header-section-number">5.3.7.3</span> CatBoost (pseudokod)</h4>
@@ -1502,10 +1858,10 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 </ul>
 <div id="exm-3" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 5.3</strong></span> Teraz dokonamy porównania dotychczasowych modeli (z <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> i <a href="#exm-2" class="quarto-xref">Przykład&nbsp;<span>5.2</span></a>) z modelami AdaBoost, XGBoost, CatBoost i LightGBM.</p>
-<div id="7cd0be7d" class="cell" data-execution_count="7">
+<div id="18908355" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> AdaBoostClassifier</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> AdaBoostClassifier</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> [</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    eval_model(tree, <span class="st">"Drzewo (surowe)"</span>),  <span class="co"># eval_model było już zdefiniowane</span></span>
@@ -1611,10 +1967,10 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 <span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a>res_df <span class="op">=</span> pd.DataFrame(results).sort_values(<span class="st">"balanced_accuracy"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000463 seconds.
+<pre><code>[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000598 seconds.
 You can set `force_row_wise=true` to remove the overhead.
 And if memory is not enough, you can set `force_col_wise=true`.
 [LightGBM] [Info] Total Bins 2654
@@ -1709,18 +2065,18 @@ Drzewo (przycięte)    0.6930             0.6930    0.6936
 <p>Warto zauważyć, że w tym porównaniu <strong>accuracy</strong>, <strong>balanced_accuracy</strong> i <strong>F1_macro</strong> są do siebie dość zbliżone. To sugeruje, że po ograniczeniu do 10 najczęstszych gatunków problem silnej nierównowagi klas nie dominuje oceny modeli; mimo to macro-F1 pozostaje użyteczne, bo każdej klasie przypisuje podobną wagę.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-breiman1996" class="csl-entry" role="listitem">
 Breiman, Leo. 1996. <span>„Bagging Predictors”</span>. <em>Machine Learning</em> 24 (2): 123–40. <a href="https://doi.org/10.1023/a:1018054314350">https://doi.org/10.1023/a:1018054314350</a>.
 </div>
 <div id="ref-breiman2001" class="csl-entry" role="listitem">
-———. 2001. <span>„Random Forests”</span>. <em>Machine Learning</em> 45 (1): 5–32. <a href="https://doi.org/10.1023/a:1010933404324">https://doi.org/10.1023/a:1010933404324</a>.
+Breiman, Leo. 2001. <span>„Random Forests”</span>. <em>Machine Learning</em> 45 (1): 5–32. <a href="https://doi.org/10.1023/a:1010933404324">https://doi.org/10.1023/a:1010933404324</a>.
 </div>
 <div id="ref-breiman2017" class="csl-entry" role="listitem">
-Breiman, Leo, Jerome Friedman, R. A. Olshen, i Charles J. Stone. 2017. <em>Classification and Regression Trees</em>. New York: Chapman; Hall/CRC.
+Breiman, Leo, Jerome Friedman, R. A. Olshen, i Charles J. Stone. 2017. <em>Classification and Regression Trees</em>. Chapman; Hall/CRC.
 </div>
 <div id="ref-chen2016" class="csl-entry" role="listitem">
-Chen, Tianqi, i Carlos Guestrin. 2016. <span>„XGBoost”</span>. <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, sierpień, 785–94. <a href="https://doi.org/10.1145/2939672.2939785">https://doi.org/10.1145/2939672.2939785</a>.
+Chen, Tianqi, i Carlos Guestrin. 2016. <span>„XGBoost”</span>. <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, sierpnia 13, 785–94. <a href="https://doi.org/10.1145/2939672.2939785">https://doi.org/10.1145/2939672.2939785</a>.
 </div>
 <div id="ref-efron1979" class="csl-entry" role="listitem">
 Efron, B. 1979. <span>„Bootstrap Methods: Another Look at the Jackknife”</span>. <em>The Annals of Statistics</em> 7 (1). <a href="https://doi.org/10.1214/aos/1176344552">https://doi.org/10.1214/aos/1176344552</a>.
@@ -1741,7 +2097,7 @@ Hothorn, Torsten, Kurt Hornik, i Achim Zeileis. 2006. <span>„Unbiased Recursiv
 Kass, G. V. 1980. <span>„An Exploratory Technique for Investigating Large Quantities of Categorical Data”</span>. <em>Applied Statistics</em> 29 (2): 119. <a href="https://doi.org/10.2307/2986296">https://doi.org/10.2307/2986296</a>.
 </div>
 <div id="ref-ke2017" class="csl-entry" role="listitem">
-Ke, Guolin, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, i Tie-Yan Liu. 2017. <span>„LightGBM: A Highly Efficient Gradient Boosting Decision Tree”</span>. W. T. 30. Curran Associates, Inc. <a href="https://proceedings.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html">https://proceedings.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html</a>.
+Ke, Guolin, Qi Meng, Thomas Finley, et al. 2017. <span>„LightGBM: A Highly Efficient Gradient Boosting Decision Tree”</span>. 30. <a href="https://proceedings.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html">https://proceedings.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html</a>.
 </div>
 <div id="ref-kuhn2018" class="csl-entry" role="listitem">
 Kuhn, Max, i Ross Quinlan. 2018. <em>C50: C5.0 Decision Trees and Rule-Based Models</em>. <a href="https://CRAN.R-project.org/package=C50">https://CRAN.R-project.org/package=C50</a>.
@@ -1756,7 +2112,7 @@ Quinlan, J. R. 1986. <span>„Induction of Decision Trees”</span>. <em>Machine
 Schapire, Robert E. 1990. <span>„The Strength of Weak Learnability”</span>. <em>Machine Learning</em> 5 (2): 197–227. <a href="https://doi.org/10.1023/a:1022648800760">https://doi.org/10.1023/a:1022648800760</a>.
 </div>
 <div id="ref-singh2025" class="csl-entry" role="listitem">
-Singh, Pranjal Kumar, i Seba Susan. 2025. <span>„EfficientNetB0-CatBoost: Deep Learning With Categorical Boosting for Food Image Recognition”</span>. <em>Cureus Journal of Computer Science</em>, październik. <a href="https://doi.org/10.7759/s44389-025-03791-2">https://doi.org/10.7759/s44389-025-03791-2</a>.
+Singh, Pranjal Kumar, i Seba Susan. 2025. <span>„EfficientNetB0-CatBoost: Deep Learning With Categorical Boosting for Food Image Recognition”</span>. <em>Cureus Journal of Computer Science</em>, advance online publication, października 21. <a href="https://doi.org/10.7759/s44389-025-03791-2">https://doi.org/10.7759/s44389-025-03791-2</a>.
 </div>
 <div id="ref-tinkamho1998" class="csl-entry" role="listitem">
 Tin Kam Ho. 1998. <span>„The random subspace method for constructing decision forests”</span>. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em> 20 (8): 832–44. <a href="https://doi.org/10.1109/34.709601">https://doi.org/10.1109/34.709601</a>.
@@ -1767,9 +2123,6 @@ Tin Kam Ho. 1998. <span>„The random subspace method for constructing decision 
 
 
 </main> <!-- /main -->
-<script type="application/vnd.jupyter.widget-state+json">
-{"state":{"03e9912d77064877b909c0a1af45f293":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HBoxModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HBoxModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HBoxView","box_style":"","children":["IPY_MODEL_340bb101980d4042ab4ff507fddf733c","IPY_MODEL_8c71603659714b9e94be1e674cb025cd","IPY_MODEL_6c60b9617e91453c963745c5dad0f469"],"layout":"IPY_MODEL_49dd4fd4a04d4beea7ee2e2e1ce18954","tabbable":null,"tooltip":null}},"12fe66a360c9410890abde1718cbe745":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"24194d618cdd438aa5b1ba6db3033327":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":"20px"}},"2b9991993efa45f8a0212fa4d82c8e29":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":null,"description_width":""}},"32e292ecc81b4268b77d6552565c0b0e":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HTMLView","description":"","description_allow_html":false,"layout":"IPY_MODEL_8c52b8fb1aab4c74b16c7fc54ee92e27","placeholder":"​","style":"IPY_MODEL_5b9e7bef81fc4519a275c59192d953b7","tabbable":null,"tooltip":null,"value":" 114000/114000 [00:00&lt;00:00, 334552.09 examples/s]"}},"33c52c7d135e4f69b0af13341488e423":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":null,"description_width":""}},"340bb101980d4042ab4ff507fddf733c":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HTMLView","description":"","description_allow_html":false,"layout":"IPY_MODEL_6303b9d9653a41dab83b6369e089c751","placeholder":"​","style":"IPY_MODEL_3b1afd5352fa4cc39c16a678fbf2e9f6","tabbable":null,"tooltip":null,"value":"dataset.csv: 100%"}},"35d28aa830384b9dbd9287c971a519ac":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HBoxModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HBoxModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HBoxView","box_style":"","children":["IPY_MODEL_a90de85d13624396a5bc57515e8961e2","IPY_MODEL_b3e8a505e3784ed4ae7a332d1f0bf42c","IPY_MODEL_7c6df96c84dc49cdb3c1d5688b67eccb"],"layout":"IPY_MODEL_9629821154f64796be4083a0cf1c432f","tabbable":null,"tooltip":null}},"3b1afd5352fa4cc39c16a678fbf2e9f6":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","background":null,"description_width":"","font_size":null,"text_color":null}},"3f44c51c698a4115a68bfc62637cd2fc":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HTMLView","description":"","description_allow_html":false,"layout":"IPY_MODEL_93867a85df09452ebab1de790cce9192","placeholder":"​","style":"IPY_MODEL_876a65f9061c4b06ab7e456c68380b7c","tabbable":null,"tooltip":null,"value":"README.md: "}},"49dd4fd4a04d4beea7ee2e2e1ce18954":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"50a01e32d9044102aef09f40fec6583a":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"527f1b03d9954f9c875d6f193b85dddd":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","background":null,"description_width":"","font_size":null,"text_color":null}},"5b9e7bef81fc4519a275c59192d953b7":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","background":null,"description_width":"","font_size":null,"text_color":null}},"5bf1e6bb3b2e4aca952243b326fc8d57":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"5ddadd040f8343f69527041e38b2e360":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"6303b9d9653a41dab83b6369e089c751":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"64cd0fa35dad4c0f84f5c618422c9656":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"6c60b9617e91453c963745c5dad0f469":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HTMLView","description":"","description_allow_html":false,"layout":"IPY_MODEL_50a01e32d9044102aef09f40fec6583a","placeholder":"​","style":"IPY_MODEL_d663c59158f64f4e9a9b4d21253dba74","tabbable":null,"tooltip":null,"value":" 20.1M/20.1M [00:03&lt;00:00, 6.28MB/s]"}},"7c6df96c84dc49cdb3c1d5688b67eccb":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HTMLView","description":"","description_allow_html":false,"layout":"IPY_MODEL_a5515da5124e476d8c35fe471947e346","placeholder":"​","style":"IPY_MODEL_527f1b03d9954f9c875d6f193b85dddd","tabbable":null,"tooltip":null,"value":" 1/1 [00:00&lt;00:00, 506.56it/s]"}},"7dd76b1f254a4a97b07e423a1c02a347":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HTMLView","description":"","description_allow_html":false,"layout":"IPY_MODEL_8f7d2ece01d04a5aa57a7c593d77865f","placeholder":"​","style":"IPY_MODEL_a60c3da1e37c464dbcf1c4df3805d827","tabbable":null,"tooltip":null,"value":"Generating train split: 100%"}},"876a65f9061c4b06ab7e456c68380b7c":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","background":null,"description_width":"","font_size":null,"text_color":null}},"8c52b8fb1aab4c74b16c7fc54ee92e27":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"8c71603659714b9e94be1e674cb025cd":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"success","description":"","description_allow_html":false,"layout":"IPY_MODEL_12fe66a360c9410890abde1718cbe745","max":20118244,"min":0,"orientation":"horizontal","style":"IPY_MODEL_2b9991993efa45f8a0212fa4d82c8e29","tabbable":null,"tooltip":null,"value":20118244}},"8f7d2ece01d04a5aa57a7c593d77865f":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"93867a85df09452ebab1de790cce9192":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"94812cc9e85643f49060e2db7fae2e69":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"success","description":"","description_allow_html":false,"layout":"IPY_MODEL_24194d618cdd438aa5b1ba6db3033327","max":1,"min":0,"orientation":"horizontal","style":"IPY_MODEL_f2699c11b0164a7f9452f7e6bac0cc37","tabbable":null,"tooltip":null,"value":1}},"9629821154f64796be4083a0cf1c432f":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"a5515da5124e476d8c35fe471947e346":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"a60c3da1e37c464dbcf1c4df3805d827":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","background":null,"description_width":"","font_size":null,"text_color":null}},"a7917eab41544c28ac8449580fafff96":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"success","description":"","description_allow_html":false,"layout":"IPY_MODEL_64cd0fa35dad4c0f84f5c618422c9656","max":114000,"min":0,"orientation":"horizontal","style":"IPY_MODEL_fc202886bfa6465cb6caed8491156a57","tabbable":null,"tooltip":null,"value":114000}},"a90de85d13624396a5bc57515e8961e2":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HTMLView","description":"","description_allow_html":false,"layout":"IPY_MODEL_d8c4c494c1c14146b4cd10b8bc936052","placeholder":"​","style":"IPY_MODEL_d7da6f0d912b41c292e443b6855b54d0","tabbable":null,"tooltip":null,"value":"Computing checksums: 100%"}},"b3e8a505e3784ed4ae7a332d1f0bf42c":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"success","description":"","description_allow_html":false,"layout":"IPY_MODEL_5ddadd040f8343f69527041e38b2e360","max":1,"min":0,"orientation":"horizontal","style":"IPY_MODEL_33c52c7d135e4f69b0af13341488e423","tabbable":null,"tooltip":null,"value":1}},"baf50d5cad294933b9352ffd70a3efbd":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HBoxModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HBoxModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HBoxView","box_style":"","children":["IPY_MODEL_3f44c51c698a4115a68bfc62637cd2fc","IPY_MODEL_94812cc9e85643f49060e2db7fae2e69","IPY_MODEL_cbb2f5cce3c443ca9dffc48657fcc928"],"layout":"IPY_MODEL_ea97fbacf0384b1ebe685e189ddb7fb6","tabbable":null,"tooltip":null}},"cbb2f5cce3c443ca9dffc48657fcc928":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HTMLView","description":"","description_allow_html":false,"layout":"IPY_MODEL_5bf1e6bb3b2e4aca952243b326fc8d57","placeholder":"​","style":"IPY_MODEL_d7b770132a8947cbad4c290b33d468da","tabbable":null,"tooltip":null,"value":" 4.68k/? [00:00&lt;00:00, 326kB/s]"}},"d663c59158f64f4e9a9b4d21253dba74":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","background":null,"description_width":"","font_size":null,"text_color":null}},"d7b770132a8947cbad4c290b33d468da":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","background":null,"description_width":"","font_size":null,"text_color":null}},"d7da6f0d912b41c292e443b6855b54d0":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HTMLStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HTMLStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","background":null,"description_width":"","font_size":null,"text_color":null}},"d8c4c494c1c14146b4cd10b8bc936052":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"e37647b2e72d42769dc35daa395fdf88":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"ea97fbacf0384b1ebe685e189ddb7fb6":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"ead6a8e064db47fbb3c09fbe5d430f0a":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HBoxModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HBoxModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HBoxView","box_style":"","children":["IPY_MODEL_7dd76b1f254a4a97b07e423a1c02a347","IPY_MODEL_a7917eab41544c28ac8449580fafff96","IPY_MODEL_32e292ecc81b4268b77d6552565c0b0e"],"layout":"IPY_MODEL_e37647b2e72d42769dc35daa395fdf88","tabbable":null,"tooltip":null}},"f2699c11b0164a7f9452f7e6bac0cc37":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":null,"description_width":""}},"fc202886bfa6465cb6caed8491156a57":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":null,"description_width":""}}},"version_major":2,"version_minor":0}
-</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -1834,13 +2187,14 @@ Tin Kam Ho. 1998. <span>„The random subspace method for constructing decision 
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pl" xml:lang="pl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>10&nbsp; Dalsze zagadnienia – Eksploracja danych i uczenie maszynowe</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -59,7 +62,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -94,14 +96,14 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2d449610c6da6b3fd31ed0a9984c1b47.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-f7ccbded210020a5533f6fd86e3f20c2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-2d449610c6da6b3fd31ed0a9984c1b47.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-666135433cace59c5973edf2e2f39c5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-c84f4249ebe5bde6a406a74c1334a68b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-666135433cace59c5973edf2e2f39c5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -134,7 +136,7 @@ div.csl-indent {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -147,7 +149,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -351,7 +353,8 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="../index.html" class="sidebar-logo-link">
-      <img src="../images/logo.jpg" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="../images/logo.jpg" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../images/logo.jpg" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Eksploracja danych i uczenie maszynowe</a> 
@@ -610,10 +613,10 @@ r_{t+1}+\gamma \max_a Q_t(s_{t+1},a)-Q_t(s_t,a_t)
 <section id="przykład-q-learning-w-prostym-gridworldzie" class="level3" data-number="10.2.7">
 <h3 data-number="10.2.7" class="anchored" data-anchor-id="przykład-q-learning-w-prostym-gridworldzie"><span class="header-section-number">10.2.7</span> Przykład: Q-learning w prostym gridworldzie</h3>
 <p>Poniższy przykład nie korzysta z gotowych środowisk typu Gym, lecz buduje minimalny świat siatki, aby zachować pełną przejrzystość matematyki i implementacji. Agent startuje w lewym górnym rogu, ma dotrzeć do celu, a każdy krok kosztuje niewielką ujemną nagrodę. Dzięki temu agent uczy się nie tylko „dojść do celu”, ale dojść <strong>możliwie szybko</strong>.</p>
-<div id="478d9183" class="cell" data-execution_count="1">
+<div id="f3360d5f" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
@@ -770,12 +773,12 @@ r_{t+1}+\gamma \max_a Q_t(s_{t+1},a)-Q_t(s_t,a_t)
 <span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>plt.colorbar(im, ax<span class="op">=</span>axes[<span class="dv">1</span>], shrink<span class="op">=</span><span class="fl">0.85</span>)</span>
 <span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="09-dalsze-zagadnienia_files/figure-html/cell-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="09-dalsze-zagadnienia_files/figure-html/cell-2-output-1.png" class="img-fluid figure-img"></a></p>
+<p><a href="09-dalsze-zagadnienia_files/figure-html/cell-2-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="09-dalsze-zagadnienia_files/figure-html/cell-2-output-1.png" width="1110" height="424" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
@@ -787,7 +790,7 @@ r_{t+1}+\gamma \max_a Q_t(s_{t+1},a)-Q_t(s_t,a_t)
 <h2 data-number="10.3" class="anchored" data-anchor-id="modele-koszykowe-i-reguły-asocjacyjne"><span class="header-section-number">10.3</span> Modele koszykowe i reguły asocjacyjne</h2>
 <section id="problem-i-rys-historyczny" class="level3" data-number="10.3.1">
 <h3 data-number="10.3.1" class="anchored" data-anchor-id="problem-i-rys-historyczny"><span class="header-section-number">10.3.1</span> Problem i rys historyczny</h3>
-<p>Analiza koszykowa wyrosła z potrzeb handlu detalicznego i hurtowni danych. Klasyczna praca Agrawala, Imielińskiego i Swamiego <span class="citation" data-cites="agrawal1993">(<a href="reference.html#ref-agrawal1993" role="doc-biblioref">Agrawal, Imieliński, i Swami 1993</a>)</span> sformalizowała problem odkrywania reguł asocjacyjnych w bazach transakcyjnych. Następnie Agrawal i Srikant zaproponowali rodzinę algorytmów <strong>Apriori</strong> <span class="citation" data-cites="agrawal1994">(<a href="reference.html#ref-agrawal1994" role="doc-biblioref">Agrawal i Srikant 1994</a>)</span>, które przez lata były standardem uczenia frequent itemsets. Kolejnym ważnym krokiem był <strong>FP-Growth</strong> Hana, Peia i Yina <span class="citation" data-cites="han2000">(<a href="reference.html#ref-han2000" role="doc-biblioref">Han, Pei, i Yin 2000</a>)</span>, który ograniczył koszt generowania kandydatów przez wykorzystanie skompresowanej struktury FP-tree.</p>
+<p>Analiza koszykowa wyrosła z potrzeb handlu detalicznego i hurtowni danych. Klasyczna praca Agrawala, Imielińskiego i Swamiego <span class="citation" data-cites="agrawal1993">(<a href="reference.html#ref-agrawal1993" role="doc-biblioref">Agrawal et al. 1993</a>)</span> sformalizowała problem odkrywania reguł asocjacyjnych w bazach transakcyjnych. Następnie Agrawal i Srikant zaproponowali rodzinę algorytmów <strong>Apriori</strong> <span class="citation" data-cites="agrawal1994">(<a href="reference.html#ref-agrawal1994" role="doc-biblioref">Agrawal i Srikant 1994</a>)</span>, które przez lata były standardem uczenia frequent itemsets. Kolejnym ważnym krokiem był <strong>FP-Growth</strong> Hana, Peia i Yina <span class="citation" data-cites="han2000">(<a href="reference.html#ref-han2000" role="doc-biblioref">Han et al. 2000</a>)</span>, który ograniczył koszt generowania kandydatów przez wykorzystanie skompresowanej struktury FP-tree.</p>
 <p>W praktyce analiza koszykowa służy nie tylko do badania produktów kupowanych razem. Ten sam formalizm stosuje się także do:</p>
 <ul>
 <li>rekomendacji współwystępujących usług,</li>
@@ -861,7 +864,7 @@ X \subseteq Y \quad \Longrightarrow \quad \operatorname{support}(Y)\le \operator
 <li>powtarzaj dla coraz większych długości itemsetów.</li>
 </ol>
 <p>Zaletą Apriori jest prostota i duża interpretowalność. Wadą jest koszt obliczeniowy: przy dużej liczbie produktów liczba kandydatów eksploduje.</p>
-<p><strong>FP-Growth</strong> <span class="citation" data-cites="han2000">(<a href="reference.html#ref-han2000" role="doc-biblioref">Han, Pei, i Yin 2000</a>)</span> rozwiązuje ten problem inaczej. Zamiast jawnie generować wielkie zbiory kandydatów:</p>
+<p><strong>FP-Growth</strong> <span class="citation" data-cites="han2000">(<a href="reference.html#ref-han2000" role="doc-biblioref">Han et al. 2000</a>)</span> rozwiązuje ten problem inaczej. Zamiast jawnie generować wielkie zbiory kandydatów:</p>
 <ul>
 <li>kompresuje bazę do struktury <strong>FP-tree</strong>,</li>
 <li>wydobywa wzorce przez rekurencyjne budowanie baz warunkowych,</li>
@@ -889,10 +892,10 @@ X \subseteq Y \quad \Longrightarrow \quad \operatorname{support}(Y)\le \operator
 <section id="przykład-prosta-implementacja-apriori-i-reguł-asocjacyjnych" class="level3" data-number="10.3.6">
 <h3 data-number="10.3.6" class="anchored" data-anchor-id="przykład-prosta-implementacja-apriori-i-reguł-asocjacyjnych"><span class="header-section-number">10.3.6</span> Przykład: prosta implementacja Apriori i reguł asocjacyjnych</h3>
 <p>W przykładzie zbudujemy małą bazę transakcji i pokażemy, jak z niej wydobyć frequent itemsets oraz reguły. Ponieważ w projekcie nie ma zainstalowanej biblioteki <code>mlxtend</code>, implementujemy najważniejsze elementy samodzielnie. Dzięki temu dokładnie widać, co liczą support, confidence i lift.</p>
-<div id="1fb0e355" class="cell" data-execution_count="2">
+<div id="885bab24" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> combinations</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> combinations</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>transactions <span class="op">=</span> [</span>
@@ -1007,7 +1010,7 @@ X \subseteq Y \quad \Longrightarrow \quad \operatorname{support}(Y)\le \operator
 <span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(freq_df.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
 <span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Najsilniejsze reguły:"</span>)</span>
-<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rules_df.head(<span class="dv">10</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rules_df.head(<span class="dv">10</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Częste itemsety:
@@ -1040,8 +1043,8 @@ mleko, pieluchy        piwo      0.3       1.000 1.667
           maslo       chleb      0.5       0.833 1.042
            piwo       chleb      0.5       0.833 1.042
            piwo       mleko      0.5       0.833 1.042
-    chleb, piwo       mleko      0.4       0.800 1.000
-    mleko, piwo       chleb      0.4       0.800 1.000</code></pre>
+    mleko, piwo       chleb      0.4       0.800 1.000
+    chleb, piwo       mleko      0.4       0.800 1.000</code></pre>
 </div>
 </div>
 <p>Wynik zwykle pokaże, że takie produkty jak <code>chleb</code>, <code>mleko</code> i <code>masło</code> występują często razem, a dla części reguł lift przekracza 1. To oznacza, że współwystępowanie jest silniejsze niż przewidywałaby sama częstość marginalna produktów. W realnych danych detalicznych analiza jest oczywiście znacznie większa, ale logika pozostaje taka sama.</p>
@@ -1051,7 +1054,7 @@ mleko, pieluchy        piwo      0.3       1.000 1.667
 <h2 data-number="10.4" class="anchored" data-anchor-id="wykrywanie-anomalii"><span class="header-section-number">10.4</span> Wykrywanie anomalii</h2>
 <section id="dlaczego-anomalia-to-trudny-obiekt-statystyczny" class="level3" data-number="10.4.1">
 <h3 data-number="10.4.1" class="anchored" data-anchor-id="dlaczego-anomalia-to-trudny-obiekt-statystyczny"><span class="header-section-number">10.4.1</span> Dlaczego anomalia to trudny obiekt statystyczny</h3>
-<p>W klasycznej klasyfikacji chcemy możliwie dobrze odróżniać znane klasy. W wykrywaniu anomalii sytuacja jest trudniejsza: często umiemy dobrze opisać to, co <strong>normalne</strong>, ale nie wiemy z góry, jak będzie wyglądać rzadkie odstępstwo. Dlatego w literaturze spotyka się zarówno nazwę <em>outlier detection</em>, jak i <em>anomaly detection</em>. Przegląd tej dziedziny przedstawiają Chandola, Banerjee i Kumar <span class="citation" data-cites="chandola2009">(<a href="reference.html#ref-chandola2009" role="doc-biblioref">Chandola, Banerjee, i Kumar 2009</a>)</span>.</p>
+<p>W klasycznej klasyfikacji chcemy możliwie dobrze odróżniać znane klasy. W wykrywaniu anomalii sytuacja jest trudniejsza: często umiemy dobrze opisać to, co <strong>normalne</strong>, ale nie wiemy z góry, jak będzie wyglądać rzadkie odstępstwo. Dlatego w literaturze spotyka się zarówno nazwę <em>outlier detection</em>, jak i <em>anomaly detection</em>. Przegląd tej dziedziny przedstawiają Chandola, Banerjee i Kumar <span class="citation" data-cites="chandola2009">(<a href="reference.html#ref-chandola2009" role="doc-biblioref">Chandola et al. 2009</a>)</span>.</p>
 <p>W praktyce anomalia może oznaczać:</p>
 <ul>
 <li>oszustwo finansowe,</li>
@@ -1064,7 +1067,7 @@ mleko, pieluchy        piwo      0.3       1.000 1.667
 </section>
 <section id="typy-anomalii" class="level3" data-number="10.4.2">
 <h3 data-number="10.4.2" class="anchored" data-anchor-id="typy-anomalii"><span class="header-section-number">10.4.2</span> Typy anomalii</h3>
-<p>W klasycznym podziale <span class="citation" data-cites="chandola2009">(<a href="reference.html#ref-chandola2009" role="doc-biblioref">Chandola, Banerjee, i Kumar 2009</a>)</span> rozróżnia się:</p>
+<p>W klasycznym podziale <span class="citation" data-cites="chandola2009">(<a href="reference.html#ref-chandola2009" role="doc-biblioref">Chandola et al. 2009</a>)</span> rozróżnia się:</p>
 <ul>
 <li><strong>anomalię punktową</strong> – pojedyncza obserwacja jest nietypowa względem reszty,</li>
 <li><strong>anomalię kontekstową</strong> – obserwacja jest nietypowa tylko w danym kontekście, np. sezonie lub porze dnia,</li>
@@ -1090,7 +1093,7 @@ s(x)\in\mathbb{R},
 </section>
 <section id="lof-lokalna-gęstość-zamiast-globalnej-odległości" class="level3" data-number="10.4.4">
 <h3 data-number="10.4.4" class="anchored" data-anchor-id="lof-lokalna-gęstość-zamiast-globalnej-odległości"><span class="header-section-number">10.4.4</span> LOF: lokalna gęstość zamiast globalnej odległości</h3>
-<p>Jedną z najważniejszych idei w tej dziedzinie była koncepcja <strong>Local Outlier Factor</strong> (LOF) Breuniga i współautorów <span class="citation" data-cites="breunig2000">(<a href="reference.html#ref-breunig2000" role="doc-biblioref">Breunig i in. 2000</a>)</span>. Zamiast patrzeć tylko na odległość punktu od środka chmury, LOF porównuje <strong>lokalną gęstość</strong> punktu z gęstością jego sąsiedztwa.</p>
+<p>Jedną z najważniejszych idei w tej dziedzinie była koncepcja <strong>Local Outlier Factor</strong> (LOF) Breuniga i współautorów <span class="citation" data-cites="breunig2000">(<a href="reference.html#ref-breunig2000" role="doc-biblioref">Breunig et al. 2000</a>)</span>. Zamiast patrzeć tylko na odległość punktu od środka chmury, LOF porównuje <strong>lokalną gęstość</strong> punktu z gęstością jego sąsiedztwa.</p>
 <p>Intuicja jest bardzo cenna: punkt może być daleko od głównego skupiska, ale nadal być normalny, jeśli wokół niego istnieje lokalna grupa punktów o podobnej gęstości. Odwrotnie, punkt może wyglądać podejrzanie, jeśli jest „luźno osadzony” względem najbliższych sąsiadów.</p>
 <p>Formalnie, dla ustalonego <span class="math inline">\(k\)</span> definiujemy zasięg osiągalności i lokalną gęstość osiągalności, a następnie:</p>
 <p><span class="math display">\[
@@ -1105,7 +1108,7 @@ s(x)\in\mathbb{R},
 </section>
 <section id="isolation-forest" class="level3" data-number="10.4.5">
 <h3 data-number="10.4.5" class="anchored" data-anchor-id="isolation-forest"><span class="header-section-number">10.4.5</span> Isolation Forest</h3>
-<p>Drugim bardzo praktycznym podejściem jest <strong>Isolation Forest</strong> Liu, Tinga i Zhou <span class="citation" data-cites="liu2008">(<a href="reference.html#ref-liu2008" role="doc-biblioref">Liu, Ting, i Zhou 2008</a>)</span>. Tutaj intuicja jest inna niż w LOF. Zamiast estymować gęstość, algorytm buduje losowe drzewa podziałów i sprawdza, jak szybko dany punkt zostaje odizolowany. Punkty anomalne są zwykle łatwe do wyizolowania, więc ich średnia długość ścieżki w drzewie jest mała.</p>
+<p>Drugim bardzo praktycznym podejściem jest <strong>Isolation Forest</strong> Liu, Tinga i Zhou <span class="citation" data-cites="liu2008">(<a href="reference.html#ref-liu2008" role="doc-biblioref">Liu et al. 2008</a>)</span>. Tutaj intuicja jest inna niż w LOF. Zamiast estymować gęstość, algorytm buduje losowe drzewa podziałów i sprawdza, jak szybko dany punkt zostaje odizolowany. Punkty anomalne są zwykle łatwe do wyizolowania, więc ich średnia długość ścieżki w drzewie jest mała.</p>
 <p>W uproszczeniu: jeżeli obserwacja leży „na uboczu”, kilka losowych przecięć osi często wystarcza, aby trafić do liścia zawierającego tylko ten punkt. Dla obserwacji typowych ścieżki są dłuższe, bo punktów podobnych jest więcej.</p>
 <p>Isolation Forest jest szczególnie atrakcyjny praktycznie, ponieważ:</p>
 <ul>
@@ -1145,10 +1148,10 @@ s(x)\in\mathbb{R},
 <section id="przykład-lof-i-isolation-forest-na-danych-syntetycznych" class="level3" data-number="10.4.8">
 <h3 data-number="10.4.8" class="anchored" data-anchor-id="przykład-lof-i-isolation-forest-na-danych-syntetycznych"><span class="header-section-number">10.4.8</span> Przykład: LOF i Isolation Forest na danych syntetycznych</h3>
 <p>Zbudujemy dwa gęste skupiska punktów oraz kilka ręcznie dodanych obserwacji odstających. Następnie porównamy wyniki LOF i Isolation Forest. To dobry scenariusz dydaktyczny: LOF pokazuje myślenie „lokalną gęstością”, a Isolation Forest – myślenie „łatwością izolacji”.</p>
-<div id="15efe3c9" class="cell" data-execution_count="3">
+<div id="075738bb" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Kod</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1244,7 +1247,7 @@ s(x)\in\mathbb{R},
 <span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_ylabel(<span class="st">"x2"</span>)</span>
 <span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].legend()</span>
 <span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Najbardziej podejrzane obserwacje wg LOF:
@@ -1272,7 +1275,7 @@ Najbardziej podejrzane obserwacje wg Isolation Forest:
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="09-dalsze-zagadnienia_files/figure-html/cell-4-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="09-dalsze-zagadnienia_files/figure-html/cell-4-output-2.png" class="img-fluid figure-img"></a></p>
+<p><a href="09-dalsze-zagadnienia_files/figure-html/cell-4-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="09-dalsze-zagadnienia_files/figure-html/cell-4-output-2.png" width="1163" height="491" class="figure-img"></a></p>
 </figure>
 </div>
 </div>
@@ -1286,24 +1289,24 @@ Najbardziej podejrzane obserwacje wg Isolation Forest:
 <p>Z dydaktycznego punktu widzenia warto zapamiętać trzy rzeczy. Po pierwsze, formalizacja problemu decyduje o wyborze narzędzia: inne metody stosujemy do sekwencji decyzji, inne do transakcji, a inne do obserwacji rzadkich. Po drugie, interpretacja wyniku jest równie ważna jak sam algorytm. Po trzecie, te obszary bardzo często pojawiają się razem w praktyce, np. system rekomendacyjny może korzystać z reguł asocjacyjnych, system sterowania z RL, a monitoring bezpieczeństwa z detekcji anomalii.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-agrawal1993" class="csl-entry" role="listitem">
 Agrawal, Rakesh, Tomasz Imieliński, i Arun Swami. 1993. <span>„Mining Association Rules Between Sets of Items in Large Databases”</span>. <em>ACM SIGMOD Record</em> 22 (2): 207–16. <a href="https://doi.org/10.1145/170036.170072">https://doi.org/10.1145/170036.170072</a>.
 </div>
 <div id="ref-agrawal1994" class="csl-entry" role="listitem">
-Agrawal, Rakesh, i Ramakrishnan Srikant. 1994. <span>„Fast Algorithms for Mining Association Rules in Large Databases”</span>. W <em>VLDB’94: Proceedings of the 20th International Conference on Very Large Data Bases</em>, 487–99. Morgan Kaufmann. <a href="https://sigmod.org/publications/dblp/db/conf/vldb/vldb94-487.html">https://sigmod.org/publications/dblp/db/conf/vldb/vldb94-487.html</a>.
+Agrawal, Rakesh, i Ramakrishnan Srikant. 1994. <span>„Fast Algorithms for Mining Association Rules in Large Databases”</span>. <em>VLDB’94: Proceedings of the 20th International Conference on Very Large Data Bases</em>, 487–99. <a href="https://sigmod.org/publications/dblp/db/conf/vldb/vldb94-487.html">https://sigmod.org/publications/dblp/db/conf/vldb/vldb94-487.html</a>.
 </div>
 <div id="ref-breunig2000" class="csl-entry" role="listitem">
-Breunig, Markus M., Hans-Peter Kriegel, Raymond T. Ng, i Jörg Sander. 2000. <span>„LOF: Identifying Density-Based Local Outliers”</span>. W <em>Proceedings of the 2000 ACM SIGMOD International Conference on Management of Data</em>, 93–104. ACM. <a href="https://doi.org/10.1145/342009.335388">https://doi.org/10.1145/342009.335388</a>.
+Breunig, Markus M., Hans-Peter Kriegel, Raymond T. Ng, i Jörg Sander. 2000. <span>„LOF: Identifying Density-Based Local Outliers”</span>. <em>Proceedings of the 2000 ACM SIGMOD International Conference on Management of Data</em>, 93–104. <a href="https://doi.org/10.1145/342009.335388">https://doi.org/10.1145/342009.335388</a>.
 </div>
 <div id="ref-chandola2009" class="csl-entry" role="listitem">
 Chandola, Varun, Arindam Banerjee, i Vipin Kumar. 2009. <span>„Anomaly Detection: A Survey”</span>. <em>ACM Computing Surveys</em> 41 (3): 15:1–58. <a href="https://doi.org/10.1145/1541880.1541882">https://doi.org/10.1145/1541880.1541882</a>.
 </div>
 <div id="ref-han2000" class="csl-entry" role="listitem">
-Han, Jiawei, Jian Pei, i Yiwen Yin. 2000. <span>„Mining Frequent Patterns Without Candidate Generation”</span>. W <em>Proceedings of the 2000 ACM SIGMOD International Conference on Management of Data</em>, 29:1–12. 2. ACM. <a href="https://sigmod.org/publications/discs/2001/out/p_miningfrequentpjijiy.htm">https://sigmod.org/publications/discs/2001/out/p_miningfrequentpjijiy.htm</a>.
+Han, Jiawei, Jian Pei, i Yiwen Yin. 2000. <span>„Mining Frequent Patterns Without Candidate Generation”</span>. <em>Proceedings of the 2000 ACM SIGMOD International Conference on Management of Data</em> 29: 1–12. <a href="https://sigmod.org/publications/discs/2001/out/p_miningfrequentpjijiy.htm">https://sigmod.org/publications/discs/2001/out/p_miningfrequentpjijiy.htm</a>.
 </div>
 <div id="ref-liu2008" class="csl-entry" role="listitem">
-Liu, Fei Tony, Kai Ming Ting, i Zhi-Hua Zhou. 2008. <span>„Isolation Forest”</span>. W <em>2008 Eighth IEEE International Conference on Data Mining</em>, 413–22. IEEE. <a href="https://doi.org/10.1109/ICDM.2008.17">https://doi.org/10.1109/ICDM.2008.17</a>.
+Liu, Fei Tony, Kai Ming Ting, i Zhi-Hua Zhou. 2008. <span>„Isolation Forest”</span>. <em>2008 Eighth IEEE International Conference on Data Mining</em>, 413–22. <a href="https://doi.org/10.1109/ICDM.2008.17">https://doi.org/10.1109/ICDM.2008.17</a>.
 </div>
 <div id="ref-sutton2018" class="csl-entry" role="listitem">
 Sutton, Richard S., i Andrew G. Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. 2. wyd. The MIT Press. <a href="https://mitpress.mit.edu/9780262039246/reinforcement-learning/">https://mitpress.mit.edu/9780262039246/reinforcement-learning/</a>.
@@ -1379,13 +1382,14 @@ Watkins, Christopher J. C. H., i Peter Dayan. 1992. <span>„Q-Learning”</span
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
