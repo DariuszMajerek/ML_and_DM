@@ -101,9 +101,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-666135433cace59c5973edf2e2f39c5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-c84f4249ebe5bde6a406a74c1334a68b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-666135433cace59c5973edf2e2f39c5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-86779a32853f5e778d9d5dc660ec6189.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-312cec54e7a238c86a02554e82c47513.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-86779a32853f5e778d9d5dc660ec6189.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -680,7 +680,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <p><span class="theorem-title"><strong>Przykład 5.1 (Przykład: drzewo klasyfikacyjne dla gatunku muzycznego (Spotify))</strong></span> Poniżej budujemy proste drzewo klasyfikacyjne przewidujące <strong>gatunek muzyczny</strong> na podstawie numerycznych cech akustycznych utworów (np. <em>danceability, energy, loudness, tempo</em>). Jest to typowy przypadek danych tablicowych, gdzie drzewa decyzyjne są dobrym modelem bazowym.</p>
 <p>W tym przykładzie <strong>nie wykonujemy klasycznego preprocessingu typu standaryzacja/normalizacja</strong>. Wynika to z faktu, że reguły w drzewach mają postać progów porównujących wartości cech (np. <span class="math inline">\(x_j \le t\)</span>), więc skala zmiennych nie wpływa na sens podziału w taki sposób jak w metodach opartych o iloczyny skalarne (np. regresja logistyczna, SVM). Innymi słowy: drzewo nie korzysta z odległości euklidesowej ani z norm współczynników, tylko z porównań i wyboru progów, dlatego <strong>skalowanie cech nie jest wymagane</strong>. W praktyce pozostają jedynie „minimalne” kroki porządkowe: wybór cech liczbowych i ewentualne uzupełnienie braków (jeśli występują).</p>
 <p>Uwaga dydaktyczna: zbiór Spotify zawiera wiele klas (gatunków). Aby uzyskać czytelny przykład (i sensowną macierz pomyłek), ograniczamy się do <span class="math inline">\(K=10\)</span> najczęstszych gatunków.</p>
-<div id="40d24549" class="cell" data-execution_count="1">
+<div id="9dec3214" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -730,7 +730,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <pre><code>Braki danych (łącznie): 0</code></pre>
 </div>
 </div>
-<div id="bec7bb09" class="cell" data-execution_count="2">
+<div id="74f7c92c" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6) Cechy: bierzemy tylko numeryczne (+ bool jako 0/1), bo DecisionTreeClassifier nie przyjmuje stringów</span></span>
@@ -765,7 +765,7 @@ T_0 \supset T_1 \supset \cdots \supset T_M,
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># nie wyświetlamy całej struktury, bo dla tego zbioru jest mało czytelna</span></span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="2af9a864" class="cell" data-execution_count="3">
+<div id="ba04dd8c" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 10) Predykcja i metryki</span></span>
@@ -827,7 +827,7 @@ progressive-house       0.63      0.61      0.62       200
 </div>
 </div>
 </div>
-<div id="0e899f35" class="cell" data-execution_count="4">
+<div id="afbe57e5" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 12) Wizualizacja drzewa (okrojona)</span></span>
@@ -855,7 +855,7 @@ progressive-house       0.63      0.61      0.62       200
 </div>
 </div>
 <p>Spróbujemy teraz przyciąć drzewo w celu poprawy jego zdolności generalizacyjnych.</p>
-<div id="f41314ba" class="cell" data-execution_count="5">
+<div id="67aa96d6" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1066,7 +1066,7 @@ Metryki (test) po przycinaniu:
 </ul>
 <div id="exm-2" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 5.2</strong></span> Dla tych samych danych co w <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> przeprowadzimy trening modeli bagging i lasu losowego.</p>
-<div id="63c74a0d" class="cell" data-execution_count="6">
+<div id="eabad5c1" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> BaggingClassifier, RandomForestClassifier</span>
@@ -1322,7 +1322,8 @@ w_3^{(2)} \propto w_3^{(1)}\exp(\alpha_1)
 </tr>
 </tbody>
 </table>
-<p>Suma wag nieznormalizowanych to: <span class="math display">\[
+<p>Suma wag nieznormalizowanych to:</p>
+<p><span class="math display">\[
 Z_1=0.10+0.10+0.40+0.10+0.10=0.80.
 \]</span></p>
 <p>Po normalizacji otrzymujemy wagi na następną iterację:</p>
@@ -1360,7 +1361,8 @@ Z_1=0.10+0.10+0.40+0.10+0.10=0.80.
 <p><span class="math display">\[
 F_1(x)=\alpha_1 h_1(x)\approx 0.693\,h_1(x),
 \]</span></p>
-<p>a klasyfikator zespołowy po tej jednej iteracji to: <span class="math display">\[
+<p>a klasyfikator zespołowy po tej jednej iteracji to:</p>
+<p><span class="math display">\[
 H_1(x)=\mathrm{sign}(F_1(x)).
 \]</span></p>
 </section>
@@ -1858,7 +1860,7 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 </ul>
 <div id="exm-3" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 5.3</strong></span> Teraz dokonamy porównania dotychczasowych modeli (z <a href="#exm-1" class="quarto-xref">Przykład&nbsp;<span>5.1</span></a> i <a href="#exm-2" class="quarto-xref">Przykład&nbsp;<span>5.2</span></a>) z modelami AdaBoost, XGBoost, CatBoost i LightGBM.</p>
-<div id="18908355" class="cell" data-execution_count="7">
+<div id="84dc226b" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> AdaBoostClassifier</span>
@@ -1970,7 +1972,7 @@ r_{\pi_t,m} = -\left.\frac{\partial\,\mathcal{L}(y_{\pi_t}, F(x_{\pi_t}))}{\part
 <span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(res_df.to_string(index<span class="op">=</span><span class="va">False</span>, float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.4f}</span><span class="ss">"</span>))</span></code></pre></div><button title="Kopiuj do schowka" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000598 seconds.
+<pre><code>[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.000388 seconds.
 You can set `force_row_wise=true` to remove the overhead.
 And if memory is not enough, you can set `force_col_wise=true`.
 [LightGBM] [Info] Total Bins 2654
@@ -2041,14 +2043,14 @@ And if memory is not enough, you can set `force_col_wise=true`.
 [LightGBM] [Warning] No further splits with positive gain, best gain: -inf
 [LightGBM] [Warning] No further splits with positive gain, best gain: -inf
              model  accuracy  balanced_accuracy  f1_macro
-           XGBoost    0.7890             0.7890    0.7901
+           XGBoost    0.7950             0.7950    0.7958
           LightGBM    0.7855             0.7855    0.7865
           CatBoost    0.7805             0.7805    0.7809
      Random Forest    0.7705             0.7705    0.7697
            Bagging    0.7310             0.7310    0.7314
 Drzewo (przycięte)    0.6930             0.6930    0.6936
    Drzewo (surowe)    0.6910             0.6910    0.6913
-          AdaBoost    0.6560             0.6560    0.6513</code></pre>
+          AdaBoost    0.5425             0.5425    0.5118</code></pre>
 </div>
 </div>
 </div>

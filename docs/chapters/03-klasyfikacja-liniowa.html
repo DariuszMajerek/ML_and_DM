@@ -101,9 +101,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-666135433cace59c5973edf2e2f39c5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-c84f4249ebe5bde6a406a74c1334a68b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-666135433cace59c5973edf2e2f39c5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-86779a32853f5e778d9d5dc660ec6189.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-312cec54e7a238c86a02554e82c47513.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-86779a32853f5e778d9d5dc660ec6189.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -542,7 +542,7 @@ kaggle datasets download -d fedesoriano/the-boston-houseprice-data -p chapters/k
 ls -la chapters/kaggle_boston
 unzip -o chapters/kaggle_boston/*.zip -d chapters/kaggle_boston || true</code></pre>
 <p>Następnie przejdziemy do budowy modelu</p>
-<div id="04af78d8" class="cell" data-execution_count="1">
+<div id="7f1dd9a5" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -714,7 +714,7 @@ z_{ij} = \frac{x_{ij}-\mu_j}{\sigma_j}.
 \]</span></p>
 <p>Po standaryzacji „jednostka” każdej cechy jest porównywalna (1 odchylenie standardowe), więc kara na współczynnikach działa symetrycznie. Dlatego w praktyce dla regresji logistycznej, ridge/lasso oraz większości modeli liniowych z regularyzacją standaryzacja jest standardowym i silnie zalecanym elementem pipeline’u, chyba że cechy są już porównywalnie przeskalowane.</p>
 <p>W ujęciu uczenia maszynowego regularyzacja jest narzędziem kontrolowania złożoności modelu. <span class="math inline">\(\lambda\)</span> staje się hiperparametrem, który dobiera się na podstawie jakości generalizacji (np. przez walidację). Wraz ze wzrostem <span class="math inline">\(\lambda\)</span> model staje się prostszy i stabilniejszy, ale może gorzej dopasowywać dane treningowe. Standaryzacja jest integralną częścią tego procesu, bo zapewnia, że dobór <span class="math inline">\(\lambda\)</span> i sama kara mają sens niezależnie od jednostek i skali cech.</p>
-<div id="ff4e600a" class="cell" data-execution_count="2">
+<div id="490fde9d" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -880,7 +880,7 @@ PTRATIO -2.016814
 </div>
 </div>
 <p>W tym uruchomieniu kalibracja parametrów <span class="math inline">\(\lambda\)</span> i <span class="math inline">\(\alpha\)</span> wskazała rozwiązanie bliskie części ridge’owej, ale nadal wewnątrz rodziny Elastic Net. Wyniki <span class="math inline">\(R^2\)</span> na treningu i teście zmieniły się nieznacznie, więc w tym przykładzie sama regularyzacja nie daje wyraźnej poprawy jakości generalizacji. Na koniec, aby sprawdzić, na ile wnioski zależą od konkretnego podziału danych, porównamy modele OLS i ridge z wykorzystaniem walidacji krzyżowej.</p>
-<div id="43d6f015" class="cell" data-execution_count="3">
+<div id="84442bfa" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1021,7 +1021,7 @@ L(\beta_0,\beta) = \prod_{i=1}^n p_i^{y_i}(1-p_i)^{1-y_i}.
 <p>Wreszcie, jest to model nadzorowany w sensie ML, ponieważ parametry <span class="math inline">\((\beta_0,\beta)\)</span> uczymy na oznakowanych parach <span class="math inline">\((x_i,y_i)\)</span> poprzez minimalizację funkcji straty. W odróżnieniu od metod nienadzorowanych, tutaj etykieta <span class="math inline">\(y_i\)</span> jest bezpośrednio składnikiem funkcji celu, a „uczenie” polega na takim doborze parametrów, aby model możliwie dobrze odtwarzał zależność między cechami a klasą docelową, nie tylko na danych uczących, ale przede wszystkim na danych niewidzianych.</p>
 <div id="exm-2" class="theorem example">
 <p><span class="theorem-title"><strong>Przykład 4.2</strong></span> &nbsp;</p>
-<div id="9c519647" class="cell" data-execution_count="4">
+<div id="4389e623" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1304,7 +1304,7 @@ x \mid (y=k) \sim \mathcal{N}(\mu_k, \Sigma_k),
 <li>pokazujemy log-loss jako miarę jakości probabilistycznej,</li>
 <li>narysujemy brzegi decyzyjne obu metod.</li>
 </ul>
-<div id="af5ddcda" class="cell" data-execution_count="5">
+<div id="425b9dca" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>

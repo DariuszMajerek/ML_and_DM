@@ -4,7 +4,7 @@ title: "Modele addytywne i splajny"
 
 ## Wprowadzenie
 
-W modelowaniu danych tablicowych bardzo często obserwujemy relacje, które nie są liniowe, ale jednocześnie nie chcemy od razu sięgać po „czarne skrzynki” (typu sieci neurononwe). Splajny i modele addytywne stanowią naturalny kompromis - pozwalają modelować nieliniowości w sposób kontrolowany i interpretowalny. W praktyce splajny pojawiają się zarówno jako samodzielne narzędzie regresji, jak i jako komponenty innych metod (np. w FDA – *Flexible Discriminant Analysis* – oraz w GAM – *Generalized Additive Models*).
+W modelowaniu danych tablicowych bardzo często obserwujemy relacje, które nie są liniowe, ale jednocześnie nie chcemy od razu sięgać po „czarne skrzynki” (typu sieci neuronowe). Splajny i modele addytywne stanowią naturalny kompromis - pozwalają modelować nieliniowości w sposób kontrolowany i interpretowalny. W praktyce splajny pojawiają się zarówno jako samodzielne narzędzie regresji, jak i jako komponenty innych metod (np. w FDA – *Flexible Discriminant Analysis* – oraz w GAM – *Generalized Additive Models*).
 
 ## Regresje sklejane (splajny)
 
@@ -178,140 +178,504 @@ plt.show()
 
 #### Reprezentacja bazowa
 
-1. Ogólna postać bazowa (wspólna dla wszystkich)
-
-Każdą z poniższych konstrukcji możemy zapisać jako model liniowy w bazie:
+Reprezentacja bazowa jest najważniejszym mostem między intuicją „gładkiej krzywej” a zwykłym modelem liniowym. Funkcja $f(x)$ może być nieliniowa względem zmiennej $x$, ale liniowa względem współczynników, które estymujemy. Wybieramy ustalony zestaw funkcji $b_1,\ldots,b_J$, a następnie zapisujemy:
 
 $$
-f(x)=\sum_{j=1}^{J}\beta_j\, b_j(x)
-\quad\text{(czasem z wyrazem wolnym wliczonym w bazę)}.
+f(x)=\sum_{j=1}^{J}\beta_j b_j(x).
 $$
 
-Różnice między „rodzajami splajnów” polegają na tym, jakie funkcje bazowe $b_j$ wybieramy oraz czy dodajemy karę wygładzającą.
+Funkcje $b_j(x)$ nazywamy funkcjami bazowymi. Nie są one estymowane z danych w taki sam sposób jak współczynniki $\beta_j$; ich kształt wynika z wybranej konstrukcji splajnu, stopnia wielomianu oraz położenia węzłów. Estymacja polega więc na dobraniu liczb $\beta_1,\ldots,\beta_J$, czyli wag, z jakimi łączymy znane funkcje bazowe.
 
-2. *Truncated power basis* (baza potęgowa ucięta)
-
-To najbardziej „analityczna” i łatwa do zapisania baza dla splajnów regresyjnych stopnia $d$ z węzłami $\tau_1<\cdots<\tau_K$:
+Dla obserwacji $x_1,\ldots,x_n$ zapis bazowy prowadzi do macierzy projektu:
 
 $$
-f(x)=\beta_0+\beta_1 x+\cdots+\beta_d x^d\;+\;\sum_{k=1}^{K}\theta_k\, (x-\tau_k)_+^{d},
-\qquad (u)_+=\max(u,0).
+X_B=
+\begin{bmatrix}
+b_1(x_1) & b_2(x_1) & \cdots & b_J(x_1)\\
+b_1(x_2) & b_2(x_2) & \cdots & b_J(x_2)\\
+\vdots & \vdots & \ddots & \vdots\\
+b_1(x_n) & b_2(x_n) & \cdots & b_J(x_n)
+\end{bmatrix},
+\qquad
+\hat y=X_B\beta.
 $$
 
-W praktyce intuicyjna, ale bywa gorzej uwarunkowana numerycznie niż B-splajny (szczególnie dla dużego $K$ i wyższych stopni).
+To wyjaśnia, dlaczego splajn można dopasować metodami regresji liniowej: nieliniowość została przeniesiona do kolumn macierzy $X_B$, natomiast model pozostaje liniowy względem parametrów $\beta$.
 
-3. B-splajny (*B-spline basis*)
+##### Baza potęgowa ucięta
 
-To standard najczęściej stosowany i dobry numeryczny. Splajn stopnia $p$ (często $p=3$) zapisujemy jako:
-
-$$
-f(x)=\sum_{j=1}^{J}\beta_j\, B_{j,p}(x),
-$$
-
-gdzie $B_{j,p}(x)$ to funkcje bazowe B-splajnów o stopniu $p$, zdefiniowane rekurencyjnie (Cox–de Boor). Dla pełności:
-
-- dla stopnia 0:
+Najprostszy analityczny zapis splajnu stopnia $d$ z węzłami $\tau_1<\cdots<\tau_K$ wykorzystuje tzw. bazę potęgową uciętą (*truncated power basis*):
 
 $$
-B_{j,0}(x)=\mathbf{1}\{\kappa_j \le x < \kappa_{j+1}\},
+f(x)=
+\beta_0+\beta_1x+\cdots+\beta_d x^d
++\sum_{k=1}^{K}\theta_k (x-\tau_k)_+^d,
+\qquad
+(u)_+=\max(u,0).
 $$
 
-- rekurencja dla $p\ge 1$:
+Pierwsza część,
 
 $$
-B_{j,p}(x)=\frac{x-\kappa_j}{\kappa_{j+p}-\kappa_j}B_{j,p-1}(x)\;+\;
+\beta_0+\beta_1x+\cdots+\beta_d x^d,
+$$
+
+jest zwykłym wielomianem stopnia $d$ działającym globalnie, czyli na całej osi $x$. Druga część dodaje składniki aktywujące się dopiero za odpowiednim węzłem. Dla ustalonego węzła $\tau_k$ mamy:
+
+$$
+(x-\tau_k)_+^d =
+\begin{cases}
+0, & x\le \tau_k,\\
+(x-\tau_k)^d, & x>\tau_k.
+\end{cases}
+$$
+
+Ten zapis pokazuje pochodzenie „kawałkowości”. Przed węzłem $\tau_k$ składnik $(x-\tau_k)_+^d$ nie wpływa na funkcję, a za węzłem dodaje nowy wielomianowy wkład. Współczynnik $\theta_k$ określa, jak mocno krzywa może zmienić swój przebieg po przekroczeniu węzła.
+
+Dla splajnu sześciennego ($d=3$) otrzymujemy:
+
+$$
+f(x)=\beta_0+\beta_1x+\beta_2x^2+\beta_3x^3
++\sum_{k=1}^{K}\theta_k (x-\tau_k)_+^3.
+$$
+
+Dlaczego taka funkcja jest gładko sklejona? Składnik $(x-\tau_k)_+^3$ ma wartość 0 w punkcie $\tau_k$, a jego pierwsza i druga pochodna również mają tam wartość 0:
+
+$$
+\frac{d}{dx}(x-\tau_k)_+^3 = 3(x-\tau_k)_+^2,
+\qquad
+\frac{d^2}{dx^2}(x-\tau_k)_+^3 = 6(x-\tau_k)_+.
+$$
+
+W samym węźle nie pojawia się więc skok funkcji, skok nachylenia ani skok krzywizny. Zmiana widoczna jest dopiero w trzeciej pochodnej. Właśnie dlatego baza potęgowa ucięta daje splajn sześcienny klasy $C^2$, czyli funkcję z ciągłą pierwszą i drugą pochodną.
+
+Zaletą tej bazy jest przejrzystość matematyczna: łatwo zobaczyć, skąd bierze się wielomian kawałkowy i dlaczego węzły zmieniają kształt funkcji. Wadą jest gorsze uwarunkowanie numeryczne, zwłaszcza gdy węzłów jest dużo albo wartości $x$ są duże. Kolumny $1,x,x^2,x^3,(x-\tau_k)_+^3$ mogą być wtedy silnie skorelowane.
+
+##### B-splajny
+
+W praktyce częściej używa się B-splajnów (*B-spline basis*), ponieważ tworzą stabilniejszą bazę numeryczną. Idea jest ta sama:
+
+$$
+f(x)=\sum_{j=1}^{J}\beta_j B_{j,p}(x),
+$$
+
+ale funkcje bazowe $B_{j,p}(x)$ mają lokalny nośnik: każda z nich jest różna od zera tylko na kilku sąsiednich przedziałach między węzłami. Dzięki temu zmiana jednego współczynnika $\beta_j$ wpływa lokalnie na krzywą, a nie na całą dziedzinę.
+
+Do definicji B-splajnów używa się rozszerzonego wektora węzłów:
+
+$$
+\kappa_1\le \kappa_2\le \cdots \le \kappa_M.
+$$
+
+Symbole $\kappa_m$ oznaczają węzły używane do konstrukcji bazy. Na brzegach zwykle powtarza się je kilka razy, aby baza dobrze opisywała zachowanie funkcji przy początku i końcu zakresu danych. Nie należy mylić $\kappa_m$ z samymi wewnętrznymi węzłami $\tau_k$: wektor $\kappa$ zawiera także węzły brzegowe i ich powtórzenia.
+
+Relację między tymi dwoma zapisami można przedstawić następująco. Węzły $\tau_1,\ldots,\tau_K$ oznaczają zwykle tylko wewnętrzne punkty podziału dziedziny, natomiast wektor $\kappa$ jest pełnym, rozszerzonym wektorem węzłów potrzebnym do konstrukcji bazy B-splajnów. Jeżeli analizowany zakres zmiennej to $[a,b]$, a splajn ma stopień $p$, to typowy rozszerzony wektor węzłów ma postać:
+
+$$
+\kappa =
+(\underbrace{a,\ldots,a}_{p+1\ \text{razy}},
+\tau_1,\ldots,\tau_K,
+\underbrace{b,\ldots,b}_{p+1\ \text{razy}}).
+$$
+
+Na przykład dla splajnu sześciennego, czyli dla $p=3$, na przedziale $[0,10]$ z trzema węzłami wewnętrznymi
+
+$$
+\tau_1=2{,}5,
+\qquad
+\tau_2=5,
+\qquad
+\tau_3=7{,}5,
+$$
+
+wektor węzłów wewnętrznych wynosi:
+
+$$
+\tau=(2{,}5,5,7{,}5),
+$$
+
+natomiast rozszerzony wektor węzłów używany w definicji B-splajnów może mieć postać:
+
+$$
+\kappa=(0,0,0,0,2{,}5,5,7{,}5,10,10,10,10).
+$$
+
+Cztery powtórzenia wartości $0$ i $10$ wynikają z tego, że dla splajnu sześciennego $p+1=4$. Powtórzone węzły brzegowe sprawiają, że baza dobrze zachowuje się przy początku i końcu przedziału, natomiast węzły $2{,}5$, $5$ i $7{,}5$ są tymi samymi węzłami wewnętrznymi, które wcześniej oznaczaliśmy przez $\tau_k$. W przypadku gdy $\kappa_k$ i $\kappa_{k+1}$ są identyczne, przyjmuje się watość splajnu 0.
+
+B-splajny definiuje się rekurencyjnie. Dla stopnia 0 funkcje bazowe są wskaźnikami przedziałów:
+
+$$
+B_{j,0}(x)=
+\mathbf{1}\{\kappa_j \le x < \kappa_{j+1}\}.
+$$
+
+Są to funkcje kawałkami stałe. B-splajn stopnia 1 powstaje z liniowego łączenia sąsiednich funkcji stopnia 0, stopnia 2 z funkcji stopnia 1 itd. Rekurencja Coxa-de Boora ma postać:
+
+$$
+B_{j,p}(x)=
+\frac{x-\kappa_j}{\kappa_{j+p}-\kappa_j}B_{j,p-1}(x)
++
 \frac{\kappa_{j+p+1}-x}{\kappa_{j+p+1}-\kappa_{j+1}}B_{j+1,p-1}(x),
+\qquad p\ge 1.
 $$
 
-gdzie $\kappa$ to tzw. *knot vector* (węzły z powtórzeniami na brzegach).
+Pierwszy ułamek rośnie liniowo od lewego brzegu odpowiedniego zakresu, a drugi maleje liniowo od prawej strony. Rekurencja tworzy więc gładkie „kopułki” przez ważone sklejanie prostszych funkcji bazowych. Dla splajnów sześciennych używamy $p=3$. Taki B-splajn jest kawałkami wielomianem trzeciego stopnia, a przy zwykłych, niepowtórzonych węzłach wewnętrznych zachowuje ciągłość funkcji oraz pierwszej i drugiej pochodnej.
 
-4. Splajn naturalny (*Natural Cubic Spline*)
+Liczba funkcji bazowych $J$ zależy od liczby węzłów i stopnia splajnu. W bibliotekach takich jak `scikit-learn` lub `pyGAM` użytkownik zwykle podaje liczbę węzłów albo liczbę funkcji bazowych, a macierz $X_B$ jest budowana automatycznie.
 
-Splajn sześcienny z dodatkowymi ograniczeniami brzegowymi, które „uspokajają” zachowanie na krańcach. Klasycznie wymaga się, aby druga pochodna była równa zero na brzegach:
-$$
-f''(a)=0,\qquad f''(b)=0
-$$
+##### Splajn naturalny
 
-dla zakresu $[a,b]$ danych. Naturalny splajn nadal można zapisać w bazie:
+Naturalny splajn sześcienny (*natural cubic spline*) jest szczególnym przypadkiem splajnu sześciennego. Tak jak zwykły splajn sześcienny, jest kawałkami wielomianem trzeciego stopnia i spełnia warunki gładkiego sklejenia w węzłach: ciągłość funkcji, pierwszej pochodnej oraz drugiej pochodnej. Dodatkowo narzuca się dwa warunki brzegowe:
 
 $$
-f(x)=\beta_0+\beta_1 x+\sum_{k=1}^{K}\theta_k\, N_k(x),
+f''(a)=0,\qquad f''(b)=0,
 $$
 
-gdzie $N_k(x)$ są odpowiednimi funkcjami bazowymi wynikającymi z ograniczeń naturalności (w praktyce zwykle budowane w oparciu o B-splajny i narzucone restrykcje liniowe na współczynniki).
+gdzie $[a,b]$ oznacza analizowany zakres zmiennej. Druga pochodna $f''(x)$ opisuje krzywiznę funkcji. Warunek $f''(a)=f''(b)=0$ oznacza więc, że na krańcach przedziału krzywizna jest zerowa. W efekcie funkcja zachowuje się przy brzegach bardziej liniowo, co ogranicza niestabilne wyginanie krzywej poza obszarem dobrze pokrytym danymi.
 
-Efekt praktyczny, to stabilniejsze ekstrapolowanie na krańcach i mniejsze ryzyko „dziwnych” zachowań na brzegach.
-
-5. Splajny wygładzające (*Smoothing splines*)
-
-Tu zamiast wybierać małą liczbę węzłów, dopuszczamy bardzo elastyczną klasę funkcji (węzły często na wszystkich unikalnych $x_i$), a złożoność kontrolujemy przez karę na krzywiznę:
+Naturalny splajn również zapisujemy jako kombinację funkcji bazowych. Jedna z często stosowanych postaci ma formę:
 
 $$
-\min_{f}\ \sum_{i=1}^{n}\big(y_i-f(x_i)\big)^2\;+\;\lambda\int_a^b\big(f''(t)\big)^2\,dt.
+f(x)=\beta_0+\beta_1x+\sum_{k=1}^{K}\theta_k N_k(x).
 $$
 
-Kluczowy fakt teoretyczny - rozwiązanie jest splajnem sześciennym z węzłami w punktach $x_i$. Praktyczna reprezentacja ma postać:
+W tym zapisie $\beta_0+\beta_1x$ jest częścią liniową, natomiast $N_k(x)$ są funkcjami bazowymi odpowiadającymi części nieliniowej naturalnego splajnu. Nie są to nowe parametry modelu, lecz ustalone funkcje zmiennej $x$, konstruowane na podstawie węzłów $\tau_1,\ldots,\tau_K$ oraz krańców przedziału $a$ i $b$. Estymowane z danych są dopiero współczynniki $\beta_0$, $\beta_1$ oraz $\theta_k$.
+
+Funkcje $N_k(x)$ można rozumieć jako specjalnie przekształcone składniki sześcienne. Ich zadaniem jest opisać nieliniowe odchylenie od prostej, ale tylko takie, które spełnia warunki naturalności. Oznacza to, że dowolna funkcja postaci
 
 $$
-f(x)=\sum_{i=1}^{n}\alpha_i\, K(x,x_i)\;+\;\beta_0+\beta_1 x,
+\beta_0+\beta_1x+\sum_{k=1}^{K}\theta_k N_k(x)
 $$
 
-gdzie $K$ jest jądrem odpowiadającym karze $\int (f'')^2$. W praktyce implementacyjnej często przechodzimy do bazy (np. B-splajnów) i rozwiązujemy problem liniowy z karą.
+jest automatycznie naturalnym splajnem sześciennym, czyli ma ciągłą funkcję, ciągłą pierwszą i drugą pochodną w węzłach oraz spełnia $f''(a)=f''(b)=0$.
 
-6. P-splajny (*Penalized B-splines*)
-
-To bardzo popularne w GAM, bo łączą stabilność B-splajnów z łatwą regularizacją. Model:
+Jedną z klasycznych konstrukcji funkcji $N_k(x)$ można zapisać przez składniki ucięte. Najpierw definiuje się funkcje pomocnicze:
 
 $$
-f(x)=\sum_{j=1}^{J}\beta_j\, B_{j,p}(x),
+d_k(x)=
+\frac{(x-\tau_k)_+^3-(x-b)_+^3}{b-\tau_k},
+\qquad k=1,\ldots,K,
 $$
 
-a kara jest nakładana nie na pochodne funkcji, tylko na różnice współczynników (np. druga różnica):
+a następnie tworzy różnice względem ostatniego węzła wewnętrznego:
 
 $$
-\min_{\beta}\ \|y - X\beta\|^2 + \lambda \|D^{(2)}\beta\|^2,
+N_k(x)=d_k(x)-d_K(x),
+\qquad k=1,
+\ldots,K-1.
 $$
 
-gdzie $D^{(2)}$ to macierz operatora drugich różnic (np. $\beta_{j}-2\beta_{j-1}+\beta_{j-2}$).
+W tej postaci funkcje $N_k(x)$ są zbudowane ze składników sześciennych, ale odejmowanie $d_K(x)$ powoduje, że spełniają ograniczenia naturalności. W szczególności część nieliniowa nie może dowolnie zakrzywiać się na końcach przedziału. Z tego powodu naturalny splajn zachowuje elastyczność w środku zakresu, ale przy brzegach przechodzi w zachowanie liniowe.
 
-7. *Thin Plate Splines* (TPS) i *thin plate regression splines*
+Warto zauważyć, że w zależności od podręcznika lub implementacji funkcje bazowe naturalnego splajnu mogą być zapisane w nieco innej, lecz równoważnej postaci. Sens pozostaje ten sam: $N_k(x)$ są bazą dla dopuszczalnej części nieliniowej po narzuceniu warunków $f''(a)=0$ oraz $f''(b)=0$. Dlatego w zapisie naturalnego splajnu część liniowa $\beta_0+\beta_1x$ pojawia się jawnie, a cała kontrolowana nieliniowość jest reprezentowana przez funkcje $N_k(x)$.
 
-To szczególnie ważne funkcje bazowe, gdy chcemy uogólnienia na wiele wymiarów (np. $x\in\mathbb{R}^d$) i nie chcemy ręcznie wybierać węzłów. W wersji 2D klasyczna postać TPS to:
+Naturalny splajn ma mniej swobodnych parametrów niż zwykły splajn sześcienny, ponieważ dwa warunki brzegowe narzucają dwa liniowe ograniczenia na możliwe kształty funkcji. W praktyce oznacza to mniejszą podatność na nadmierne wyginanie przy krańcach zakresu danych.
+
+##### Splajny wygładzające
+
+W splajnach regresyjnych najpierw wybieramy węzły, a następnie dopasowujemy współczynniki. Splajn wygładzający (*smoothing spline*) odwraca akcent: dopuszczamy bardzo elastyczną klasę funkcji, ale kontrolujemy jej złożoność karą za krzywiznę:
 
 $$
-f(x)=\beta_0+\beta_1 x_1+\beta_2 x_2+\sum_{i=1}^{n}\alpha_i\,\phi(\|x-x_i\|),
+\min_{f}\ 
+\sum_{i=1}^{n}\big(y_i-f(x_i)\big)^2
++
+\lambda\int_a^b\big(f''(t)\big)^2\,dt.
 $$
 
-gdzie funkcja radialna (dla 2D) ma postać:
+Pierwszy składnik mierzy błąd dopasowania do danych. Drugi składnik mierzy szorstkość funkcji: duże wartości $f''(t)$ oznaczają silne zakrzywienie, czyli falującą krzywą. Parametr $\lambda\ge 0$ ustala kompromis:
+
+- gdy $\lambda=0$, kara znika i funkcja może bardzo mocno dopasować się do danych,
+- gdy $\lambda$ jest duże, krzywizna jest silnie karana i funkcja zbliża się do prostej.
+
+W zapisie $\min_f$ funkcja $f$ nie jest jedną z góry ustaloną funkcją, lecz kandydatem wybieranym z klasy dostatecznie gładkich funkcji, dla których można policzyć drugą pochodną i karę $\int_a^b(f''(t))^2dt$. Teoretycznie szukamy więc najlepszego kompromisu w bardzo szerokiej klasie funkcji: funkcja ma dobrze dopasować punkty, ale nie może nadmiernie się wyginać. Kluczowy wynik mówi jednak, że rozwiązania nie trzeba szukać wśród wszystkich możliwych funkcji gładkich, ponieważ funkcja minimalizująca ten problem ma postać naturalnego splajnu sześciennego z węzłami w punktach obserwacji $x_i$.
+
+##### P-splajny
+
+P-splajny (*penalized B-splines*) łączą bazę B-splajnów z prostą karą na współczynniki. Model ma postać:
+
+$$
+f(x)=\sum_{j=1}^{J}\beta_j B_{j,p}(x),
+$$
+
+a estymacja polega na minimalizacji:
+
+$$
+\min_{\beta}\ \|y-X_B\beta\|^2+\lambda\|D^{(2)}\beta\|^2.
+$$
+
+Macierz $D^{(2)}$ oblicza drugie różnice sąsiednich współczynników. Typowy wiersz tej macierzy odpowiada wyrażeniu:
+
+$$
+\Delta^2\beta_j=\beta_j-2\beta_{j-1}+\beta_{j-2}.
+$$
+
+Jeżeli drugie różnice są małe, kolejne współczynniki zmieniają się prawie liniowo, a otrzymana funkcja jest gładka. Kara nie działa więc bezpośrednio na pochodne funkcji, lecz na „falowanie” ciągu współczynników w bazie B-splajnów. To rozwiązanie jest popularne w GAM, ponieważ jest stabilne obliczeniowo i łatwo sterować jego gładkością przez $\lambda$.
+
+##### Bazy wielowymiarowe
+
+Dla dwóch lub większej liczby zmiennych nie wystarcza zwykła jednowymiarowa baza $b_j(x)$. Trzeba zbudować funkcje bazowe zależne od kilku argumentów.
+
+W splajnach tensorowych (*tensor product splines*) łączy się dwie bazy jednowymiarowe:
+
+$$
+f(x_1,x_2)=
+\sum_{j=1}^{J_1}\sum_{\ell=1}^{J_2}
+\beta_{j\ell}\, b_j(x_1)c_\ell(x_2).
+$$
+
+Funkcja $b_j(x_1)$ opisuje lokalne zachowanie wzdłuż pierwszej zmiennej, a $c_\ell(x_2)$ wzdłuż drugiej. Iloczyn $b_j(x_1)c_\ell(x_2)$ tworzy lokalny element powierzchni. Taka baza pozwala modelować gładkie interakcje, np. powierzchnię zależną jednocześnie od temperatury i wilgotności.
+
+Inną rodziną są *thin plate splines* (TPS), które są szczególnie użyteczne w wielu wymiarach, gdy nie chcemy ręcznie konstruować siatki węzłów. W splajnach tensorowych budujemy osobne bazy dla każdej zmiennej i łączymy je przez iloczyny. W TPS punkt wyjścia jest inny: funkcje bazowe są związane z odległościami między punktami w przestrzeni predyktorów.
+
+W dwóch wymiarach klasyczny zapis ma postać:
+
+$$
+f(x)=\beta_0+\beta_1x_1+\beta_2x_2
++\sum_{i=1}^{n}\alpha_i\phi(\|x-x_i\|),
+$$
+
+gdzie $x=(x_1,x_2)$ oznacza punkt, dla którego chcemy obliczyć wartość funkcji, a $x_i=(x_{i1},x_{i2})$ oznacza $i$-ty punkt obserwowany w danych. Pierwsza część,
+
+$$
+\beta_0+\beta_1x_1+\beta_2x_2,
+$$
+
+jest częścią liniową, czyli zwykłą płaszczyzną regresyjną. Druga część dodaje nieliniowe odkształcenia tej płaszczyzny. Każdy punkt danych $x_i$ generuje jedną funkcję bazową zależną od odległości między $x$ i $x_i$.
+
+Odległość ta ma postać:
+
+$$
+\|x-x_i\|
+=
+\sqrt{(x_1-x_{i1})^2+(x_2-x_{i2})^2}.
+$$
+
+W klasycznym TPS w dwóch wymiarach funkcja radialna jest dana wzorem:
 
 $$
 \phi(r)=r^2\log r.
 $$
 
-TPS minimalizuje analog kary „energii gięcia” (*bending energy*), będącej odpowiednikiem $\int (f'')^2$ w wielu wymiarach. W praktyce GAM często używa się *thin plate regression splines* – wersji z redukcją wymiaru bazy, aby obliczenia były wykonalne.
+Oznacza to, że wkład punktu $x_i$ do wartości $f(x)$ zależy od odległości $r=\|x-x_i\|$, a nie od osobnych współrzędnych. Jeżeli dwa punkty leżą w tej samej odległości od $x_i$, to składnik $\phi(\|x-x_i\|)$ ma dla nich tę samą wartość, niezależnie od kierunku.
 
-8. Splajny tensorowe (*Tensor product splines*) – dla interakcji 2D/3D w GAM
-
-Gdy chcemy modelować gładką zależność od dwóch zmiennych $x_1,x_2$, często stosujemy bazę tensorową:
+Przykładowo załóżmy, że modelujemy wartość $y$ na podstawie dwóch zmiennych $x_1$ i $x_2$, na przykład temperatury i wilgotności. Mamy trzy obserwacje w punktach:
 
 $$
-f(x_1,x_2)=\sum_{j=1}^{J_1}\sum_{\ell=1}^{J_2}\beta_{j\ell}\, b_j(x_1)\, c_\ell(x_2),
+x_1^{(obs)}=(0,0),\qquad
+x_2^{(obs)}=(1,0),\qquad
+x_3^{(obs)}=(0,1).
 $$
 
-gdzie $b_j$ i $c_\ell$ są bazami jednowymiarowymi (np. B-splajny). To daje kontrolowaną, interpretowalną gładką „powierzchnię” zamiast pojedynczych interakcji parametrycznych.
-
-9. *Cardinal splines* / splajny Hermite’a (czasem spotykane)
-
-W zastosowaniach sygnałowych lub interpolacyjnych spotyka się splajny, w których parametryzujemy wartości i pochodne w węzłach (Hermite):
-
-Na przedziale $[x_k,x_{k+1}]$:
+Chcemy przewidzieć wartość funkcji w punkcie:
 
 $$
-f(x)=h_{00}(t)\,y_k+h_{10}(t)\,m_k+h_{01}(t)\,y_{k+1}+h_{11}(t)\,m_{k+1},
-\quad t=\frac{x-x_k}{x_{k+1}-x_k},
+x=(1,1).
 $$
 
-gdzie $y_k=f(x_k), m_k=f'(x_k), a h_{00},h_{10},h_{01},h_{11}$ to wielomiany Hermite’a. To podejście jest bardziej „interpolacyjne” niż regresyjne, ale warto znać.
+Odległości od punktów obserwowanych wynoszą:
+
+$$
+\|x-x_1^{(obs)}\|=\sqrt{(1-0)^2+(1-0)^2}=\sqrt{2},
+$$
+
+$$
+\|x-x_2^{(obs)}\|=\sqrt{(1-1)^2+(1-0)^2}=1,
+$$
+
+$$
+\|x-x_3^{(obs)}\|=\sqrt{(1-0)^2+(1-1)^2}=1.
+$$
+
+Wartość funkcji w punkcie $x=(1,1)$ ma więc postać:
+
+$$
+f(1,1)=
+\beta_0+\beta_1\cdot 1+\beta_2\cdot 1
++\alpha_1\phi(\sqrt{2})
++\alpha_2\phi(1)
++\alpha_3\phi(1).
+$$
+
+Ten przykład pokazuje mechanizm TPS. Funkcja w nowym punkcie powstaje z części liniowej oraz z sumy wkładów pochodzących od punktów obserwowanych. Każdy wkład zależy od odległości do odpowiedniego punktu obserwowanego. Współczynniki $\alpha_i$ określają, czy dany punkt lokalnie podnosi, czy obniża powierzchnię funkcji.
+
+TPS minimalizuje wielowymiarowy odpowiednik kary za krzywiznę, nazywany *bending energy*. W jednowymiarowym splajnie wygładzającym karaliśmy dużą wartość drugiej pochodnej $f''(x)$. W dwóch wymiarach karane jest nadmierne pofałdowanie powierzchni, mierzone przez drugie pochodne cząstkowe. Intuicja jest taka sama: funkcja ma dobrze opisywać dane, ale nie powinna tworzyć zbyt gwałtownych lokalnych zagięć.
+
+W praktycznych implementacjach GAM często używa się *thin plate regression splines*, czyli wersji z ograniczoną liczbą funkcji bazowych. Klasyczny zapis TPS zawiera sumę po wszystkich obserwacjach, co przy dużym $n$ byłoby kosztowne obliczeniowo. Wersja regresyjna zachowuje ideę TPS, ale używa mniejszej liczby funkcji bazowych, dzięki czemu jest bardziej praktyczna w modelach GAM.
+
+##### Splajny Hermite'a
+
+W zastosowaniach interpolacyjnych spotyka się także splajny Hermite'a. Ich idea jest nieco inna niż w splajnach regresyjnych. W splajnie regresyjnym najczęściej wybieramy bazę funkcji i estymujemy współczynniki na podstawie danych, zwykle dopuszczając błąd dopasowania. W interpolacji Hermite'a zakładamy natomiast, że w wybranych punktach znamy nie tylko wartości funkcji, ale także jej nachylenia. Chcemy więc zbudować krzywą, która dokładnie przechodzi przez zadane punkty i ma w tych punktach zadane pochodne.
+
+Rozważmy jeden przedział $[x_k,x_{k+1}]$. Zakładamy, że znamy wartości funkcji na końcach przedziału:
+
+$$
+y_k=f(x_k),
+\qquad
+ y_{k+1}=f(x_{k+1}),
+$$
+
+oraz nachylenia, czyli wartości pierwszej pochodnej:
+
+$$
+m_k=f'(x_k),
+\qquad
+m_{k+1}=f'(x_{k+1}).
+$$
+
+Splajn Hermite'a na tym przedziale jest wielomianem trzeciego stopnia dobranym tak, aby spełniał cztery warunki:
+
+$$
+f(x_k)=y_k,
+\qquad
+f(x_{k+1})=y_{k+1},
+\qquad
+f'(x_k)=m_k,
+\qquad
+f'(x_{k+1})=m_{k+1}.
+$$
+
+Cztery warunki są zgodne z tym, że wielomian trzeciego stopnia ma cztery współczynniki. Zamiast zapisywać go w postaci $a+bx+cx^2+dx^3$, wygodniej przejść na lokalną zmienną:
+
+$$
+t=\frac{x-x_k}{x_{k+1}-x_k}.
+$$
+
+Dzięki temu $t=0$ odpowiada lewemu końcowi przedziału, a $t=1$ prawemu końcowi. Jeśli oznaczymy długość przedziału przez
+
+$$
+\Delta x_k=x_{k+1}-x_k,
+$$
+
+to standardowa postać interpolantu Hermite'a jest następująca:
+
+$$
+f(x)=
+h_{00}(t)y_k
++h_{10}(t)\Delta x_k m_k
++h_{01}(t)y_{k+1}
++h_{11}(t)\Delta x_k m_{k+1}.
+$$
+
+Ważny jest czynnik $\Delta x_k$ przy pochodnych. Wynika on z tego, że funkcje bazowe są zapisane względem zmiennej $t$, a nie bezpośrednio względem $x$. Ponieważ $t=(x-x_k)/\Delta x_k$, nachylenie względem $x$ wymaga przeskalowania przez długość przedziału.
+
+Funkcje bazowe Hermite'a mają postać:
+
+$$
+h_{00}(t)=2t^3-3t^2+1,
+$$
+
+$$
+h_{10}(t)=t^3-2t^2+t,
+$$
+
+$$
+h_{01}(t)=-2t^3+3t^2,
+$$
+
+$$
+h_{11}(t)=t^3-t^2.
+$$
+
+Każda z tych funkcji ma inną rolę. Funkcja $h_{00}$ przenosi wartość z lewego końca przedziału, a $h_{01}$ przenosi wartość z prawego końca. Funkcja $h_{10}$ odpowiada za nachylenie na lewym końcu, a $h_{11}$ za nachylenie na prawym końcu. Te funkcje są skonstruowane tak, aby w punktach $t=0$ i $t=1$ zachowywały się selektywnie: jedna kontroluje wartość, inna pochodną.
+
+Dokładniej:
+
+$$
+h_{00}(0)=1,
+\qquad
+h_{00}(1)=0,
+$$
+
+$$
+h_{01}(0)=0,
+\qquad
+h_{01}(1)=1.
+$$
+
+Dlatego $h_{00}$ zapewnia wpływ wartości $y_k$ na lewym końcu, a $h_{01}$ zapewnia wpływ wartości $y_{k+1}$ na prawym końcu. Z kolei $h_{10}$ i $h_{11}$ mają tak dobrane pochodne, aby kontrolować nachylenia w końcach przedziału.
+
+Przykład liczbowy pokazuje mechanizm. Załóżmy, że interpolujemy na przedziale $[0,2]$. Dane są:
+
+$$
+x_k=0,
+\qquad
+x_{k+1}=2,
+$$
+
+$$
+y_k=1,
+\qquad
+ y_{k+1}=3,
+$$
+
+oraz nachylenia:
+
+$$
+m_k=0,
+\qquad
+m_{k+1}=1.
+$$
+
+Długość przedziału wynosi:
+
+$$
+\Delta x_k=2-0=2.
+$$
+
+Chcemy policzyć wartość w punkcie $x=1$. Najpierw przeliczamy $x$ na lokalną zmienną $t$:
+
+$$
+t=\frac{x-x_k}{x_{k+1}-x_k}
+=\frac{1-0}{2-0}
+=\frac{1}{2}.
+$$
+
+Dla $t=1/2$ funkcje bazowe mają wartości:
+
+$$
+h_{00}\left(\frac12\right)=2\left(\frac12\right)^3-3\left(\frac12\right)^2+1
+=\frac12,
+$$
+
+$$
+h_{10}\left(\frac12\right)=\left(\frac12\right)^3-2\left(\frac12\right)^2+\frac12
+=\frac18,
+$$
+
+$$
+h_{01}\left(\frac12\right)=-2\left(\frac12\right)^3+3\left(\frac12\right)^2
+=\frac12,
+$$
+
+$$
+h_{11}\left(\frac12\right)=\left(\frac12\right)^3-\left(\frac12\right)^2
+-\frac{1}{8}.
+$$
+
+Podstawiamy do wzoru:
+
+$$
+f(1)=
+\frac12\cdot 1
++\frac18\cdot 2\cdot 0
++\frac12\cdot 3
+-\frac18\cdot 2\cdot 1.
+$$
+
+Stąd:
+
+$$
+f(1)=
+\frac12+0+\frac32-\frac14
+=\frac74
+=1{,}75.
+$$
+
+Interpretacja jest następująca. Gdybyśmy brali tylko wartości $y_k=1$ i $y_{k+1}=3$, środek przedziału naturalnie leżałby w okolicy średniej wartości $2$. Jednak dodatnie nachylenie na prawym końcu $m_{k+1}=1$ wpływa na kształt krzywej i w tym przykładzie obniża wartość w środku do $1{,}75$. Splajn Hermite'a nie tylko łączy punkty, ale także uwzględnia kierunek, z jakim krzywa ma wchodzić i wychodzić z końców przedziału.
+
+Jeżeli mamy wiele przedziałów, budujemy taki wielomian osobno na każdym $[x_k,x_{k+1}]$. Aby cała krzywa była gładka klasy $C^1$, czyli miała ciągłą pierwszą pochodną, należy użyć zgodnych nachyleń $m_k$ w punktach wspólnych sąsiednich przedziałów. Wtedy lewy i prawy fragment krzywej mają w węźle to samo nachylenie.
+
+Splajny Hermite'a są więc bardziej narzędziem interpolacji niż regresji. Używa się ich wtedy, gdy chcemy dokładnie kontrolować wartości i nachylenia w węzłach, na przykład w grafice komputerowej, animacji, interpolacji trajektorii lub rekonstrukcji gładkich krzywych. W klasycznych zastosowaniach regresyjnych, zwłaszcza dla zaszumionych danych, częściej używa się B-splajnów, splajnów wygładzających albo P-splajnów, ponieważ tam nachylenia nie są zwykle znane i muszą być pośrednio wyznaczane z danych.
 
 #### Liczba węzłów a elastyczność i przeuczenie
 
@@ -321,10 +685,6 @@ Możemy to ująć w języku bias–variance: małe $K$ daje większy *bias* (zby
 
 - albo dobieramy $K$ (np. walidacją krzyżową),
 - albo stosujemy splajny wygładzające (*smoothing splines*), gdzie liczba węzłów może być duża, ale złożoność kontrolujemy przez karę na „szorstkość” funkcji.
-
-#### Splajny jako element FDA i GAM
-
-W FDA (*Flexible Discriminant Analysis*) splajny służą do budowy nieliniowych transformacji predyktorów, a następnie stosuje się ideę dyskryminacji na przekształconej przestrzeni cech. W GAM splajny są naturalnym „budulcem” nieliniowych składowych addytywnych. W obu przypadkach kluczowe jest to, że splajn zachowuje interpretowalność: nadal widzimy, jak zmienna wpływa na wynik, ale w sposób nieliniowy.
 
 ## Generalized Additive Models (GAM)
 
@@ -363,7 +723,7 @@ gdzie $S_j$ to macierz kary (związana z „szorstkością” funkcji), a $\lamb
 
 - dla klasyfikacji/log-loss - analogicznie minimalizujemy ujemną log-wiarygodność + kara.
 
-Zuważmy, że w GAM „regularizacja” jest interpretowana jako dobór gładkości funkcji $f_j$, a nie tylko jako „kurczenie współczynników”.
+Zauważmy, że w GAM „regularizacja” jest interpretowana jako dobór gładkości funkcji $f_j$, a nie tylko jako „kurczenie współczynników”.
 
 #### Dobór parametrów wygładzania
 
@@ -375,7 +735,7 @@ Dobór $\lambda_j$ jest kluczowy - zbyt małe wartości prowadzą do przeuczenia
 
 ### Interpretacja GAM
 
-Największa zaleta GAM jest interpretowalność - każdą funkcję $f_j$ możemy wykreślić jako krzywą efektu cząstkowego, trzymając pozostałe zmienne „w tle”. Dzięki temu otrzymujemy model elastyczny, ale nadal opisujący jak każda zmienna wpływa na wynik.
+Największą zaletą GAM jest interpretowalność - każdą funkcję $f_j$ możemy wykreślić jako krzywą efektu cząstkowego, trzymając pozostałe zmienne „w tle”. Dzięki temu otrzymujemy model elastyczny, ale nadal opisujący, jak każda zmienna wpływa na wynik.
 
 ### Zalety i wady GAM
 
@@ -653,22 +1013,28 @@ fig.add_trace(
     row=2, col=1
 )
 
-# Aktualizacja osi
-fig.update_xaxes(title_text="x₁", row=1, col=1)
-fig.update_yaxes(title_text="x₂", row=1, col=1)
-fig.update_xaxes(title_text="x₁", row=2, col=1)
-fig.update_yaxes(title_text="x₂", row=2, col=1)
+# Ustawienie proporcji scen 3D, aby płaszczyzna (x₁, x₂) nie była wizualnie zbyt wąska
+scene_style = dict(
+    xaxis=dict(title="x₁"),
+    yaxis=dict(title="x₂"),
+    zaxis=dict(title="y"),
+    aspectmode="manual",
+    aspectratio=dict(x=1.8, y=1.8, z=0.9),
+    camera=dict(eye=dict(x=1.5, y=1.45, z=0.75))
+)
 
 fig.update_layout(
     title_text="Porównanie rzeczywistej funkcji i estymacji GAM (widok 3D)",
+    scene=scene_style,
+    scene2=scene_style,
     width=1300,
-    height=700
+    height=900
 )
 
 fig.show()
 ```
 
-`pyGAM` automatycznie dobiera parametry wygładzania (zwykle przez CV/GCV). Największą zaletą GAM jest możliwość wizualizacji efektów cząstkowych każdej zmiennej - widzimy dokładnie, w jaki sposób każdy predyktor wpływa na przewidywaną wartość, trzymając pozostałe zmienne „w tle". Wizualizacja 3D (powyżej) pokazuje jak dobrze model GAM aproksymuje rzeczywistą powierzchnię, uchwycając zarówno oscylacyjny jak i paraboliczny charakter funkcji. W praktyce GAM stanowi świetny kompromis między prostotą interpretacji a elastycznością modelowania nieliniowości.
+`pyGAM` automatycznie dobiera parametry wygładzania (zwykle przez CV/GCV). Największą zaletą GAM jest możliwość wizualizacji efektów cząstkowych każdej zmiennej - widzimy dokładnie, w jaki sposób każdy predyktor wpływa na przewidywaną wartość, trzymając pozostałe zmienne „w tle”. Wizualizacja 3D pokazuje, jak dobrze model GAM aproksymuje rzeczywistą powierzchnię, uchwycając zarówno oscylacyjny, jak i paraboliczny charakter funkcji. W praktyce GAM stanowi świetny kompromis między prostotą interpretacji a elastycznością modelowania nieliniowości.
 
 ## Podsumowanie
 

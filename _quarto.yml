@@ -49,8 +49,8 @@ format:
       gutter-width: 1.5rem
     lang: pl
     theme:
-      light: [flatly, mycss.scss]
-      dark: [darkly, mycss.scss]
+      light: [flatly]
+      dark: [darkly]
     code-link: true
     code-fold: show
     fig-align: center

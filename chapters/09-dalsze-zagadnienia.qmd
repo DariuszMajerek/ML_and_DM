@@ -20,75 +20,253 @@ W klasycznym uczeniu nadzorowanym dostajemy zbiór par $(x_i,y_i)$ i minimalizuj
 
 ### Formalizacja: proces decyzyjny Markowa
 
-Standardową formalizacją RL jest **proces decyzyjny Markowa** (*Markov Decision Process, MDP*):
+Żeby formalnie opisać uczenie ze wzmocnieniem, trzeba najpierw odejść od myślenia typowego dla klasycznego uczenia nadzorowanego. W klasyfikacji albo regresji mamy zwykle niezależne obserwacje $x_i$ oraz etykiety lub wartości docelowe $y_i$. W RL pojedyncza decyzja nie jest izolowana: akcja wybrana teraz wpływa na następny stan, a następny stan wpływa na to, jakie decyzje będzie można podjąć później. Dlatego podstawową jednostką opisu nie jest pojedyncza para $(x_i,y_i)$, lecz sekwencja interakcji agenta ze środowiskiem.
+
+Standardową formalizacją takiej sytuacji jest **proces decyzyjny Markowa** (*Markov Decision Process, MDP*):
 
 $$
-\mathcal{M}=(\mathcal{S}, \mathcal{A}, P, R, \gamma),
+\mathcal{M}=(\mathcal{S}, \mathcal{A}, P, R, \gamma).
 $$
 
-gdzie:
+- Zbiór $\mathcal{S}$ zawiera wszystkie możliwe stany środowiska. Stan opisuje aktualną sytuację, w której znajduje się agent. W prostym przykładzie gry planszowej stanem może być pozycja pionka na planszy, w systemie magazynowym liczba dostępnych produktów, a w problemie sterowania temperatura lub położenie urządzenia.
+- Zbiór $\mathcal{A}$ zawiera akcje, które agent może wykonać. Akcją może być przesunięcie pionka w lewo, zwiększenie produkcji, zmiana ceny, przydzielenie pracownika do zadania albo uruchomienie konkretnego urządzenia. W najprostszych przykładach zakłada się, że ten sam zbiór akcji jest dostępny w każdym stanie, ale w praktyce dostępne akcje mogą zależeć od aktualnego stanu.
+- Funkcja przejścia $P(s'\mid s,a)$ opisuje, z jakim prawdopodobieństwem agent przejdzie do stanu $s'$ po wykonaniu akcji $a$ w stanie $s$. Jeżeli środowisko jest deterministyczne, to dana akcja zawsze prowadzi do tego samego następnego stanu. Jeżeli środowisko jest losowe, ta sama akcja może prowadzić do różnych stanów z różnymi prawdopodobieństwami. Przykładowo, robot może próbować przesunąć się w prawo, ale z powodu poślizgu czasem pozostanie w miejscu albo przesunie się w inną stronę.
+- Funkcja nagrody $R(s,a,s')$ określa natychmiastową ocenę skutku przejścia ze stanu $s$ do stanu $s'$ po wykonaniu akcji $a$. Nagroda nie musi oznaczać wyłącznie pozytywnego wyniku. Może być dodatnia, gdy agent osiąga cel, ujemna, gdy popełnia błąd lub zużywa zasoby, albo bliska zeru, gdy dana decyzja nie ma bezpośrednio dużego znaczenia. Ważne jest to, że agent nie maksymalizuje jednej nagrody natychmiastowej, lecz sumę nagród uzyskiwanych w czasie.
+- Parametr $\gamma\in[0,1)$ jest współczynnikiem dyskonta. Określa, jak mocno cenimy przyszłe nagrody względem nagrody natychmiastowej. Gdy $\gamma$ jest bliskie zera, agent koncentruje się głównie na najbliższej nagrodzie. Gdy $\gamma$ jest bliskie jedności, agent silniej uwzględnia konsekwencje długoterminowe.
 
-- $\mathcal{S}$ to zbiór stanów,
-- $\mathcal{A}$ to zbiór akcji,
-- $P(s' \mid s,a)$ to prawdopodobieństwo przejścia do stanu $s'$ po wykonaniu akcji $a$ w stanie $s$,
-- $R(s,a,s')$ to nagroda,
-- $\gamma \in [0,1)$ to współczynnik dyskonta.
+Agent działa według polityki $\pi(a\mid s)$. Polityka mówi, jaką akcję agent wybiera w danym stanie. Jeżeli polityka jest deterministyczna, to każdemu stanowi przypisuje jedną konkretną akcję. Jeżeli jest stochastyczna, to dla każdego stanu przypisuje rozkład prawdopodobieństwa na akcjach. Na przykład zapis $\pi(a\mid s)=0.7$ oznacza, że w stanie $s$ agent wybiera akcję $a$ z prawdopodobieństwem $0.7$.
 
-Agent działa według polityki $\pi(a\mid s)$, czyli reguły określającej, jaką akcję wybrać w stanie $s$. Celem jest maksymalizacja oczekiwanego skumulowanego zwrotu:
+Celem agenta jest maksymalizacja oczekiwanego skumulowanego zwrotu. Zwrot od chwili $t$ zapisujemy jako
+
+$$
+G_t = R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+\gamma^3 R_{t+4}+\cdots,
+$$
+
+czyli równoważnie
 
 $$
 G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}.
 $$
 
-Interpretacja jest kluczowa: nagroda natychmiastowa może być niewielka lub nawet ujemna, ale ważny jest **łączny** efekt przyszłych decyzji. Właśnie dlatego RL nadaje się do problemów sterowania, planowania, optymalizacji sekwencyjnej czy alokacji zasobów.
+Ten wzór mówi, że nagroda otrzymana natychmiast ma wagę $1$, nagroda otrzymana jeden krok później ma wagę $\gamma$, kolejna ma wagę $\gamma^2$ itd. Im dalej w przyszłość, tym mniejsza waga nagrody, o ile $\gamma<1$.
+
+Rozważmy prosty przykład liczbowy. Agent znajduje się w stanie $s_0$ i ma dwie możliwe akcje: $A$ oraz $B$. Akcja $A$ daje natychmiastową nagrodę równą $5$, ale potem agent trafia do stanu końcowego i nie uzyskuje już żadnych nagród. Akcja $B$ daje natychmiastową nagrodę równą $1$, ale następnie prowadzi do stanu, w którym agent otrzymuje jeszcze nagrodę $10$ w kolejnym kroku. Załóżmy, że $\gamma=0.9$.
+
+Dla akcji $A$ zwrot wynosi
+
+$$
+G_t(A)=5.
+$$
+
+Dla akcji $B$ zwrot wynosi
+
+$$
+G_t(B)=1+0.9\cdot 10=10.
+$$
+
+Chociaż akcja $A$ daje większą nagrodę natychmiastową, akcja $B$ jest lepsza z punktu widzenia skumulowanego zdyskontowanego zwrotu. To jest podstawowa różnica między RL a prostym wybieraniem decyzji o największej korzyści natychmiastowej: agent powinien wybierać akcje, które maksymalizują wartość całej przyszłej ścieżki, a nie tylko najbliższy zysk.
+
+Własność Markowa oznacza, że aktualny stan zawiera wszystkie informacje potrzebne do przewidywania dalszego przebiegu procesu. Formalnie rozkład następnego stanu zależy od bieżącego stanu i akcji, ale nie zależy już od całej wcześniejszej historii:
+
+$$
+P(S_{t+1}=s'\mid S_t=s,A_t=a,S_{t-1},A_{t-1},\ldots)=P(S_{t+1}=s'\mid S_t=s,A_t=a).
+$$
+
+W praktyce oznacza to, że stan powinien być zdefiniowany na tyle bogato, aby zawierał informacje istotne dla przyszłych decyzji. Jeżeli stan pomija ważne informacje z historii, problem może przestać mieć własność Markowa, a klasyczne metody RL będą działały gorzej.
+
+Interpretacja jest kluczowa: nagroda natychmiastowa może być niewielka lub nawet ujemna, ale ważny jest łączny efekt przyszłych decyzji. Właśnie dlatego RL nadaje się do problemów sterowania, planowania, optymalizacji sekwencyjnej czy alokacji zasobów.
 
 ### Funkcje wartości i równania Bellmana
 
-Podstawowe obiekty w RL to funkcje wartości. Dla ustalonej polityki $\pi$ definiujemy:
+Po zdefiniowaniu procesu decyzyjnego Markowa naturalne pytanie brzmi: skąd agent ma wiedzieć, który stan jest dobry albo która akcja jest korzystna? Sama nagroda natychmiastowa nie wystarcza, ponieważ decyzja może być słaba krótkookresowo, ale bardzo korzystna długookresowo. Dlatego w RL wprowadza się **funkcje wartości**. Ich zadaniem jest ocena stanów lub akcji przez pryzmat całego przyszłego zwrotu, a nie tylko najbliższej nagrody.
+
+Dla ustalonej polityki $\pi$ funkcja wartości stanu ma postać
 
 $$
-V^\pi(s)=\mathbb{E}_\pi[G_t \mid S_t=s],
+V^\pi(s)=\mathbb{E}_\pi[G_t \mid S_t=s].
 $$
 
-czyli oczekiwany zdyskontowany zwrot od stanu $s$, oraz
+Wartość $V^\pi(s)$ mówi, jakiego skumulowanego zdyskontowanego zwrotu możemy oczekiwać, jeżeli zaczynamy w stanie $s$, a następnie postępujemy zgodnie z polityką $\pi$. Innymi słowy, $V^\pi(s)$ ocenia sam stan, przy założeniu, że dalsze decyzje będą podejmowane według danej polityki.
+
+Drugim obiektem jest funkcja wartości akcji:
 
 $$
-Q^\pi(s,a)=\mathbb{E}_\pi[G_t \mid S_t=s,\ A_t=a],
+Q^\pi(s,a)=\mathbb{E}_\pi[G_t \mid S_t=s,\ A_t=a].
 $$
 
-czyli oczekiwany zwrot po wykonaniu akcji $a$ w stanie $s$ i dalszym postępowaniu zgodnie z polityką $\pi$.
+Wartość $Q^\pi(s,a)$ mówi, jakiego zwrotu możemy oczekiwać, jeżeli w stanie $s$ najpierw wykonamy konkretną akcję $a$, a dopiero później będziemy postępować zgodnie z polityką $\pi$. Różnica między $V$ i $Q$ jest więc następująca: $V^\pi(s)$ ocenia stan jako całość, natomiast $Q^\pi(s,a)$ ocenia konkretną decyzję podjętą w tym stanie.
 
-Własność Markowa prowadzi do równań Bellmana. Dla funkcji wartości akcji otrzymujemy:
+Te dwie funkcje są ze sobą powiązane. Jeżeli polityka $\pi$ wybiera w stanie $s$ akcje losowo, to wartość stanu jest średnią ważoną wartości możliwych akcji:
+
+$$
+V^\pi(s)=\sum_a \pi(a\mid s)Q^\pi(s,a).
+$$
+
+Przykładowo, jeżeli w stanie $s$ agent wybiera akcję $a_1$ z prawdopodobieństwem $0.7$, a akcję $a_2$ z prawdopodobieństwem $0.3$, oraz
+
+$$
+Q^\pi(s,a_1)=10,
+\qquad
+Q^\pi(s,a_2)=4,
+$$
+
+to wartość stanu wynosi
+
+$$
+V^\pi(s)=0.7\cdot 10+0.3\cdot 4=8.2.
+$$
+
+Oznacza to, że stan $s$ jest oceniany nie przez jedną najlepszą akcję, lecz przez akcje faktycznie wybierane przez politykę $\pi$.
+
+Równania Bellmana wynikają z prostej obserwacji: całkowity przyszły zwrot można rozbić na dwie części. Pierwsza część to nagroda otrzymana natychmiast po wykonaniu akcji. Druga część to zdyskontowana wartość dalszej przyszłości. Dla funkcji wartości akcji przy ustalonej polityce $\pi$ zapisujemy to jako
 
 $$
 Q^\pi(s,a)=\sum_{s'} P(s' \mid s,a)\left[R(s,a,s')+\gamma \sum_{a'} \pi(a' \mid s') Q^\pi(s',a')\right].
 $$
 
-W wersji optymalnej:
+Ten wzór można czytać od środka. Jeżeli po wykonaniu akcji $a$ w stanie $s$ trafimy do stanu $s'$, to najpierw otrzymujemy nagrodę $R(s,a,s')$. Następnie, od stanu $s'$, agent będzie wybierał kolejne akcje zgodnie z polityką $\pi$. Dlatego dalsza wartość jest średnią
+
+$$
+\sum_{a'} \pi(a'\mid s')Q^\pi(s',a'),
+$$
+
+a ponieważ dotyczy przyszłości, mnożymy ją przez $\gamma$. Na końcu uśredniamy wynik po możliwych następnych stanach $s'$, używając prawdopodobieństw przejścia $P(s'\mid s,a)$.
+
+Przykład liczbowy pokazuje strukturę tego równania. Załóżmy, że w stanie $s$ wykonujemy akcję $a$. Po tej akcji środowisko może przejść do dwóch stanów: $s_1$ z prawdopodobieństwem $0.8$ albo $s_2$ z prawdopodobieństwem $0.2$. Nagroda za przejście do $s_1$ wynosi $2$, a za przejście do $s_2$ wynosi $-1$. Przyjmijmy $\gamma=0.9$. Załóżmy też, że zgodnie z polityką $\pi$ oczekiwana wartość dalszego działania wynosi
+
+$$
+V^\pi(s_1)=5,
+\qquad
+V^\pi(s_2)=10.
+$$
+
+Wtedy wartość wykonania akcji $a$ w stanie $s$ wynosi
+
+$$
+Q^\pi(s,a)=0.8\left(2+0.9\cdot 5\right)+0.2\left(-1+0.9\cdot 10\right).
+$$
+
+Po obliczeniu otrzymujemy
+
+$$
+Q^\pi(s,a)=0.8\cdot 6.5+0.2\cdot 8=5.2+1.6=6.8.
+$$
+
+Interpretacja jest następująca: wartość akcji $a$ nie jest równa samej nagrodzie natychmiastowej. Uwzględnia ona także to, do jakich stanów akcja może doprowadzić i jak wartościowe są te stany z punktu widzenia dalszego postępowania.
+
+Wersja optymalna równania Bellmana pojawia się wtedy, gdy nie chcemy już oceniać ustalonej polityki $\pi$, lecz szukamy najlepszej możliwej polityki. Wtedy w następnym stanie nie uśredniamy wartości po akcjach zgodnie z $\pi$, tylko zakładamy wybór najlepszej dostępnej akcji:
 
 $$
 Q^*(s,a)=\sum_{s'} P(s' \mid s,a)\left[R(s,a,s')+\gamma \max_{a'} Q^*(s',a')\right].
 $$
 
-To równanie ma ogromne znaczenie: mówi, że optymalna wartość akcji składa się z nagrody natychmiastowej i najlepszego możliwego zdyskontowanego zysku w następnym stanie.
+Różnica między równaniem dla $Q^\pi$ i równaniem dla $Q^*$ jest więc bardzo istotna. W $Q^\pi$ pytamy: „ile uzyskamy, jeżeli będziemy dalej postępować według konkretnej polityki $\pi$?”. W $Q^*$ pytamy: „ile możemy uzyskać, jeżeli od następnego stanu będziemy zawsze wybierać najlepsze możliwe akcje?”. To drugie równanie jest podstawą wielu algorytmów sterowania, w tym Q-learningu.
+
+Sens równań Bellmana polega na tym, że rozbijają trudny problem oceny całej przyszłej ścieżki na lokalną rekurencję: wartość obecnej decyzji jest równa nagrodzie natychmiastowej plus zdyskontowana wartość przyszłości. Dzięki temu można uczyć się wartości stopniowo, na podstawie kolejnych przejść obserwowanych w środowisku.
 
 ### Q-learning
 
-Q-learning [@watkins1992] jest algorytmem **off-policy**, który aproksymuje $Q^*(s,a)$ bez znajomości modelu przejść $P$. Aktualizacja ma postać:
+Q-learning [@watkins1992] jest jednym z najprostszych i najważniejszych algorytmów uczenia ze wzmocnieniem. Jego celem jest nauczenie funkcji $Q^*(s,a)$, czyli optymalnej wartości wykonania akcji $a$ w stanie $s$. Wartość $Q^*(s,a)$ odpowiada na pytanie: jakiego łącznego, zdyskontowanego zwrotu można oczekiwać, jeśli teraz w stanie $s$ wykonamy akcję $a$, a później będziemy postępować możliwie najlepiej?
+
+W najprostszej, tablicowej wersji algorytmu tworzymy tabelę $Q$. Wiersze tej tabeli odpowiadają stanom, kolumny odpowiadają akcjom, a komórka $Q(s,a)$ przechowuje aktualną ocenę opłacalności wykonania akcji $a$ w stanie $s$. Na początku wartości w tabeli są zwykle ustawione na zero albo na małe wartości losowe, ponieważ agent nie wie jeszcze, które decyzje są dobre.
+
+Q-learning aktualizuje tylko tę komórkę tabeli, która odpowiada rzeczywiście wykonanej akcji. Jeżeli w chwili $t$ agent był w stanie $s_t$, wykonał akcję $a_t$, otrzymał nagrodę $r_{t+1}$ i przeszedł do stanu $s_{t+1}$, to aktualizowana jest wartość $Q(s_t,a_t)$. Pozostałe wpisy tabeli w tym kroku nie zmieniają się.
+
+Punktem wyjścia jest optymalne równanie Bellmana. Mówi ono, że dobra ocena pary $(s_t,a_t)$ powinna składać się z dwóch części: nagrody otrzymanej natychmiast oraz najlepszej możliwej wartości przyszłej w kolejnym stanie. Dlatego tworzymy tak zwany cel TD (*temporal difference target*):
+
+$$
+\text{cel TD}=r_{t+1}+\gamma\max_a Q_t(s_{t+1},a).
+$$
+
+Pierwszy składnik, $r_{t+1}$, jest nagrodą za wykonaną akcję. Drugi składnik, $\gamma\max_a Q_t(s_{t+1},a)$, jest zdyskontowaną oceną najlepszej akcji dostępnej w następnym stanie. Operator maksimum oznacza, że Q-learning zakłada dalsze postępowanie zachłanne względem aktualnych wartości $Q$.
+
+Następnie porównujemy ten cel z dotychczasową oceną $Q_t(s_t,a_t)$. Różnica między nimi to błąd TD:
+
+$$
+\delta_t=r_{t+1}+\gamma\max_a Q_t(s_{t+1},a)-Q_t(s_t,a_t).
+$$
+
+Jeżeli $\delta_t>0$, to znaczy, że nowa informacja sugeruje, iż akcja była lepsza, niż wcześniej sądziliśmy. Wtedy wartość $Q(s_t,a_t)$ powinna wzrosnąć. Jeżeli $\delta_t<0$, to akcja okazała się gorsza od wcześniejszej oceny i wartość $Q(s_t,a_t)$ powinna spaść. Jeżeli $\delta_t=0$, aktualna ocena jest zgodna z celem TD i nie ma potrzeby jej zmieniać.
+
+Aktualizacja Q-learningu ma postać
+
+$$
+Q_{t+1}(s_t,a_t)=Q_t(s_t,a_t)+\alpha\delta_t,
+$$
+
+czyli po podstawieniu błędu TD:
 
 $$
 Q_{t+1}(s_t,a_t)
 =
 Q_t(s_t,a_t)
-+
++ 
 \alpha\left[
 r_{t+1}+\gamma \max_a Q_t(s_{t+1},a)-Q_t(s_t,a_t)
-\right],
+\right].
 $$
 
-gdzie $\alpha$ to współczynnik uczenia. W nawiasie kwadratowym znajduje się **błąd TD** (*temporal difference error*): porównujemy starą estymację z „celem” złożonym z nagrody natychmiastowej i najlepszej przewidywanej wartości przyszłej.
+Parametr $\alpha\in(0,1]$ jest współczynnikiem uczenia. Określa, jak duży krok wykonujemy w stronę nowego celu. Gdy $\alpha=1$, stara wartość jest zastępowana bezpośrednio przez cel TD. Gdy $\alpha$ jest mniejsze, aktualizacja jest ostrożniejsza: nowa wartość jest kompromisem między starą oceną a nową informacją.
 
-To równanie można rozumieć jako stochastyczne przybliżenie równania Bellmana. Jeżeli wielokrotnie odwiedzamy pary stan-akcja i odpowiednio kontrolujemy eksplorację, tablica $Q$ zbiega do optimum w przypadku dyskretnego MDP.
+Tę samą aktualizację można zapisać w równoważnej, często bardziej intuicyjnej postaci:
+
+$$
+Q_{t+1}(s_t,a_t)
+=(1-\alpha)Q_t(s_t,a_t)+\alpha\left[r_{t+1}+\gamma\max_a Q_t(s_{t+1},a)\right].
+$$
+
+Widać wtedy, że nowa wartość $Q$ jest średnią ważoną starej oceny oraz nowego celu TD. Współczynnik $1-\alpha$ określa wagę starej wiedzy, a $\alpha$ wagę nowej obserwacji.
+
+Rozważmy prosty przykład liczbowy. Załóżmy, że agent znajduje się w stanie $s_t$ i wykonuje akcję $a_t$. Aktualna wartość tej pary w tabeli wynosi
+
+$$
+Q_t(s_t,a_t)=4.
+$$
+
+Po wykonaniu akcji agent otrzymuje nagrodę
+
+$$
+r_{t+1}=2
+$$
+
+i przechodzi do stanu $s_{t+1}$. W następnym stanie dostępne są trzy akcje, których aktualne wartości wynoszą
+
+$$
+Q_t(s_{t+1},a_1)=3,
+\qquad
+Q_t(s_{t+1},a_2)=6,
+\qquad
+Q_t(s_{t+1},a_3)=5.
+$$
+
+Najlepsza przewidywana wartość przyszła wynosi zatem
+
+$$
+\max_a Q_t(s_{t+1},a)=6.
+$$
+
+Przyjmijmy $\gamma=0.9$ oraz $\alpha=0.5$. Cel TD wynosi
+
+$$
+r_{t+1}+\gamma\max_a Q_t(s_{t+1},a)
+=2+0.9\cdot 6=7.4.
+$$
+
+Dotychczasowa ocena wynosiła $4$, więc błąd TD jest równy
+
+$$
+\delta_t=7.4-4=3.4.
+$$
+
+Aktualizacja daje
+
+$$
+Q_{t+1}(s_t,a_t)=4+0.5\cdot 3.4=5.7.
+$$
+
+Wartość wykonanej akcji wzrosła z $4$ do $5.7$, ponieważ otrzymana nagroda i wartość następnego stanu okazały się lepsze niż dotychczasowa ocena. Gdyby cel TD był mniejszy niż stara wartość, aktualizacja obniżyłaby wpis w tabeli $Q$.
+
+Q-learning jest algorytmem **off-policy**. Oznacza to, że agent może eksplorować środowisko jedną strategią, na przykład czasem wybierając akcje losowe, ale aktualizacja wartości zakłada najlepszą akcję w następnym stanie przez składnik $\max_a Q_t(s_{t+1},a)$. Innymi słowy, sposób zbierania doświadczenia może być eksploracyjny, natomiast uczona funkcja $Q$ dąży do wartości odpowiadających polityce zachłannej, czyli wybierającej akcje o największej wartości $Q$.
 
 ### Elementarne kroki postępowania
 
@@ -121,7 +299,17 @@ W praktyce różnice między algorytmami RL dotyczą głównie tego, czy uczymy 
 
 ### Przykład: Q-learning w prostym gridworldzie
 
-Poniższy przykład nie korzysta z gotowych środowisk typu Gym, lecz buduje minimalny świat siatki, aby zachować pełną przejrzystość matematyki i implementacji. Agent startuje w lewym górnym rogu, ma dotrzeć do celu, a każdy krok kosztuje niewielką ujemną nagrodę. Dzięki temu agent uczy się nie tylko „dojść do celu”, ale dojść **możliwie szybko**.
+Celem tego przykładu jest pokazanie, jak działa Q-learning w najprostszym możliwym problemie sekwencyjnego podejmowania decyzji. Nie korzystamy z gotowych środowisk typu Gym, lecz samodzielnie definiujemy mały świat siatki (*gridworld*), aby było jasne, czym są stany, akcje, nagrody, przejścia między stanami oraz aktualizacja tablicy $Q$.
+
+Środowisko ma postać siatki $4\times 4$. Każde pole siatki jest stanem, w którym może znaleźć się agent, z wyjątkiem pól zablokowanych. Agent startuje w lewym górnym rogu, czyli w stanie $(0,0)$, a jego celem jest dotarcie do prawego dolnego rogu, czyli stanu $(3,3)$. Dwa pola, $(1,1)$ oraz $(2,1)$, są zablokowane i nie można na nie wejść. Jeżeli agent próbuje wejść poza planszę albo w pole zablokowane, pozostaje w dotychczasowym stanie.
+
+W każdym stanie agent może wykonać jedną z czterech akcji: przejść w górę, w dół, w lewo albo w prawo. Po wykonaniu akcji środowisko zwraca nowy stan, nagrodę oraz informację, czy epizod się zakończył. Epizod kończy się wtedy, gdy agent osiągnie cel. Za każdy zwykły krok agent otrzymuje niewielką karę $-0.04$, natomiast za wejście do celu otrzymuje nagrodę $1.0$. Taka konstrukcja nagrody ma konkretny sens: samo dotarcie do celu jest opłacalne, ale każdy dodatkowy krok obniża łączny zwrot. Agent powinien więc nauczyć się nie tylko osiągać cel, lecz robić to możliwie krótką ścieżką.
+
+Chcemy zrealizować to przez tablicowy Q-learning. Tworzymy tablicę $Q$, w której każdy wiersz odpowiada jednemu dozwolonemu stanowi, a każda kolumna jednej z czterech akcji. Wartość $Q(s,a)$ jest bieżącą oceną opłacalności wykonania akcji $a$ w stanie $s$. Na początku wszystkie wartości są równe zero, ponieważ agent nie zna jeszcze struktury środowiska. W kolejnych epizodach agent porusza się po siatce, zbiera nagrody i aktualizuje wartości $Q$ na podstawie błędu TD.
+
+Podczas uczenia stosujemy strategię $\varepsilon$-greedy. Oznacza to, że z prawdopodobieństwem $\varepsilon$ agent wybiera losową akcję, aby eksplorować środowisko, a z prawdopodobieństwem $1-\varepsilon$ wybiera akcję o największej aktualnej wartości $Q$. Wartość $\varepsilon$ stopniowo maleje, więc na początku agent częściej eksperymentuje, a później coraz częściej wykorzystuje to, czego się nauczył.
+
+Po zakończeniu uczenia analizujemy dwa elementy. Pierwszy wykres pokazuje zwrot uzyskiwany w kolejnych epizodach oraz jego średnią kroczącą. Jeżeli uczenie działa poprawnie, średni zwrot powinien rosnąć, ponieważ agent coraz częściej znajduje krótszą drogę do celu. Drugi wykres pokazuje wyuczoną wartość stanów oraz politykę zachłanną, czyli najlepszą akcję w każdym stanie według końcowej tablicy $Q$. Dzięki temu widzimy nie tylko, czy agent się poprawia, ale także jaką strategię poruszania się po siatce ostatecznie wybrał.
 
 ```{python}
 #| code-fold: true
@@ -302,107 +490,198 @@ W praktyce analiza koszykowa służy nie tylko do badania produktów kupowanych 
 
 ### Formalizacja danych transakcyjnych
 
-Załóżmy, że mamy zbiór transakcji
+W analizie koszykowej pojedyncza obserwacja nie jest wektorem liczbowych cech, lecz zbiorem obiektów występujących razem. Najczęściej myślimy o transakcji jako o koszyku zakupowym klienta, ale formalizm jest ogólniejszy: transakcją może być zestaw klikniętych stron, pakiet usług kupionych przez klienta, lista rozpoznanych diagnoz albo zbiór zdarzeń zapisanych w logach systemowych.
+
+Załóżmy, że mamy zbiór wszystkich możliwych produktów lub obiektów
 
 $$
-\mathcal{D}=\{T_1,T_2,\dots,T_n\},
+\mathcal{I}=\{\text{chleb},\text{masło},\text{mleko},\text{piwo},\text{pieluchy}\}.
 $$
 
-gdzie każda transakcja $T_i \subseteq \mathcal{I}$ jest podzbiorem zbioru wszystkich produktów (lub obiektów) $\mathcal{I}$. Dla itemsetu $X \subseteq \mathcal{I}$ definiujemy **wsparcie**:
+Pojedyncza transakcja $T_i$ jest podzbiorem tego zbioru. Przykładowo
+
+$$
+T_1=\{\text{chleb},\text{masło},\text{mleko}\}
+$$
+
+oznacza, że w pierwszej transakcji wystąpiły razem chleb, masło i mleko. Cała baza transakcji to zbiór
+
+$$
+\mathcal{D}=\{T_1,T_2,\dots,T_n\}.
+$$
+
+W analizie koszykowej interesują nas nie pojedyncze produkty, lecz zbiory produktów. Taki zbiór nazywamy itemsetem. Na przykład
+
+$$
+X=\{\text{chleb},\text{masło}\}
+$$
+
+jest 2-elementowym itemsetem. Pytanie brzmi: jak często taki zbiór występuje w transakcjach?
+
+Do tego służy **wsparcie** (*support*). Dla itemsetu $X\subseteq\mathcal{I}$ definiujemy
 
 $$
 \operatorname{support}(X)
 =
-\frac{1}{n}\sum_{i=1}^{n}\mathbf{1}\{X \subseteq T_i\}.
+\frac{1}{n}\sum_{i=1}^{n}\mathbf{1}\{X\subseteq T_i\}.
 $$
 
-Support mówi, w jakim odsetku transakcji występuje jednocześnie cały zbiór $X$.
+Ten wzór mówi, że sprawdzamy każdą transakcję i zapisujemy $1$, jeżeli zawiera ona wszystkie elementy zbioru $X$, oraz $0$ w przeciwnym razie. Następnie uśredniamy wynik po wszystkich transakcjach. Support jest więc odsetkiem transakcji, w których występuje cały itemset.
 
-Reguła asocjacyjna ma postać:
+Rozważmy małą bazę pięciu transakcji:
+
+$$
+\begin{aligned}
+T_1&=\{\text{chleb},\text{masło},\text{mleko}\},\\
+T_2&=\{\text{chleb},\text{masło}\},\\
+T_3&=\{\text{chleb},\text{mleko}\},\\
+T_4&=\{\text{mleko},\text{piwo}\},\\
+T_5&=\{\text{chleb},\text{masło},\text{piwo}\}.
+\end{aligned}
+$$
+
+Itemset $X=\{\text{chleb},\text{masło}\}$ występuje w transakcjach $T_1$, $T_2$ oraz $T_5$, czyli w trzech z pięciu transakcji. Dlatego
+
+$$
+\operatorname{support}(\{\text{chleb},\text{masło}\})=\frac{3}{5}=0.6.
+$$
+
+Support nie mówi jeszcze nic o kierunku zależności. Informuje tylko, jak często dany zbiór produktów występuje razem. Jeżeli chcemy zapisać zależność typu „jeżeli klient kupił $X$, to często kupuje też $Y$”, używamy reguł asocjacyjnych.
+
+Reguła asocjacyjna ma postać
 
 $$
 X \Rightarrow Y,
 \qquad
-X \cap Y = \varnothing,
+X\cap Y=\varnothing.
 $$
 
-gdzie $X$ jest poprzednikiem (*antecedent*), a $Y$ następnikiem (*consequent*). Dla takiej reguły najczęściej mierzymy:
+Zbiór $X$ nazywamy poprzednikiem (*antecedent*), a zbiór $Y$ następnikiem (*consequent*). Przykładowa reguła
 
 $$
-\operatorname{confidence}(X \Rightarrow Y)
+\{\text{chleb}\}\Rightarrow\{\text{masło}\}
+$$
+
+oznacza: „w transakcjach, w których występuje chleb, sprawdzamy, jak często występuje również masło”.
+
+Pierwszą miarą jakości reguły jest **ufność** (*confidence*):
+
+$$
+\operatorname{confidence}(X\Rightarrow Y)
 =
-\frac{\operatorname{support}(X \cup Y)}{\operatorname{support}(X)},
+\frac{\operatorname{support}(X\cup Y)}{\operatorname{support}(X)}.
 $$
 
-oraz
+Confidence można interpretować jako empiryczne prawdopodobieństwo warunkowe: wśród transakcji zawierających $X$ sprawdzamy, jaki odsetek zawiera także $Y$. W naszej małej bazie chleb występuje w transakcjach $T_1,T_2,T_3,T_5$, czyli
 
 $$
-\operatorname{lift}(X \Rightarrow Y)
+\operatorname{support}(\{\text{chleb}\})=\frac{4}{5}=0.8.
+$$
+
+Chleb i masło razem występują w trzech transakcjach, więc
+
+$$
+\operatorname{support}(\{\text{chleb},\text{masło}\})=\frac{3}{5}=0.6.
+$$
+
+Dla reguły $\{\text{chleb}\}\Rightarrow\{\text{masło}\}$ mamy zatem
+
+$$
+\operatorname{confidence}(\{\text{chleb}\}\Rightarrow\{\text{masło}\})
+=\frac{0.6}{0.8}=0.75.
+$$
+
+Oznacza to, że wśród transakcji zawierających chleb w $75\%$ przypadków pojawia się również masło.
+
+Sama confidence bywa jednak myląca. Jeżeli następnik $Y$ jest bardzo częsty, to reguła może mieć wysoką confidence nawet wtedy, gdy $X$ nie wnosi żadnej dodatkowej informacji. Dlatego używa się miary **lift**:
+
+$$
+\operatorname{lift}(X\Rightarrow Y)
 =
-\frac{\operatorname{support}(X \cup Y)}
+\frac{\operatorname{support}(X\cup Y)}
 {\operatorname{support}(X)\operatorname{support}(Y)}.
 $$
 
-Interpretacja jest następująca:
+Równoważnie można zapisać
 
-- **support** mówi, jak częsta jest wspólna obserwacja,
-- **confidence** mówi, jak często po zajściu $X$ obserwujemy też $Y$,
-- **lift** porównuje tę zależność z sytuacją niezależności.
+$$
+\operatorname{lift}(X\Rightarrow Y)
+=
+\frac{\operatorname{confidence}(X\Rightarrow Y)}{\operatorname{support}(Y)}.
+$$
 
-Jeżeli $\operatorname{lift}>1$, to współwystępowanie jest częstsze niż oczekiwalibyśmy przy niezależności.
+Lift porównuje obserwowane współwystępowanie $X$ i $Y$ z tym, czego oczekiwalibyśmy przy niezależności. Jeżeli $\operatorname{lift}=1$, to $X$ i $Y$ współwystępują tak często, jak wynikałoby z ich częstości marginalnych. Jeżeli $\operatorname{lift}>1$, to współwystępowanie jest częstsze niż przy niezależności. Jeżeli $\operatorname{lift}<1$, to wystąpienie $X$ raczej zmniejsza szansę wystąpienia $Y$.
+
+W naszym przykładzie masło występuje w transakcjach $T_1,T_2,T_5$, czyli
+
+$$
+\operatorname{support}(\{\text{masło}\})=\frac{3}{5}=0.6.
+$$
+
+Dla reguły $\{\text{chleb}\}\Rightarrow\{\text{masło}\}$ lift wynosi
+
+$$
+\operatorname{lift}
+=
+\frac{0.6}{0.8\cdot 0.6}
+=
+\frac{0.6}{0.48}
+=1.25.
+$$
+
+Interpretacja jest następująca: chleb i masło występują razem $1.25$ razy częściej, niż oczekiwalibyśmy przy założeniu niezależności ich występowania. Nie jest to dowód zależności przyczynowej, ale jest to sygnał dodatniego współwystępowania.
+
+W praktycznej analizie warto odróżniać trzy pytania. Support odpowiada na pytanie: „czy ten wzorzec występuje wystarczająco często, aby był stabilny?”. Confidence odpowiada na pytanie: „jak często $Y$ występuje wtedy, gdy pojawiło się $X$?”. Lift odpowiada na pytanie: „czy relacja $X\Rightarrow Y$ jest silniejsza niż wynikałoby z samej popularności $Y$?”.
 
 ### Własność antymonotoniczności i Apriori
 
-Fundamentalna własność, na której opiera się Apriori, brzmi:
+Algorytmy wyszukiwania częstych itemsetów muszą radzić sobie z bardzo dużą liczbą możliwych kombinacji produktów. Jeżeli mamy $m$ produktów, to liczba możliwych niepustych itemsetów wynosi $2^m-1$. Dla kilkudziesięciu albo kilkuset produktów pełne sprawdzenie wszystkich kombinacji staje się niepraktyczne.
+
+Kluczową własnością wykorzystywaną przez algorytm Apriori jest antymonotoniczność supportu:
 
 $$
 X \subseteq Y \quad \Longrightarrow \quad \operatorname{support}(Y)\le \operatorname{support}(X).
 $$
 
-Dowód intuicyjny jest prosty: jeśli większy zbiór $Y$ pojawia się w danej transakcji, to wszystkie jego podzbiory, w tym $X$, też się w niej pojawiają. Zatem każda transakcja licząca się do supportu $Y$ liczy się także do supportu $X$, ale nie odwrotnie.
+Sens tej nierówności jest prosty. Większy zbiór produktów nie może występować częściej niż jego mniejszy podzbiór. Jeżeli transakcja zawiera $Y=\{\text{chleb},\text{masło},\text{mleko}\}$, to automatycznie zawiera też każdy podzbiór tego zbioru, na przykład $X=\{\text{chleb},\text{masło}\}$. Ale odwrotność nie musi zachodzić: transakcja może zawierać chleb i masło, ale nie zawierać mleka.
 
-Stąd wynika reguła przycinania:
+Przykład liczbowy dobrze pokazuje tę zasadę. W poprzedniej bazie mieliśmy
 
-- jeżeli itemset jest **rzadki**, to wszystkie jego nadzbiory też będą rzadkie,
-- więc nie trzeba ich już dalej rozważać.
+$$
+\operatorname{support}(\{\text{chleb},\text{masło}\})=0.6.
+$$
 
-To właśnie serce Apriori: generujemy kandydatów poziomami, a potem odrzucamy tych, których podzbiory nie są częste.
+Itemset trzy-elementowy $\{\text{chleb},\text{masło},\text{mleko}\}$ występuje tylko w transakcji $T_1$, więc
+
+$$
+\operatorname{support}(\{\text{chleb},\text{masło},\text{mleko}\})=\frac{1}{5}=0.2.
+$$
+
+Po dodaniu kolejnego produktu support spadł z $0.6$ do $0.2$. Taka sytuacja jest ogólna: im więcej warunków musi spełnić transakcja, tym mniej transakcji będzie je spełniało.
+
+Z antymonotoniczności wynika reguła przycinania. Jeżeli pewien itemset jest rzadki, to wszystkie jego nadzbiory też muszą być rzadkie. Przykładowo, jeżeli $\{\text{mleko},\text{piwo}\}$ ma support poniżej progu `min_support`, to nie ma sensu sprawdzać itemsetów $\{\text{mleko},\text{piwo},\text{chleb}\}$, $\{\text{mleko},\text{piwo},\text{masło}\}$ itd., ponieważ ich support nie może być większy.
+
+To jest główna idea Apriori. Algorytm nie sprawdza wszystkich kombinacji naraz. Najpierw znajduje częste itemsety jednoelementowe. Następnie z nich buduje kandydatów dwuelementowych. Potem z częstych itemsetów dwuelementowych buduje kandydatów trzyelementowych. Na każdym poziomie odrzuca kandydatów, których podzbiory nie są częste. Dzięki temu liczba sprawdzanych kombinacji może być znacznie mniejsza niż liczba wszystkich możliwych itemsetów.
 
 ### Apriori i FP-Growth
 
-**Apriori** działa poziomowo:
+Apriori można rozumieć jako procedurę poziomową. Najpierw liczymy support pojedynczych produktów i zostawiamy tylko te, które przekraczają próg `min_support`. Następnie tworzymy kandydatów złożonych z dwóch produktów, ale tylko z produktów częstych. Liczymy ich support i znowu odrzucamy zbiory zbyt rzadkie. Potem przechodzimy do itemsetów trzyproduktowych i kontynuujemy tę procedurę aż do momentu, gdy nie da się wygenerować nowych częstych kandydatów.
 
-1. znajdź wszystkie częste 1-itemsety,
-2. wygeneruj kandydatów 2-elementowych,
-3. odrzuć tych, których podzbiory są nieczęste,
-4. policz support pozostałych,
-5. powtarzaj dla coraz większych długości itemsetów.
+Przykładowo, jeśli `min_support = 0.4`, to w bazie pięciu transakcji itemset musi wystąpić co najmniej w dwóch transakcjach. Itemset $\{\text{chleb},\text{masło},\text{mleko}\}$ ma support $0.2$, więc jest rzadki. Apriori nie będzie już rozszerzał go o kolejne produkty, ponieważ każdy jego nadzbiór również będzie miał support co najwyżej $0.2$.
 
-Zaletą Apriori jest prostota i duża interpretowalność. Wadą jest koszt obliczeniowy: przy dużej liczbie produktów liczba kandydatów eksploduje.
+Zaletą Apriori jest prostota i bardzo dobra interpretowalność. Dobrze nadaje się do dydaktycznego pokazania, czym są częste itemsety i jak działa przycinanie przestrzeni kandydatów. Jego wadą jest koszt obliczeniowy: przy dużej liczbie produktów i niskim progu `min_support` liczba kandydatów może nadal być bardzo duża.
 
-**FP-Growth** [@han2000] rozwiązuje ten problem inaczej. Zamiast jawnie generować wielkie zbiory kandydatów:
+FP-Growth [@han2000] rozwiązuje ten sam problem w inny sposób. Zamiast generować wszystkie kandydaty poziomami, kompresuje bazę transakcji do struktury FP-tree. Taka struktura przechowuje wspólne prefiksy transakcji razem, dzięki czemu powtarzające się fragmenty koszyków nie muszą być zapisywane wielokrotnie. Następnie algorytm wydobywa częste wzorce przez rekurencyjne tworzenie baz warunkowych.
 
-- kompresuje bazę do struktury **FP-tree**,
-- wydobywa wzorce przez rekurencyjne budowanie baz warunkowych,
-- często znacznie ogranicza liczbę skanów i obiektów pośrednich.
-
-W sensie matematycznym oba podejścia celują w te same frequent itemsets, ale ich koszt obliczeniowy i reprezentacja danych są różne.
+Intuicyjnie Apriori pyta: „które kombinacje produktów warto jeszcze sprawdzić?”. FP-Growth pyta raczej: „jak skompresować całą bazę transakcji, aby częste wzorce były widoczne w strukturze drzewa?”. Oba podejścia prowadzą do częstych itemsetów, ale różnią się organizacją obliczeń. Apriori jest prostszy koncepcyjnie, natomiast FP-Growth bywa znacznie szybszy dla dużych i gęstych baz transakcyjnych.
 
 ### Zalety i wady analizy koszykowej
 
-**Zalety**
+Analiza koszykowa ma dużą wartość praktyczną, ponieważ jej wyniki są łatwe do komunikowania. Reguła postaci $\{\text{chleb}\}\Rightarrow\{\text{masło}\}$ jest zrozumiała dla osób nietechnicznych i może bezpośrednio sugerować działania biznesowe, takie jak rekomendacje, promocje łączone albo układ produktów. Ważną zaletą jest też brak potrzeby definiowania zmiennej celu: szukamy wzorców współwystępowania, a nie uczymy klasyfikatora nadzorowanego.
 
-- bardzo naturalna interpretacja biznesowa,
-- brak potrzeby jawnej zmiennej celu,
-- łatwość budowania rekomendacji i kampanii cross-sellingowych,
-- możliwość stosowania również poza handlem detalicznym.
+Jednocześnie analiza koszykowa wymaga ostrożności interpretacyjnej. Po pierwsze, liczba reguł może być ogromna, a wiele z nich będzie banalna albo przypadkowa. Po drugie, wyniki są wrażliwe na progi `min_support`, `min_confidence` i minimalny `lift`. Po trzecie, reguły asocjacyjne opisują współwystępowanie, a nie przyczynowość. Wysoki lift nie oznacza, że zakup jednego produktu powoduje zakup drugiego. Oznacza tylko, że produkty pojawiają się razem częściej, niż oczekiwalibyśmy przy niezależności.
 
-**Wady**
-
-- ogromna liczba pozornie interesujących reguł,
-- wrażliwość na progi `min_support` i `min_confidence`,
-- ryzyko mylenia korelacji z relacją przyczynową,
-- słabsza użyteczność dla bardzo rzadkich, ale istotnych wzorców.
+Istotnym ograniczeniem jest także problem rzadkich, ale ważnych wzorców. Niski support może oznaczać przypadkowy szum, ale może też oznaczać wartościową niszę, np. rzadką kombinację usług, nietypową sekwencję zdarzeń albo specjalistyczny segment klientów. Dlatego progi w analizie koszykowej powinny być dobierane nie tylko technicznie, ale także z uwzględnieniem celu analizy i wiedzy dziedzinowej.
 
 ### Przykład: prosta implementacja Apriori i reguł asocjacyjnych
 
