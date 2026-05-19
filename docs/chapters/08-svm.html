@@ -148,7 +148,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -456,7 +456,7 @@ window.Quarto = {
 <div class="toc-actions"><ul><li><a href="https://github.com/DariuszMajerek/ML_and_DM/issues/new" class="toc-action"><i class="bi bi-github"></i>Zgłoś problem</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -508,7 +508,7 @@ window.Quarto = {
 \]</span></p>
 <p>Interpretacja wartości <span class="math inline">\(\xi_i\)</span> zależy od położenia punktu względem granicy decyzyjnej i marginesu, a jednocześnie pozwala określić, które obserwacje są wektorami nośnymi. Gdy <span class="math inline">\(\xi_i=0\)</span> i jednocześnie <span class="math inline">\(y_i(w^\top x_i+b)&gt;1\)</span>, obserwacja leży poprawnie poza marginesem i nie jest wektorem nośnym. Gdy <span class="math inline">\(\xi_i=0\)</span> oraz <span class="math inline">\(y_i(w^\top x_i+b)=1\)</span>, obserwacja leży dokładnie na brzegu marginesu i jest wektorem nośnym. Gdy <span class="math inline">\(0&lt;\xi_i&lt;1\)</span>, obserwacja nadal jest poprawnie sklasyfikowana, ale znajduje się wewnątrz marginesu, czyli zbyt blisko granicy decyzyjnej; taka obserwacja również jest wektorem nośnym. Gdy <span class="math inline">\(\xi_i=1\)</span>, obserwacja leży dokładnie na granicy decyzyjnej <span class="math inline">\(w^\top x+b=0\)</span>. Natomiast gdy <span class="math inline">\(\xi_i&gt;1\)</span>, obserwacja znajduje się po złej stronie granicy decyzyjnej i jest błędnie sklasyfikowana. W przypadkach <span class="math inline">\(\xi_i\ge 1\)</span> obserwacja także jest wektorem nośnym, ponieważ narusza warunek marginesu i wpływa na rozwiązanie optymalizacyjne.</p>
 <p>W ten sposób soft-margin SVM nie wymaga, aby wszystkie punkty spełniały idealny warunek marginesu. Zamiast tego dopuszcza naruszenia, ale dolicza je do funkcji celu przez składnik <span class="math inline">\(C\sum_i \xi_i\)</span>. Im większe są wartości <span class="math inline">\(\xi_i\)</span>, tym większa kara za obserwacje trudne, leżące wewnątrz marginesu lub błędnie sklasyfikowane. Parametr <span class="math inline">\(C&gt;0\)</span> reguluje kompromis między szerokością marginesu a karą za naruszenia: duże <span class="math inline">\(C\)</span> prowadzi do silniejszego „ścigania” błędów treningowych, a małe <span class="math inline">\(C\)</span> do większej regularizacji i szerszego marginesu kosztem większej tolerancji błędów.</p>
-<div id="06c5bb52" class="cell" data-execution_count="1">
+<div id="9baf3951" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -623,6 +623,7 @@ K(x,z)=(x_1z_1+x_2z_2)^2
 =K(x,z).
 \]</span></p>
 <p>Oznacza to, że jądro <span class="math inline">\(K(x,z)=(x^\top z)^2\)</span> działa tak, jakbyśmy najpierw zastąpili oryginalne cechy <span class="math inline">\((x_1,x_2)\)</span> nowymi cechami kwadratowymi <span class="math inline">\((x_1^2,\sqrt{2}x_1x_2,x_2^2)\)</span>, a dopiero potem policzyli zwykły iloczyn skalarny. Właśnie na tym polega intuicja triku jądrowego: obliczamy podobieństwo w bogatszej, nieliniowej przestrzeni cech, nie konstruując tej przestrzeni jawnie dla całego zbioru danych.</p>
+<p>Dlaczego w ogóle zależy nam na podobieństwie w bogatszej przestreni? Ponieważ funkcja decyzyjna kernelowego SVM ma postać <span class="math inline">\(f(x)=\sum_{i \in SV}\alpha_i y_i K(x_i,x)+b\)</span>, gdzie każdy wyraz sumy wyraża, jak bardzo nowy punkt <span class="math inline">\(x\)</span> przypomina dany wektor nośny <span class="math inline">\(x_i\)</span> — ale właśnie w przestrzeni przekształconej. Jeśli dwie obserwacje należą do tej samej klasy i leżą blisko siebie w tej przestrzeni, ich jądro będzie duże i wzmocni decyzję modelu. Gdybyśmy mierzyli podobieństwo wyłącznie w oryginalnych cechach, nie bylibyśmy w stanie wykryć struktur nieliniowych, takich jak okręgi czy parabole. Bogatsza przestrzeń sprawia, że punkty, które są „podobne” w sensie nieliniowej granicy decyzyjnej, stają się faktycznie bliskie w sensie iloczynu skalarnego — i właśnie to podobieństwo model wykorzystuje do klasyfikacji.</p>
 <section id="popularne-jądra-i-ich-zastosowania" class="level3" data-number="9.4.1">
 <h3 data-number="9.4.1" class="anchored" data-anchor-id="popularne-jądra-i-ich-zastosowania"><span class="header-section-number">9.4.1</span> Popularne jądra i ich zastosowania</h3>
 <p>Najprostszym przypadkiem jest jądro liniowe <span class="math inline">\(K(x,z)=x^\top z\)</span>. Jest ono równoważne klasycznemu liniowemu SVM, ponieważ nie wprowadza nieliniowego odwzorowania przestrzeni cech. Stosuje się je przede wszystkim wtedy, gdy dane są liniowo lub prawie liniowo separowalne, a także w problemach wysokowymiarowych i rzadkich, takich jak klasyfikacja tekstów, dane genomowe lub reprezentacje typu <em>bag-of-words</em>. Jądro liniowe jest szybkie, skalowalne i relatywnie łatwe do interpretacji, ale ma ograniczoną elastyczność, ponieważ nie pozwala modelować złożonych nieliniowych granic decyzyjnych.</p>
@@ -632,12 +633,12 @@ K(x,z)=(x_1z_1+x_2z_2)^2
 <p>Jądro Laplace’a ma postać <span class="math inline">\(K(x,z)=\exp(-\gamma\|x-z\|_1)\)</span> i jest podobne do jądra RBF, ale zamiast normy euklidesowej wykorzystuje normę <span class="math inline">\(L^1\)</span>. Może być użyteczne wtedy, gdy chcemy mierzyć podobieństwo w sposób bardziej odporny na pojedyncze duże odchylenia w cechach. W praktyce stosuje się je rzadziej niż klasyczne jądro RBF, ale może być sensowną alternatywą w danych, w których odległość Manhattan lepiej opisuje strukturę podobieństwa między obserwacjami.</p>
 </section>
 </section>
-<section id="estymacja-parametrów-w-svm-margines-twardy-i-miękki" class="level2" data-number="9.5">
+<section id="estymacja-parametrów-w-svm-margines-twardy-i-miękki" class="level2 page-columns page-full" data-number="9.5">
 <h2 data-number="9.5" class="anchored" data-anchor-id="estymacja-parametrów-w-svm-margines-twardy-i-miękki"><span class="header-section-number">9.5</span> Estymacja parametrów w SVM: margines twardy i miękki</h2>
 <p>Estymacja parametrów SVM jest problemem optymalizacji wypukłej. W wersji liniowej parametry modelu to <span class="math inline">\((w,b)\)</span>, natomiast w ujęciu dualnym (które jest kluczowe zarówno obliczeniowo, jak i dla jąder) parametrami roboczymi stają się mnożniki Lagrange’a <span class="math inline">\(\alpha_1,\dots,\alpha_n\)</span> oraz <span class="math inline">\(b\)</span>. Przejście do postaci dualnej nie jest tylko „trikiem” formalnym: ono wyjaśnia, dlaczego rozwiązanie zależy wyłącznie od części obserwacji (wektorów nośnych) oraz dlaczego kernel SVM można zrealizować bez jawnego konstruowania <span class="math inline">\(\varphi(x)\)</span>.</p>
-<section id="margines-twardy-od-postaci-pierwotnej-do-dualnej" class="level3" data-number="9.5.1">
+<section id="margines-twardy-od-postaci-pierwotnej-do-dualnej" class="level3 page-columns page-full" data-number="9.5.1">
 <h3 data-number="9.5.1" class="anchored" data-anchor-id="margines-twardy-od-postaci-pierwotnej-do-dualnej"><span class="header-section-number">9.5.1</span> Margines twardy: od postaci pierwotnej do dualnej</h3>
-<p>W hard-margin SVM rozwiązujemy zadanie z ograniczeniami nierównościowymi. Aby przejść do dualu, konstruujemy Lagrangian przez dołączenie ograniczeń z mnożnikami <span class="math inline">\(\alpha_i\ge 0\)</span>. Otrzymujemy funkcję:</p>
+<p>W hard-margin SVM rozwiązujemy zadanie z ograniczeniami wynikającymi z nierówności. Aby przejść do postaci dualnej, konstruujemy Lagrangian przez dołączenie ograniczeń z mnożnikami <span class="math inline">\(\alpha_i\ge 0\)</span>. Otrzymujemy funkcję:</p>
 <p><span class="math display">\[
 \mathcal{L}(w,b,\alpha)=\frac{1}{2}\|w\|^2-\sum_{i=1}^n \alpha_i\big(y_i(w^\top x_i+b)-1\big).
 \]</span></p>
@@ -770,8 +771,8 @@ A=
 \sum_{i=1}^n\sum_{j=1}^n
 \alpha_i\alpha_j y_i y_j x_i^\top x_j.
 \]</span></p>
-<p>Ponieważ w problemie dualnym maksymalizujemy tę funkcję względem <span class="math inline">\(\alpha\)</span>, więc mamy postać</p>
-<p><span class="math display">\[
+<p>Ponieważ w problemie dualnym maksymalizujemy tę funkcję względem <span class="math inline">\(\alpha\)</span> , więc mamy postać<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Ograniczenie <span class="math inline">\(\alpha_i \ge 0\)</span> wynika z definicji mnożników Lagrange’a dla ograniczeń nierównościowych: aby Lagrangian był ograniczony od dołu, mnożniki przy ograniczeniach <span class="math inline">\(\ge 0\)</span> muszą być nieujemne. Ograniczenie <span class="math inline">\(\sum_i \alpha_i y_i = 0\)</span> pochodzi z warunku stacjonarności <span class="math inline">\(\partial \mathcal{L}/\partial b = 0\)</span>: ponieważ <span class="math inline">\(b\)</span> jest wolnym parametrem, jego pochodna musi znikać, co daje dokładnie tę sumę.</p></div></div><p><span class="math display">\[
 \max_{\alpha}\
 \sum_{i=1}^n \alpha_i
 -
@@ -785,7 +786,8 @@ A=
 <p><span class="math display">\[
 \hat w=\sum_{i=1}^n \alpha_i y_i x_i.
 \]</span></p>
-<p>W tym miejscu potrzebna jest jeszcze interpretacja współczynników <span class="math inline">\(\alpha_i\)</span>. Sam problem dualny mówi, że każda obserwacja ma swój mnożnik Lagrange’a, ale nie wyjaśnia jeszcze, które obserwacje rzeczywiście wpływają na granicę decyzyjną. Do tego służą warunki KKT (Karush–Kuhn–Tucker), czyli warunki optymalności dla problemów z ograniczeniami. W przypadku hard-margin SVM najważniejszy jest warunek komplementarności</p>
+<p>W tym miejscu potrzebna jest jeszcze interpretacja współczynników <span class="math inline">\(\alpha_i\)</span>. Sam problem dualny mówi, że każda obserwacja ma swój mnożnik Lagrange’a, ale nie wyjaśnia jeszcze, które obserwacje rzeczywiście wpływają na granicę decyzyjną. Do tego służą warunki KKT (Karush–Kuhn–Tucker), czyli warunki optymalności dla problemów z ograniczeniami.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Warunki KKT to uogólnienie metody mnożników Lagrange’a na ograniczenia nierównościowe. Składają się z czterech grup: (1) dopuszczalność pierwotna — punkt spełnia ograniczenia; (2) dopuszczalność dualna — mnożniki <span class="math inline">\(\alpha_i \ge 0\)</span>; (3) stacjonarność — gradient Lagrangianu znika w punkcie optymalnym; (4) komplementarność — <span class="math inline">\(\alpha_i [y_i(w^\top x_i + b) - 1] = 0\)</span>. W SVM warunek (4) jest kluczowy: dzieli obserwacje na nieaktywne (<span class="math inline">\(\alpha_i = 0\)</span>, poza marginesem) i wektory nośne (<span class="math inline">\(\alpha_i &gt; 0\)</span>, na brzegu marginesu), które jako jedyne wyznaczają położenie hiperpłaszczyzny.</p></div></div><p>W przypadku hard-margin SVM najważniejszy jest warunek komplementarności</p>
 <p><span class="math display">\[
 \alpha_i\left[y_i(w^\top x_i+b)-1\right]=0.
 \]</span></p>
@@ -818,7 +820,7 @@ y_s(\hat w^\top x_s+\hat b)=1.
 \]</span></p>
 <p>W praktyce <span class="math inline">\(\hat b\)</span> często oblicza się dla kilku wektorów nośnych i uśrednia, aby zmniejszyć wpływ błędów numerycznych.</p>
 </section>
-<section id="margines-miękki" class="level3" data-number="9.5.2">
+<section id="margines-miękki" class="level3 page-columns page-full" data-number="9.5.2">
 <h3 data-number="9.5.2" class="anchored" data-anchor-id="margines-miękki"><span class="header-section-number">9.5.2</span> Margines miękki</h3>
 <p>W soft-margin SVM punktem wyjścia jest postać pierwotna z dodatkowymi zmiennymi luzu <span class="math inline">\(\xi_i\ge 0\)</span>:</p>
 <p><span class="math display">\[
@@ -839,19 +841,28 @@ C-\alpha_i-\mu_i=0.
 <p><span class="math display">\[
 0\le \alpha_i\le C.
 \]</span></p>
-<p>Funkcja celu w problemie dualnym ma tę samą postać jak w przypadku hard-margin SVM, ponieważ dane nadal występują przez iloczyny skalarne <span class="math inline">\(x_i^\top x_j\)</span>. Zmienia się natomiast zakres dopuszczalnych wartości mnożników <span class="math inline">\(\alpha_i\)</span>:</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Skąd pochodzi każdy składnik warunku <span class="math inline">\(C - \alpha_i - \mu_i = 0\)</span>:</p>
+<ul>
+<li><span class="math inline">\(C\)</span> — z kary <span class="math inline">\(C\xi_i\)</span> w funkcji celu,</li>
+<li><span class="math inline">\(-\alpha_i\)</span> — z ograniczenia marginesowego <span class="math inline">\(y_i(w^\top x_i+b) \ge 1-\xi_i\)</span> (zawiera <span class="math inline">\(\xi_i\)</span> z minusem),</li>
+<li><span class="math inline">\(-\mu_i\)</span> — z ograniczenia nieujemności <span class="math inline">\(\xi_i \ge 0\)</span>.</li>
+</ul>
+<p>Ponieważ <span class="math inline">\(\mu_i \ge 0\)</span>, z równości <span class="math inline">\(\alpha_i = C - \mu_i\)</span> wynika <span class="math inline">\(\alpha_i \le C\)</span>. Łącząc z <span class="math inline">\(\alpha_i \ge 0\)</span> (definicja mnożników Lagrange’a), dostajemy <span class="math inline">\(0 \le \alpha_i \le C\)</span>.</p>
+</div></div><p>Funkcja celu w problemie dualnym ma tę samą postać jak w przypadku hard-margin SVM, ponieważ dane nadal występują przez iloczyny skalarne <span class="math inline">\(x_i^\top x_j\)</span>. Zmienia się natomiast zakres dopuszczalnych wartości mnożników <span class="math inline">\(\alpha_i\)</span>:</p>
 <p><span class="math display">\[
 \max_{\alpha}\ \sum_{i=1}^n \alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n \alpha_i\alpha_j y_i y_j\, x_i^\top x_j,
 \quad
 \text{s.t. } 0\le \alpha_i\le C,\ \sum_{i=1}^n \alpha_i y_i=0.
 \]</span></p>
-<p>Ograniczenie górne <span class="math inline">\(\alpha_i\le C\)</span> ma ważną interpretację. W hard-margin SVM mnożnik <span class="math inline">\(\alpha_i\)</span> mógł rosnąć bez takiego ograniczenia, ponieważ nie dopuszczaliśmy naruszeń marginesu. W soft-margin SVM pojedyncza obserwacja nie może wymusić dowolnie dużego wpływu na rozwiązanie dualne, ponieważ jej wpływ jest ograniczony przez parametr <span class="math inline">\(C\)</span>. Im większe <span class="math inline">\(C\)</span>, tym silniej model reaguje na punkty naruszające margines; im mniejsze <span class="math inline">\(C\)</span>, tym łatwiej model „odpuszcza” trudne obserwacje na rzecz szerszego marginesu.</p>
-<p>Warunki KKT pozwalają powiązać wartości <span class="math inline">\(\alpha_i\)</span> z położeniem obserwacji względem marginesu. Jeżeli <span class="math inline">\(\alpha_i=0\)</span>, obserwacja jest nieaktywna: leży poprawnie poza marginesem i nie wpływa na położenie granicy decyzyjnej. Jeżeli <span class="math inline">\(0&lt;\alpha_i&lt;C\)</span>, obserwacja leży dokładnie na brzegu marginesu, czyli spełnia</p>
+<p>Ograniczenie górne <span class="math inline">\(\alpha_i\le C\)</span> ma ważną interpretację. W hard-margin SVM mnożnik <span class="math inline">\(\alpha_i\)</span> mógł rosnąć bez takiego ograniczenia, ponieważ nie dopuszczaliśmy naruszeń marginesu. W soft-margin SVM pojedyncza obserwacja nie może wymusić dowolnie dużego wpływu na rozwiązanie dualne, ponieważ jej wpływ jest ograniczony przez parametr <span class="math inline">\(C\)</span>. Im większe <span class="math inline">\(C\)</span>, tym silniej model reaguje na punkty naruszające margines; im mniejsze <span class="math inline">\(C\)</span>, tym łatwiej model „odpuszcza” trudne obserwacje na rzecz szerszego marginesu kosztem większej tolerancji błędów.</p>
+<p>Warunki KKT pozwalają powiązać wartości <span class="math inline">\(\alpha_i\)</span> z położeniem obserwacji względem marginesu. Jeżeli <span class="math inline">\(\alpha_i=0\)</span>, obserwacja jest nieaktywna: leży na brzegu marginesu lub poza nim. Jeżeli <span class="math inline">\(0&lt;\alpha_i&lt;C\)</span>, obserwacja leży dokładnie na brzegu marginesu, czyli spełnia</p>
 <p><span class="math display">\[
 y_i(w^\top x_i+b)=1.
 \]</span></p>
 <p>Są to klasyczne wektory nośne, szczególnie użyteczne do obliczania <span class="math inline">\(\hat b\)</span>.</p>
-<p>Jeżeli natomiast <span class="math inline">\(\alpha_i=C\)</span>, obserwacja jest punktem nasyconym ograniczeniem dualnym. Taki przypadek zwykle oznacza, że punkt znajduje się wewnątrz marginesu albo po złej stronie granicy decyzyjnej, choć granicznie może także leżeć na brzegu marginesu. Dlatego nie należy utożsamiać warunku <span class="math inline">\(\alpha_i=C\)</span> wyłącznie z błędną klasyfikacją. Precyzyjniej: są to obserwacje, dla których kara za naruszenie osiąga maksymalny dopuszczalny wpływ w dualu. Do wyznaczania <span class="math inline">\(\hat b\)</span> najbezpieczniej używać punktów spełniających <span class="math inline">\(0&lt;\alpha_i&lt;C\)</span>, ponieważ dla nich zachodzi dokładna równość brzegowa bez nasycenia karą.</p>
+<p>Jeżeli natomiast <span class="math inline">\(\alpha_i=C\)</span>, obserwacja jest punktem nasyconym ograniczeniem dualnym. Taki przypadek zwykle oznacza, że punkt znajduje się wewnątrz marginesu albo po złej stronie granicy decyzyjnej, choć granicznie może także leżeć na brzegu marginesu. Dlatego nie należy utożsamiać warunku <span class="math inline">\(\alpha_i=C\)</span> wyłącznie z błędną klasyfikacją. Precyzyjniej: są to obserwacje, dla których kara za naruszenie osiąga maksymalny dopuszczalny wpływ w problemie dualnym. Do wyznaczania <span class="math inline">\(\hat b\)</span> najbezpieczniej używać punktów spełniających <span class="math inline">\(0&lt;\alpha_i&lt;C\)</span>, ponieważ dla nich zachodzi dokładna równość brzegowa bez nasycenia karą.</p>
 <p>Soft-margin SVM można też zapisać bez jawnych zmiennych luzu. Dla ustalonych <span class="math inline">\(w\)</span> i <span class="math inline">\(b\)</span> najmniejsza wartość <span class="math inline">\(\xi_i\)</span>, która spełnia ograniczenie <span class="math inline">\(y_i(w^\top x_i+b)\ge 1-\xi_i\)</span>, wynosi</p>
 <p><span class="math display">\[
 \xi_i=\max\{0,\ 1-y_i(w^\top x_i+b)\}.
@@ -860,7 +871,7 @@ y_i(w^\top x_i+b)=1.
 <p><span class="math display">\[
 \min_{w,b}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n \max\{0,\ 1-y_i(w^\top x_i+b)\}.
 \]</span></p>
-<p>Drugi składnik jest sumą strat zawiasowych (<em>hinge loss</em>). W tej postaci dobrze widać, że soft-margin SVM łączy dwa mechanizmy: regularizację przez minimalizację <span class="math inline">\(\|w\|^2\)</span> oraz karanie obserwacji, które znajdują się wewnątrz marginesu lub są błędnie sklasyfikowane. Parametr <span class="math inline">\(C\)</span> reguluje względną siłę tej kary względem szerokości marginesu.</p>
+<p>Drugi składnik jest sumą strat nazywanych <em>hinge loss</em>. W tej postaci dobrze widać, że soft-margin SVM łączy dwa mechanizmy: regularizację przez minimalizację <span class="math inline">\(\|w\|^2\)</span> oraz karanie obserwacji, które znajdują się wewnątrz marginesu lub są błędnie sklasyfikowane. Parametr <span class="math inline">\(C\)</span> reguluje względną siłę tej kary względem szerokości marginesu.</p>
 </section>
 <section id="kernelowa-wersja-a-estymacja-parametrów" class="level3" data-number="9.5.3">
 <h3 data-number="9.5.3" class="anchored" data-anchor-id="kernelowa-wersja-a-estymacja-parametrów"><span class="header-section-number">9.5.3</span> Kernelowa wersja a estymacja parametrów</h3>
@@ -894,7 +905,7 @@ f(x)=\sum_{i\in SV} \alpha_i y_i K(x_i,x)+b.
 <p><span class="math display">\[
 \hat w=\sum_i \alpha_i y_i\varphi(x_i).
 \]</span></p>
-<p>Jeżeli przestrzeń ta jest bardzo wysokowymiarowa albo nieskończenie wymiarowa, jawna rekonstrukcja <span class="math inline">\(\hat w\)</span> nie jest potrzebna. Model jest reprezentowany przez wektory nośne, ich współczynniki <span class="math inline">\(\alpha_i\)</span>, etykiety <span class="math inline">\(y_i\)</span>, funkcję jądra oraz wyraz wolny <span class="math inline">\(b\)</span>.</p>
+<p>Jeżeli przestrzeń ta jest bardzo wysokowymiarowa albo nieskończenie wymiarowa, jawna rekonstrukcja <span class="math inline">\(\hat w\)</span> nie jest potrzebna/możliwa. Model jest reprezentowany przez wektory nośne, ich współczynniki <span class="math inline">\(\alpha_i\)</span>, etykiety <span class="math inline">\(y_i\)</span>, funkcję jądra oraz wyraz wolny <span class="math inline">\(b\)</span>.</p>
 <p>Wyraz wolny <span class="math inline">\(b\)</span> wyznacza się z warunków KKT. Najwygodniej używać do tego wektorów nośnych spełniających <span class="math inline">\(0&lt;\alpha_i&lt;C\)</span>, ponieważ dla takich punktów zachodzi równość brzegowa</p>
 <p><span class="math display">\[
 y_i f(x_i)=1.
@@ -913,7 +924,7 @@ b=y_i-\sum_{j\in SV}\alpha_j y_j K(x_j,x_i).
 <li><strong>one-vs-rest (OvR)</strong> – uczymy <span class="math inline">\(K\)</span> klasyfikatorów binarnych „klasa <span class="math inline">\(k\)</span> vs reszta” i wybieramy klasę o największej wartości funkcji decyzyjnej;</li>
 <li><strong>one-vs-one (OvO)</strong> – uczymy <span class="math inline">\(K(K-1)/2\)</span> klasyfikatorów dla każdej pary klas i stosujemy głosowanie.</li>
 </ul>
-<p>W praktyce implementacje (np. scikit-learn) domyślnie stosują OvO dla <code>SVC</code>, a OvR jest często spotykany w wersjach liniowych (np. <code>LinearSVC</code>). Wybór strategii wpływa na koszt obliczeń i zachowanie w przypadku niezbalansowanych klas.</p>
+<p>W praktyce implementacje (np. <code>scikit-learn</code>) domyślnie stosują OvO dla <code>SVC</code>, a OvR jest często spotykany w wersjach liniowych (np. <code>LinearSVC</code>). Wybór strategii wpływa na koszt obliczeń i zachowanie w przypadku niezbalansowanych klas.</p>
 </section>
 <section id="svm-w-regresji-svr" class="level2" data-number="9.7">
 <h2 data-number="9.7" class="anchored" data-anchor-id="svm-w-regresji-svr"><span class="header-section-number">9.7</span> SVM w regresji: SVR</h2>
@@ -997,7 +1008,7 @@ y_i=10,
 \qquad
 \xi_i^*=0.
 \]</span></p>
-<p>Ten przykład pokazuje, że SVR nie karze samego faktu popełnienia błędu, lecz dopiero przekroczenie ustalonej tolerancji <span class="math inline">\(\varepsilon\)</span>. Punkty leżące wewnątrz rurki nie wpływają bezpośrednio na karę w funkcji celu. Punkty leżące na brzegu rurki lub poza nią są odpowiednikami wektorów nośnych w regresji, ponieważ to one wyznaczają położenie funkcji regresji. Podobnie jak SVC, SVR może korzystać z jąder: wówczas funkcja regresji jest liniowa w przestrzeni cech <span class="math inline">\(\varphi(x)\)</span>, ale może być nieliniowa względem oryginalnych zmiennych.</p>
+<p>Ten przykład pokazuje, że SVR nie karze samego faktu popełnienia błędu, lecz dopiero przekrocenie ustalonej tolerancji <span class="math inline">\(\varepsilon\)</span>. Punkty leżące wewnątrz rurki nie wpływają bezpośrednio na karę w funkcji celu. Punkty leżące na brzegu rurki lub poza nią są odpowiednikami wektorów nośnych w regresji, ponieważ to one wyznaczają położenie funkcji regresji. Podobnie jak SVC, SVR może korzystać z jąder: wówczas funkcja regresji jest liniowa w przestrzeni cech <span class="math inline">\(\varphi(x)\)</span>, ale może być nieliniowa względem oryginalnych zmiennych.</p>
 </section>
 <section id="założenia-zalety-i-wady" class="level2" data-number="9.8">
 <h2 data-number="9.8" class="anchored" data-anchor-id="założenia-zalety-i-wady"><span class="header-section-number">9.8</span> Założenia, zalety i wady</h2>
@@ -1006,7 +1017,7 @@ y_i=10,
 <section id="przykład-klasyfikacji-wieloklasowej" class="level2" data-number="9.9">
 <h2 data-number="9.9" class="anchored" data-anchor-id="przykład-klasyfikacji-wieloklasowej"><span class="header-section-number">9.9</span> Przykład klasyfikacji wieloklasowej</h2>
 <p>Poniżej wykorzystujemy zbiór <code>scikit-learn/iris</code> z Hugging Face i uczymy wieloklasowe SVM z jądrem RBF. Zwracamy uwagę na dwa elementy praktyczne: standaryzację oraz dobór hiperparametrów <span class="math inline">\(C\)</span> i <span class="math inline">\(\gamma\)</span> przez walidację krzyżową.</p>
-<div id="41217eb3" class="cell" data-execution_count="2">
+<div id="c848ccaa" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1101,7 +1112,7 @@ weighted avg       1.00      1.00      1.00        38
 <section id="przykład-regresyjny" class="level2" data-number="9.10">
 <h2 data-number="9.10" class="anchored" data-anchor-id="przykład-regresyjny"><span class="header-section-number">9.10</span> Przykład regresyjny</h2>
 <p>W drugim przykładzie pokazujemy SVR na zbiorze <code>scikit-learn/Fish</code>. Ponownie stosujemy skalowanie i stroimy <span class="math inline">\(C\)</span>, <span class="math inline">\(\varepsilon\)</span> oraz <span class="math inline">\(\gamma\)</span> (dla RBF) przez walidację krzyżową.</p>
-<div id="0862c9d8" class="cell" data-execution_count="3">
+<div id="f8e475f5" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Kod</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1162,6 +1173,7 @@ Test RMSE: 68.12953630825864</code></pre>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -164,6 +164,8 @@ $$
 
 Oznacza to, że jądro $K(x,z)=(x^\top z)^2$ działa tak, jakbyśmy najpierw zastąpili oryginalne cechy $(x_1,x_2)$ nowymi cechami kwadratowymi $(x_1^2,\sqrt{2}x_1x_2,x_2^2)$, a dopiero potem policzyli zwykły iloczyn skalarny. Właśnie na tym polega intuicja triku jądrowego: obliczamy podobieństwo w bogatszej, nieliniowej przestrzeni cech, nie konstruując tej przestrzeni jawnie dla całego zbioru danych.
 
+Dlaczego w ogóle zależy nam na podobieństwie w bogatszej przestreni? Ponieważ funkcja decyzyjna kernelowego SVM ma postać $f(x)=\sum_{i \in SV}\alpha_i y_i K(x_i,x)+b$, gdzie każdy wyraz sumy wyraża, jak bardzo nowy punkt $x$ przypomina dany wektor nośny $x_i$ — ale właśnie w przestrzeni przekształconej. Jeśli dwie obserwacje należą do tej samej klasy i leżą blisko siebie w tej przestrzeni, ich jądro będzie duże i wzmocni decyzję modelu. Gdybyśmy mierzyli podobieństwo wyłącznie w oryginalnych cechach, nie bylibyśmy w stanie wykryć struktur nieliniowych, takich jak okręgi czy parabole. Bogatsza przestrzeń sprawia, że punkty, które są „podobne" w sensie nieliniowej granicy decyzyjnej, stają się faktycznie bliskie w sensie iloczynu skalarnego — i właśnie to podobieństwo model wykorzystuje do klasyfikacji.
+
 ### Popularne jądra i ich zastosowania
 
 Najprostszym przypadkiem jest jądro liniowe $K(x,z)=x^\top z$. Jest ono równoważne klasycznemu liniowemu SVM, ponieważ nie wprowadza nieliniowego odwzorowania przestrzeni cech. Stosuje się je przede wszystkim wtedy, gdy dane są liniowo lub prawie liniowo separowalne, a także w problemach wysokowymiarowych i rzadkich, takich jak klasyfikacja tekstów, dane genomowe lub reprezentacje typu *bag-of-words*. Jądro liniowe jest szybkie, skalowalne i relatywnie łatwe do interpretacji, ale ma ograniczoną elastyczność, ponieważ nie pozwala modelować złożonych nieliniowych granic decyzyjnych.
@@ -182,7 +184,7 @@ Estymacja parametrów SVM jest problemem optymalizacji wypukłej. W wersji linio
 
 ### Margines twardy: od postaci pierwotnej do dualnej
 
-W hard-margin SVM rozwiązujemy zadanie z ograniczeniami nierównościowymi. Aby przejść do dualu, konstruujemy Lagrangian przez dołączenie ograniczeń z mnożnikami $\alpha_i\ge 0$. Otrzymujemy funkcję:
+W hard-margin SVM rozwiązujemy zadanie z ograniczeniami wynikającymi z nierówności. Aby przejść do postaci dualnej, konstruujemy Lagrangian przez dołączenie ograniczeń z mnożnikami $\alpha_i\ge 0$. Otrzymujemy funkcję:
 
 $$
 \mathcal{L}(w,b,\alpha)=\frac{1}{2}\|w\|^2-\sum_{i=1}^n \alpha_i\big(y_i(w^\top x_i+b)-1\big).
@@ -355,7 +357,7 @@ $$
 \alpha_i\alpha_j y_i y_j x_i^\top x_j.
 $$
 
-Ponieważ w problemie dualnym maksymalizujemy tę funkcję względem $\alpha$, więc mamy postać
+Ponieważ w problemie dualnym maksymalizujemy tę funkcję względem $\alpha$ , więc mamy postać^[Ograniczenie $\alpha_i \ge 0$ wynika z definicji mnożników Lagrange'a dla ograniczeń nierównościowych: aby Lagrangian był ograniczony od dołu, mnożniki przy ograniczeniach $\ge 0$ muszą być nieujemne. Ograniczenie $\sum_i \alpha_i y_i = 0$ pochodzi z warunku stacjonarności $\partial \mathcal{L}/\partial b = 0$: ponieważ $b$ jest wolnym parametrem, jego pochodna musi znikać, co daje dokładnie tę sumę.]
 
 $$
 \max_{\alpha}\ 
@@ -368,13 +370,16 @@ $$
 \text{s.t. } \alpha_i\ge 0,\ \sum_{i=1}^n \alpha_i y_i=0.
 $$
 
+
 Otrzymane zadanie jest problemem programowania kwadratowego (QP) z liniowymi ograniczeniami. Ma ono tę samą treść optymalizacyjną co problem pierwotny, ale jest zapisane w innych zmiennych: zamiast bezpośrednio szukać $w$ i $b$, wyznaczamy współczynniki $\alpha_i$ przypisane do kolejnych obserwacji treningowych. Następnie, po rozwiązaniu problemu dualnego, wektor normalny do hiperpłaszczyzny można odtworzyć ze wzoru
 
 $$
 \hat w=\sum_{i=1}^n \alpha_i y_i x_i.
 $$
 
-W tym miejscu potrzebna jest jeszcze interpretacja współczynników $\alpha_i$. Sam problem dualny mówi, że każda obserwacja ma swój mnożnik Lagrange'a, ale nie wyjaśnia jeszcze, które obserwacje rzeczywiście wpływają na granicę decyzyjną. Do tego służą warunki KKT (Karush–Kuhn–Tucker), czyli warunki optymalności dla problemów z ograniczeniami. W przypadku hard-margin SVM najważniejszy jest warunek komplementarności
+W tym miejscu potrzebna jest jeszcze interpretacja współczynników $\alpha_i$. Sam problem dualny mówi, że każda obserwacja ma swój mnożnik Lagrange'a, ale nie wyjaśnia jeszcze, które obserwacje rzeczywiście wpływają na granicę decyzyjną. Do tego służą warunki KKT (Karush–Kuhn–Tucker), czyli warunki optymalności dla problemów z ograniczeniami.^[Warunki KKT to uogólnienie metody mnożników Lagrange'a na ograniczenia nierównościowe. Składają się z czterech grup: (1) dopuszczalność pierwotna — punkt spełnia ograniczenia; (2) dopuszczalność dualna — mnożniki $\alpha_i \ge 0$; (3) stacjonarność — gradient Lagrangianu znika w punkcie optymalnym; (4) komplementarność — $\alpha_i [y_i(w^\top x_i + b) - 1] = 0$. W SVM warunek (4) jest kluczowy: dzieli obserwacje na nieaktywne ($\alpha_i = 0$, poza marginesem) i wektory nośne ($\alpha_i > 0$, na brzegu marginesu), które jako jedyne wyznaczają położenie hiperpłaszczyzny.]
+
+W przypadku hard-margin SVM najważniejszy jest warunek komplementarności
 
 $$
 \alpha_i\left[y_i(w^\top x_i+b)-1\right]=0.
@@ -454,6 +459,16 @@ $$
 0\le \alpha_i\le C.
 $$
 
+::: {.column-margin}
+Skąd pochodzi każdy składnik warunku $C - \alpha_i - \mu_i = 0$:
+
+- $C$ — z kary $C\xi_i$ w funkcji celu,
+- $-\alpha_i$ — z ograniczenia marginesowego $y_i(w^\top x_i+b) \ge 1-\xi_i$ (zawiera $\xi_i$ z minusem),
+- $-\mu_i$ — z ograniczenia nieujemności $\xi_i \ge 0$.
+
+Ponieważ $\mu_i \ge 0$, z równości $\alpha_i = C - \mu_i$ wynika $\alpha_i \le C$. Łącząc z $\alpha_i \ge 0$ (definicja mnożników Lagrange'a), dostajemy $0 \le \alpha_i \le C$.
+:::
+
 Funkcja celu w problemie dualnym ma tę samą postać jak w przypadku hard-margin SVM, ponieważ dane nadal występują przez iloczyny skalarne $x_i^\top x_j$. Zmienia się natomiast zakres dopuszczalnych wartości mnożników $\alpha_i$:
 
 $$
@@ -462,9 +477,9 @@ $$
 \text{s.t. } 0\le \alpha_i\le C,\ \sum_{i=1}^n \alpha_i y_i=0.
 $$
 
-Ograniczenie górne $\alpha_i\le C$ ma ważną interpretację. W hard-margin SVM mnożnik $\alpha_i$ mógł rosnąć bez takiego ograniczenia, ponieważ nie dopuszczaliśmy naruszeń marginesu. W soft-margin SVM pojedyncza obserwacja nie może wymusić dowolnie dużego wpływu na rozwiązanie dualne, ponieważ jej wpływ jest ograniczony przez parametr $C$. Im większe $C$, tym silniej model reaguje na punkty naruszające margines; im mniejsze $C$, tym łatwiej model „odpuszcza” trudne obserwacje na rzecz szerszego marginesu.
+Ograniczenie górne $\alpha_i\le C$ ma ważną interpretację. W hard-margin SVM mnożnik $\alpha_i$ mógł rosnąć bez takiego ograniczenia, ponieważ nie dopuszczaliśmy naruszeń marginesu. W soft-margin SVM pojedyncza obserwacja nie może wymusić dowolnie dużego wpływu na rozwiązanie dualne, ponieważ jej wpływ jest ograniczony przez parametr $C$. Im większe $C$, tym silniej model reaguje na punkty naruszające margines; im mniejsze $C$, tym łatwiej model „odpuszcza” trudne obserwacje na rzecz szerszego marginesu kosztem większej tolerancji błędów.
 
-Warunki KKT pozwalają powiązać wartości $\alpha_i$ z położeniem obserwacji względem marginesu. Jeżeli $\alpha_i=0$, obserwacja jest nieaktywna: leży poprawnie poza marginesem i nie wpływa na położenie granicy decyzyjnej. Jeżeli $0<\alpha_i<C$, obserwacja leży dokładnie na brzegu marginesu, czyli spełnia
+Warunki KKT pozwalają powiązać wartości $\alpha_i$ z położeniem obserwacji względem marginesu. Jeżeli $\alpha_i=0$, obserwacja jest nieaktywna: leży na brzegu marginesu lub poza nim. Jeżeli $0<\alpha_i<C$, obserwacja leży dokładnie na brzegu marginesu, czyli spełnia
 
 $$
 y_i(w^\top x_i+b)=1.
@@ -472,7 +487,7 @@ $$
 
 Są to klasyczne wektory nośne, szczególnie użyteczne do obliczania $\hat b$.
 
-Jeżeli natomiast $\alpha_i=C$, obserwacja jest punktem nasyconym ograniczeniem dualnym. Taki przypadek zwykle oznacza, że punkt znajduje się wewnątrz marginesu albo po złej stronie granicy decyzyjnej, choć granicznie może także leżeć na brzegu marginesu. Dlatego nie należy utożsamiać warunku $\alpha_i=C$ wyłącznie z błędną klasyfikacją. Precyzyjniej: są to obserwacje, dla których kara za naruszenie osiąga maksymalny dopuszczalny wpływ w dualu. Do wyznaczania $\hat b$ najbezpieczniej używać punktów spełniających $0<\alpha_i<C$, ponieważ dla nich zachodzi dokładna równość brzegowa bez nasycenia karą.
+Jeżeli natomiast $\alpha_i=C$, obserwacja jest punktem nasyconym ograniczeniem dualnym. Taki przypadek zwykle oznacza, że punkt znajduje się wewnątrz marginesu albo po złej stronie granicy decyzyjnej, choć granicznie może także leżeć na brzegu marginesu. Dlatego nie należy utożsamiać warunku $\alpha_i=C$ wyłącznie z błędną klasyfikacją. Precyzyjniej: są to obserwacje, dla których kara za naruszenie osiąga maksymalny dopuszczalny wpływ w problemie dualnym. Do wyznaczania $\hat b$ najbezpieczniej używać punktów spełniających $0<\alpha_i<C$, ponieważ dla nich zachodzi dokładna równość brzegowa bez nasycenia karą.
 
 Soft-margin SVM można też zapisać bez jawnych zmiennych luzu. Dla ustalonych $w$ i $b$ najmniejsza wartość $\xi_i$, która spełnia ograniczenie $y_i(w^\top x_i+b)\ge 1-\xi_i$, wynosi
 
@@ -486,7 +501,7 @@ $$
 \min_{w,b}\ \frac{1}{2}\|w\|^2 + C\sum_{i=1}^n \max\{0,\ 1-y_i(w^\top x_i+b)\}.
 $$
 
-Drugi składnik jest sumą strat zawiasowych (*hinge loss*). W tej postaci dobrze widać, że soft-margin SVM łączy dwa mechanizmy: regularizację przez minimalizację $\|w\|^2$ oraz karanie obserwacji, które znajdują się wewnątrz marginesu lub są błędnie sklasyfikowane. Parametr $C$ reguluje względną siłę tej kary względem szerokości marginesu.
+Drugi składnik jest sumą strat nazywanych *hinge loss*. W tej postaci dobrze widać, że soft-margin SVM łączy dwa mechanizmy: regularizację przez minimalizację $\|w\|^2$ oraz karanie obserwacji, które znajdują się wewnątrz marginesu lub są błędnie sklasyfikowane. Parametr $C$ reguluje względną siłę tej kary względem szerokości marginesu.
 
 ### Kernelowa wersja a estymacja parametrów
 
@@ -534,7 +549,7 @@ $$
 \hat w=\sum_i \alpha_i y_i\varphi(x_i).
 $$
 
-Jeżeli przestrzeń ta jest bardzo wysokowymiarowa albo nieskończenie wymiarowa, jawna rekonstrukcja $\hat w$ nie jest potrzebna. Model jest reprezentowany przez wektory nośne, ich współczynniki $\alpha_i$, etykiety $y_i$, funkcję jądra oraz wyraz wolny $b$.
+Jeżeli przestrzeń ta jest bardzo wysokowymiarowa albo nieskończenie wymiarowa, jawna rekonstrukcja $\hat w$ nie jest potrzebna/możliwa. Model jest reprezentowany przez wektory nośne, ich współczynniki $\alpha_i$, etykiety $y_i$, funkcję jądra oraz wyraz wolny $b$.
 
 Wyraz wolny $b$ wyznacza się z warunków KKT. Najwygodniej używać do tego wektorów nośnych spełniających $0<\alpha_i<C$, ponieważ dla takich punktów zachodzi równość brzegowa
 
@@ -557,7 +572,7 @@ SVM jest z natury klasyfikatorem binarnym. Dla problemów wieloklasowych stosuje
 - **one-vs-rest (OvR)** – uczymy $K$ klasyfikatorów binarnych „klasa $k$ vs reszta” i wybieramy klasę o największej wartości funkcji decyzyjnej;
 - **one-vs-one (OvO)** – uczymy $K(K-1)/2$ klasyfikatorów dla każdej pary klas i stosujemy głosowanie.
 
-W praktyce implementacje (np. scikit-learn) domyślnie stosują OvO dla `SVC`, a OvR jest często spotykany w wersjach liniowych (np. `LinearSVC`). Wybór strategii wpływa na koszt obliczeń i zachowanie w przypadku niezbalansowanych klas.
+W praktyce implementacje (np. `scikit-learn`) domyślnie stosują OvO dla `SVC`, a OvR jest często spotykany w wersjach liniowych (np. `LinearSVC`). Wybór strategii wpływa na koszt obliczeń i zachowanie w przypadku niezbalansowanych klas.
 
 ## SVM w regresji: SVR
 
@@ -681,7 +696,7 @@ $$
 \xi_i^*=0.
 $$
 
-Ten przykład pokazuje, że SVR nie karze samego faktu popełnienia błędu, lecz dopiero przekroczenie ustalonej tolerancji $\varepsilon$. Punkty leżące wewnątrz rurki nie wpływają bezpośrednio na karę w funkcji celu. Punkty leżące na brzegu rurki lub poza nią są odpowiednikami wektorów nośnych w regresji, ponieważ to one wyznaczają położenie funkcji regresji. Podobnie jak SVC, SVR może korzystać z jąder: wówczas funkcja regresji jest liniowa w przestrzeni cech $\varphi(x)$, ale może być nieliniowa względem oryginalnych zmiennych.
+Ten przykład pokazuje, że SVR nie karze samego faktu popełnienia błędu, lecz dopiero przekrocenie ustalonej tolerancji $\varepsilon$. Punkty leżące wewnątrz rurki nie wpływają bezpośrednio na karę w funkcji celu. Punkty leżące na brzegu rurki lub poza nią są odpowiednikami wektorów nośnych w regresji, ponieważ to one wyznaczają położenie funkcji regresji. Podobnie jak SVC, SVR może korzystać z jąder: wówczas funkcja regresji jest liniowa w przestrzeni cech $\varphi(x)$, ale może być nieliniowa względem oryginalnych zmiennych.
 
 ## Założenia, zalety i wady
 
