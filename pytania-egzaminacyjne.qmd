@@ -35,7 +35,7 @@ fontsize: 12pt
 
 12. Omów zalety i ograniczenia pojedynczych drzew decyzyjnych. W jakich sytuacjach drzewa są szczególnie użyteczne, a kiedy ich własności stają się problemem?
 
-13. Na czym polega bagging i dlaczego bootstrap jest w nim tak istotny? Wyjaśnij, jak zespołowanie wielu drzew wpływa na stabilność i wariancję predykcji.
+13. Na czym polega bagging i dlaczego bootstrap jest w nim tak istotny? Wyjaśnij, jak ensamble wielu drzew wpływa na stabilność i wariancję predykcji.
 
 14. Czym las losowy różni się od zwykłego baggingu drzew? Omów rolę losowania cech, mechanizm budowy modelu oraz skutki tego podejścia dla jakości i różnorodności drzew w zespole.
 
