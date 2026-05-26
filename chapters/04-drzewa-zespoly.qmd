@@ -595,7 +595,7 @@ Rozwój boostingu można przedstawić jako przejście od idei teoretycznej do ba
 -   **Gradient Boosting / Multiple Additive Regression Trees** [@friedman2001]- uogólnienie boostingu do postaci optymalizacji funkcji straty w przestrzeni funkcji, interpretowane jako „zejście gradientowe” w modelu addytywnym.
 -   **XGBoost** [@chen2016]- bardzo wydajna implementacja gradientowego boostingu drzew z regularizacją, obsługą braków i szeregiem optymalizacji obliczeniowych (m.in. przyspieszone wyznaczanie podziałów, równoległość, przycinanie przez ograniczenia).
 -   **LightGBM** [@ke2017]- to wysoce wydajna i skalowalna implementacja gradientowego boostingu drzew (GBDT), wykorzystująca m.in. histogramowe wyznaczanie podziałów oraz strategię wzrostu *leaf-wise* (*best-first*) w celu przyspieszenia uczenia przy zachowaniu wysokiej jakości predykcji.
--   **CatBoost** [@singh2025] - boosting drzew z natywną obsługą zmiennych kategorycznych oraz mechanizmami ograniczającymi *target leakage* i przeuczenie (m.in. uporządkowane statystyki docelowe, *ordered boosting*).
+-   **CatBoost** [@dorogush2017] - boosting drzew z natywną obsługą zmiennych kategorycznych oraz mechanizmami ograniczającymi *target leakage* i przeuczenie (m.in. uporządkowane statystyki docelowe, *ordered boosting*).
 
 ### Koncepcja - model addytywny i uczenie „na błędach”
 
